@@ -1,0 +1,126 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3>📤 Export Data</h3>
+
+  <!-- Table selector + Update button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <label class="form-label fw-bold">🗂 Select Table</label>
+      <select id="tableSelect" class="form-select" onchange="renderColumns()">
+        <option disabled selected>-- Choose Table --</option>
+        {% for table in columns_by_table %}
+          <option value="{{ table }}">{{ table }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-outline-secondary mt-4" onclick="updateTables()">🔄 Update Tables</button>
+  </div>
+
+  <!-- Dynamic column checkboxes -->
+  <div class="card mb-4">
+    <div class="card-header bg-dark text-white">📌 Available Columns</div>
+    <div class="card-body">
+      <div id="checkboxContainer" class="row g-3"></div>
+    </div>
+  </div>
+
+  <!-- Selected columns display -->
+  <div class="card mb-4">
+    <div class="card-header bg-success text-white">✅ Selected Columns</div>
+    <div class="card-body">
+      <div id="selectedList" class="d-flex flex-wrap gap-2"></div>
+    </div>
+  </div>
+
+  <!-- Export form -->
+  <form method="POST" action="/export-data/submit">
+    <div id="columnsInputContainer"></div>
+
+    <div class="mb-3">
+      <label class="form-label">📁 File Name</label>
+      <input type="text" name="filename" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">📦 File Format</label>
+      <select class="form-select" name="filetype" required>
+        <option value="xlsx">Excel (.xlsx)</option>
+        <option value="pdf">PDF (.pdf)</option>
+        <option value="ods">OpenDocument (.ods)</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">🚀 Export Now</button>
+  </form>
+</div>
+
+<script>
+  const allColumns = {{ columns_by_table | tojson }};
+  const selectedColumns = {}; // key = value (field), value = {label, table}
+
+  function renderColumns() {
+    const selectedTable = document.getElementById("tableSelect").value;
+    const container = document.getElementById("checkboxContainer");
+    container.innerHTML = "";
+
+    if (!selectedTable || !allColumns[selectedTable]) return;
+
+    allColumns[selectedTable].forEach(col => {
+      const colDiv = document.createElement("div");
+      colDiv.className = "col-md-4";
+      colDiv.innerHTML = `
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="${col.value}" id="${selectedTable}_${col.value}"
+            onchange="toggleColumn('${col.value}', '${col.label}', '${selectedTable}')"
+            ${selectedColumns[col.value] ? "checked" : ""}
+          >
+          <label class="form-check-label" for="${selectedTable}_${col.value}">${col.label}</label>
+        </div>
+      `;
+      container.appendChild(colDiv);
+    });
+  }
+
+  function toggleColumn(value, label, table) {
+    if (!value) return;
+    if (selectedColumns[value]) {
+      delete selectedColumns[value];
+    } else {
+      selectedColumns[value] = { label, table };
+    }
+    updateSelectedDisplay();
+  }
+
+  function updateSelectedDisplay() {
+    const list = document.getElementById("selectedList");
+    const container = document.getElementById("columnsInputContainer");
+
+    list.innerHTML = "";
+    container.innerHTML = "";
+
+    Object.entries(selectedColumns).forEach(([key, info]) => {
+      const tag = document.createElement("span");
+      tag.className = "badge bg-info text-dark";
+      tag.innerText = `${info.label} (${info.table})`;
+      list.appendChild(tag);
+
+      const hidden = document.createElement("input");
+      hidden.type = "hidden";
+      hidden.name = "columns";
+      hidden.value = key;
+      container.appendChild(hidden);
+    });
+  }
+
+  function updateTables() {
+    fetch("/export-data/update-columns")
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ Table structure updated!");
+        location.reload();
+      });
+  }
+</script>
+{% endblock %}

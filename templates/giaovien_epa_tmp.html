@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tự Đánh Giá EPA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+        }
+        h1::before {
+            content: "📝";
+            margin-right: 10px;
+        }
+        h2 {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        h2::before {
+            content: "📋";
+            margin-right: 10px;
+        }
+        .question {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .question p {
+            margin: 0 0 10px;
+        }
+        .question input, .question textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+        .question textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .score-inputs, .comment-inputs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .score-inputs div, .comment-inputs div {
+            flex: 1;
+        }
+        .score-inputs label, .comment-inputs label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .error {
+            color: #e74c3c;
+            font-style: italic;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #2980b9;
+        }
+        .assessment-entry {
+            background: #ecf0f1;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e67e22;
+        }
+        hr {
+            border: 0;
+            border-top: 1px dashed #bdc3c7;
+            margin: 15px 0;
+        }
+        .highlight {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .total-score {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tự Đánh Giá EPA - {{month}} - {{ user }}</h1>
+
+        <!-- Period Check -->
+        <div id="period-message"></div>
+
+        <!-- Last Assessment -->
+        <h2>Kết Quả Tự Đánh Giá Trước Đây</h2>
+        <div id="last-assessment"></div>
+
+        <!-- Total Score Table -->
+        <h2>Tổng Điểm Đánh Giá</h2>
+        <table id="total-score-table">
+            <thead>
+                <tr>
+                    <th>Năm</th>
+                    <th>Tháng</th>
+                    <th>Tổng điểm tự đánh giá</th>
+                    <th>Tổng điểm giám sát</th>
+                    <th>Điểm cấp trên</th>
+                    <th>Nhận xét cấp trên</th>
+                </tr>
+            </thead>
+            <tbody id="total-score-table-body"></tbody>
+        </table>
+
+        <!-- Assessment Form -->
+        <h2>Gửi Đánh Giá EPA Mới</h2>
+        <div class="total-score" id="total-score-display">
+            Tổng điểm tự đánh giá: 0 | Tổng điểm giám sát: 0
+        </div>
+        <div id="assessment-form"></div>
+
+        <button id="submit-btn" disabled>Gửi</button>
+        <div id="form-message"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api';
+        const tenTk = '{{ user }}';
+        const userRole = '{{ role }}';
+
+        function debugLog(message, data = null) {
+            console.log(`[DEBUG] ${message}`, data || '');
+        }
+
+        async function checkAssessmentPeriod() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/assessment-period`);
+                const data = await response.json();
+                debugLog('Kiểm tra thời gian:', data);
+                if (!response.ok) throw new Error(data.message || 'Lỗi khi kiểm tra thời gian');
+                document.getElementById('period-message').innerHTML = data.isOpen
+                    ? '<p class="success">Thời gian đánh giá đang mở!</p>'
+                    : '<p class="error">Thời gian đánh giá đã đóng. Mở từ ngày ' + data.startDate + ' đến cuối tháng.</p>';
+                document.getElementById('submit-btn').disabled = !data.isOpen;
+                return data.isOpen;
+            } catch (error) {
+                debugLog('Lỗi kiểm tra thời gian:', error);
+                document.getElementById('period-message').innerHTML = '<p class="error">Lỗi khi kiểm tra thời gian.</p>';
+                return false;
+            }
+        }
+
+        async function loadQuestions() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/epa-questions`);
+                const data = await response.json();
+                debugLog('Danh sách câu hỏi:', data);
+                if (!response.ok) throw new Error(data.message || 'Lỗi khi tải câu hỏi');
+                const formDiv = document.getElementById('assessment-form');
+                const isSupervisorOrAdmin = userRole === 'supervisor' || userRole === 'admin';
+                formDiv.innerHTML = data.questions.slice(0, 10).map((q, index) => `
+                    <div class="question">
+                        <p><strong>${index + 1}. ${q.translate}</strong></p>
+                        <div class="score-inputs">
+                            <div>
+                                <label>Điểm tự chấm:</label>
+                                <input type="number" min="0" max="30" id="score-${q.id}" placeholder="Nhập điểm (0-30)">
+                            </div>
+                            <div>
+                                <label>Điểm từ Supervisor:</label>
+                                <input type="number" min="0" max="30" id="sup-score-${q.id}" placeholder="Nhập điểm (0-30)" ${isSupervisorOrAdmin ? '' : 'disabled'}>
+                            </div>
+                        </div>
+                        <div class="comment-inputs">
+                            <div>
+                                <label>Ý kiến tự đánh giá:</label>
+                                <textarea id="user-comment-${q.id}" placeholder="Nhập ý kiến của bạn cho câu hỏi này..."></textarea>
+                            </div>
+                            <div>
+                                <label>Ý kiến từ Supervisor:</label>
+                                <textarea id="sup-comment-${q.id}" placeholder="Nhập ý kiến đánh giá (Supervisor)" ${isSupervisorOrAdmin ? '' : 'disabled'}></textarea>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add event listeners for real-time total score update
+                const scoreInputs = document.querySelectorAll('input[type="number"][id^="score-"]');
+                const supScoreInputs = document.querySelectorAll('input[type="number"][id^="sup-score-"]');
+                scoreInputs.forEach(input => input.addEventListener('input', updateTotalScore));
+                supScoreInputs.forEach(input => input.addEventListener('input', updateTotalScore));
+                updateTotalScore();
+            } catch (error) {
+                debugLog('Lỗi tải câu hỏi:', error);
+                document.getElementById('assessment-form').innerHTML = '<p class="error">Không thể tải câu hỏi.</p>';
+            }
+        }
+
+        function updateTotalScore() {
+            const scoreInputs = document.querySelectorAll('input[type="number"][id^="score-"]');
+            const supScoreInputs = document.querySelectorAll('input[type="number"][id^="sup-score-"]');
+            let userTotal = 0;
+            let supTotal = 0;
+            scoreInputs.forEach(input => {
+                const value = parseInt(input.value) || 0;
+                if (value >= 0 && value <= 30) userTotal += value;
+            });
+            supScoreInputs.forEach(input => {
+                const value = parseInt(input.value) || 0;
+                if (value >= 0 && value <= 30) supTotal += value;
+            });
+            document.getElementById('total-score-display').textContent = `Tổng điểm tự đánh giá: ${userTotal} | Tổng điểm giám sát: ${supTotal}`;
+        }
+
+        async function loadLastAssessment() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/last-assessment`);
+                const data = await response.json();
+                debugLog('Kết quả đánh giá trước:', data);
+                if (!response.ok) throw new Error(data.message || 'Lỗi khi tải đánh giá');
+                const assessmentDiv = document.getElementById('last-assessment');
+                const totalScoreTableBody = document.getElementById('total-score-table-body');
+
+                // Load individual assessments
+                if (data.assessments && data.assessments.length === 0) {
+                    assessmentDiv.innerHTML = '<p>Không tìm thấy kết quả đánh giá trước đây.</p>';
+                } else {
+                    assessmentDiv.innerHTML = (data.assessments || data).map(a => `
+                        <div class="assessment-entry">
+                            <p class="highlight">Năm: ${a.year}, Tháng: ${a.month}</p>
+                            <p><strong>Câu hỏi:</strong> ${a.translate}</p>
+                            <p><strong>Điểm tự chấm:</strong> ${a.user_score || 'N/A'}</p>
+                            <p><strong>Điểm từ Supervisor:</strong> ${a.sup_score || 'Chưa chấm'}</p>
+                            <p><strong>Ý kiến tự đánh giá:</strong> ${a.user_comment || 'Không có ý kiến'}</p>
+                            <p><strong>Ý kiến từ Supervisor:</strong> ${a.sup_comment || 'Không có ý kiến'}</p>
+                        </div>
+                    `).join('<hr>');
+                }
+
+                // Load total scores
+                if (data.total_score) {
+                    totalScoreTableBody.innerHTML = `
+                        <tr>
+                            <td>${data.total_score.year}</td>
+                            <td>${data.total_score.month}</td>
+                            <td>${data.total_score.user_total_score || 0}</td>
+                            <td>${data.total_score.sup_total_score || 0}</td>
+                            <td>${data.total_score.pri_total_score || 'Chưa có'}</td>
+                            <td>${data.total_score.pri_comment || 'Chưa có'}</td>
+                        </tr>
+                    `;
+                } else {
+                    totalScoreTableBody.innerHTML = '<tr><td colspan="6">Không tìm thấy tổng điểm.</td></tr>';
+                }
+            } catch (error) {
+                debugLog('Lỗi tải đánh giá trước:', error);
+                document.getElementById('last-assessment').innerHTML = '<p class="error">Hãy hoàn thành bảng đánh giá thángtháng.</p>';
+                document.getElementById('total-score-table-body').innerHTML = '<tr><td colspan="6">Lỗi khi tải tổng điểm.</td></tr>';
+            }
+        }
+
+        async function submitAssessment() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const scores = [];
+            const questionInputs = document.querySelectorAll('#assessment-form .question');
+            let userTotalScore = 0;
+            let supTotalScore = 0;
+
+            questionInputs.forEach(inputGroup => {
+                const questionId = inputGroup.querySelector('input[type="number"]').id.split('-')[1];
+                const user_score = parseInt(inputGroup.querySelector(`#score-${questionId}`).value);
+                const supScoreInput = inputGroup.querySelector(`#sup-score-${questionId}`);
+                const sup_score = supScoreInput.disabled ? null : parseInt(supScoreInput.value);
+                const user_comment = inputGroup.querySelector(`#user-comment-${questionId}`).value.trim();
+                const supCommentInput = inputGroup.querySelector(`#sup-comment-${questionId}`);
+                const sup_comment = supCommentInput.disabled ? '' : supCommentInput.value.trim();
+                if (!isNaN(user_score)) {
+                    scores.push({ 
+                        questionId, 
+                        score: user_score, 
+                        sup_score: isNaN(sup_score) ? null : sup_score,
+                        user_comment,
+                        sup_comment
+                    });
+                    if (user_score >= 0 && user_score <= 30) userTotalScore += user_score;
+                    if (sup_score >= 0 && sup_score <= 30) supTotalScore += sup_score;
+                }
+            });
+            debugLog('Gửi dữ liệu:', { ten_tk: tenTk, year, month, scores, user_total_score: userTotalScore, sup_total_score: supTotalScore });
+            if (scores.length === 0) {
+                document.getElementById('form-message').innerHTML = '<p class="error">Vui lòng nhập ít nhất một điểm số.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/submit-assessment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        ten_tk: tenTk, 
+                        year, 
+                        month, 
+                        scores,
+                        user_total_score: userTotalScore,
+                        sup_total_score: supTotalScore
+                    })
+                });
+                const data = await response.json();
+                debugLog('Kết quả gửi:', data);
+                if (!response.ok) throw new Error(data.message || 'Lỗi khi gửi đánh giá');
+                document.getElementById('form-message').innerHTML = '<p class="success">Đánh giá đã được gửi thành công!</p>';
+                questionInputs.forEach(inputGroup => {
+                    const questionId = inputGroup.querySelector('input[type="number"]').id.split('-')[1];
+                    inputGroup.querySelector(`#score-${questionId}`).value = '';
+                    inputGroup.querySelector(`#sup-score-${questionId}`).value = '';
+                    inputGroup.querySelector(`#user-comment-${questionId}`).value = '';
+                    const supCommentInput = inputGroup.querySelector(`#sup-comment-${questionId}`);
+                    if (!supCommentInput.disabled) supCommentInput.value = '';
+                });
+                updateTotalScore();
+                loadLastAssessment();
+            } catch (error) {
+                debugLog('Lỗi gửi đánh giá:', error);
+                document.getElementById('form-message').innerHTML = '<p class="error">Không thể gửi đánh giá.</p>';
+            }
+        }
+
+        async function init() {
+            debugLog('Khởi tạo trang');
+            const isOpen = await checkAssessmentPeriod();
+            if (isOpen) {
+                await loadQuestions();
+            }
+            await loadLastAssessment();
+            document.getElementById('submit-btn').addEventListener('click', submitAssessment);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

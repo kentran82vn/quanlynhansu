@@ -1,0 +1,41 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3>📊 Final EPA Scores - {{ month }}/{{ year }}</h3>
+  <table class="table table-bordered table-striped mt-3 align-middle text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Staff ID</th>
+        <th>Full Name</th>
+        <th>Team</th>
+        <th>Avg Score</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in data %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.staff_id }}</td>
+        <td>{{ row.full_name }}</td>
+        <td>{{ row.team }}</td>
+        <td>{{ "%.2f"|format(row.avg_score) }}</td>
+        <td>
+          {% if row.grade == 'A' %}
+            <span class="badge bg-success">A</span>
+          {% elif row.grade == 'B' %}
+            <span class="badge bg-primary">B</span>
+          {% elif row.grade == 'C' %}
+            <span class="badge bg-warning text-dark">C</span>
+          {% else %}
+            <span class="badge bg-danger">D</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

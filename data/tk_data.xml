@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+xmlns:html="http://www.w3.org/TR/REC-html40">
+<Worksheet ss:Name="Table1">
+	<Table>
+		<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Row>
+			<Cell><Data ss:Type="String">ten_tk</Data></Cell>
+			<Cell><Data ss:Type="String">nhom</Data></Cell>
+			<Cell><Data ss:Type="String">mat_khau</Data></Cell>
+			<Cell><Data ss:Type="String">ngay_tao</Data></Cell>
+			<Cell><Data ss:Type="String">nguoi_tao</Data></Cell>
+			<Cell><Data ss:Type="String">ngay_hh</Data></Cell>
+		</Row>
+
+		<Row>
+			<Cell><Data ss:Type="String">admin</Data></Cell>
+			<Cell><Data ss:Type="String">admin</Data></Cell>
+			<Cell><Data ss:Type="String">scrypt:32768:8:1$fjueim7O5rG80zQa$6a7a432c16fc080103edebe5f93097cdca40788180fb1130ac5bf636ba23f36df0ef6f826e58cc4a5686353778602d0953ef4b32605c9feeb8da8faf325f70eb</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-14</Data></Cell>
+			<Cell><Data ss:Type="String">system</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">anhtho</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">hangnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">hannguyen</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">hoangtran</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">huongphuong</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">supervisor</Data></Cell>
+			<Cell><Data ss:Type="String">scrypt:32768:8:1$e3yAlSQRuOfDJVIN$0fd53f8df5319a5c8ce8c74ffe280bed1bc80ea26c3f94e51e7e5f26caa0ec0fbeb532aff00ebbe59f6737a3ceb44dacf5259b53cd70aeeac3b7e486220cecbe</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String">2025-09-14</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">kimnhung</Data></Cell>
+			<Cell><Data ss:Type="String">supervisor</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String">2025-09-14</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">kimoanh</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">ksira</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">ngocba</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">ngocnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">ngocphuong</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">ngocquy</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">thamtran</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">thanhhuyen</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">thanhtuyen</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">thuuyen</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">tronghung</Data></Cell>
+			<Cell><Data ss:Type="String">user</Data></Cell>
+			<Cell><Data ss:Type="String">abc123</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+		</Row>	</Table>
+</Worksheet>
+</Workbook>

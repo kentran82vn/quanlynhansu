@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Nhân Sự</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Loại bỏ lề và padding để canh trái toàn trang */
+        body {
+            margin: 2;
+            padding: 2;
+        }
+        .no-padding {
+            padding-left: 2 !important;
+            padding-right: 2 !important;
+        }
+        /* Đảm bảo bảng full width và cuộn ngang nếu cần */
+        .table-responsive {
+            width: 100%;
+            margin: 4;
+            padding: 4;
+            overflow-x: auto;
+        }
+        .table-bordered {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        /* Tối ưu không gian bảng */
+        .table-bordered th, .table-bordered td {
+            padding: 8px; /* Giảm padding để hiển thị nhiều nội dung hơn */
+            font-size: 14px; /* Font nhỏ hơn để tiết kiệm không gian */
+        }
+        /* Tăng khoảng cách giữa các phần tử để thoáng hơn */
+        .form-group, .card, .table-responsive {
+            margin-bottom: 20px;
+        }
+        /* Màu nền và chữ cho thead */
+        .table-bordered thead {
+            background-color: #007bff; /* Màu xanh dương */
+            color: white; /* Chữ trắng */
+        }
+        /* Canh giữa nội dung cho th và td */
+        .table-bordered th, .table-bordered td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid no-padding"> <!-- container-fluid để full width, no-padding để canh trái -->
+        <div class="row no-gutters"> <!-- no-gutters để bỏ padding trái/phải -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0 d-flex align-items-center gap-3">
+                            📋 - THÔNG TIN NHÂN SỰ -
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                👤 {{ user }} ({{ role }})
+                            </div>
+                            <div class="col text-right">
+                                <a href="/change-password">🔐 Đổi Mật Khẩu</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-12">
+                <div class="form-group d-flex align-items-end">
+                    <div class="mr-3">
+                        <label for="deptSelect">Bộ Phận</label>
+                        <select name="deptSelect" id="deptSelect" class="form-control form-control-sm" onchange="switchDept()">
+                            <option value="">-- Chọn Bộ Phận --</option>
+                            <option value="HS">HS</option>
+                            <option value="GV">GV</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="searchInput" class="sr-only">Tìm kiếm</label>
+                        <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="🔍 Tìm kiếm..." style="width: 250px;">
+                    </div>
+                </div>
+                <div id="dynamicInputRow"></div>
+                <div class="table-responsive">
+                    <div id="table_hs" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã HS</th>
+                                    <th>Mã GV</th>
+                                    <th>Mã Lớp</th>
+                                    <th>Họ và Tên</th>
+                                    <th>Ngày Sinh</th>
+                                    <th>Giới Tính</th>
+                                    <th>Dân Tộc</th>
+                                    <th>Mã Định Danh</th>
+                                    <th>Tên Bố</th>
+                                    <th>Nghề Bố</th>
+                                    <th>Tên Mẹ</th>
+                                    <th>Nghề Mẹ</th>
+                                    <th>Hộ Khẩu</th>
+                                    <th>CCCD Bố/Mẹ</th>
+                                    <th>SĐT Bố/Mẹ</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div id="table_gv" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã GV</th>
+                                    <th>Họ và Tên</th>
+                                    <th>Tên TK</th>
+                                    <th>Chức Vụ</th>
+                                    <th>Ngày Sinh</th>
+                                    <th>Quê Quán</th>
+                                    <th>CCCD</th>
+                                    <th>Ngày Cấp CCCD</th>
+                                    <th>Mã Số Thuế</th>
+                                    <th>CMND</th>
+                                    <th>Số Bảo Hiểm</th>
+                                    <th>Số Điện Thoại</th>
+                                    <th>Tài Khoản NH</th>
+                                    <th>Email</th>
+                                    <th>Nhóm Máu</th>
+                                    <th>Địa Chỉ</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<script>
+  let maGVList = [];
+  let maLopList = [];
+
+  async function fetchMaLists() {
+    const res = await fetch("/api/danh-sach-ma");
+    const data = await res.json();
+    maGVList = data.maGVList;
+    maLopList = data.maLopList;
+  }
+
+  // Gọi hàm này trước khi render bảng học sinh
+  fetchMaLists();
+</script>
+<script>
+let schemaByDept = {};
+const currentUser = "{{ user|lower }}";
+const userRole = "{{ role }}";
+
+async function fetchSchema() {
+  try {
+    const res = await fetch("/api/table-schema", { credentials: "include" });
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}, StatusText: ${res.statusText}`);
+    const schema = await res.json();
+    if (!schema || typeof schema !== "object") {
+      throw new Error("Invalid schema format: " + JSON.stringify(schema));
+    }
+    // Map backend column names to frontend field names
+    schemaByDept = {
+      HS: schema.HS ? schema.HS.map(field => ({
+        ma_hs: "ma_hs",
+        ma_gv: "ma_gv",
+        ma_lop: "ma_lop",
+        ho_va_ten: "full_name",
+        ngay_sinh: "birth_date",
+        gioi_tinh: "gender",
+        dan_toc: "ethnicity",
+        ma_dinh_danh: "identifier_code",
+        ho_ten_bo: "father_name",
+        nghe_nghiep_bo: "father_job",
+        ho_ten_me: "mother_name",
+        nghe_nghiep_me: "mother_job",
+        ho_khau: "household_address",
+        cccd_bo_me: "parent_id_card",
+        sdt: "parent_phone"
+      }[field] || field)) : [],
+      GV: schema.GV ? schema.GV.map(field => ({
+        ma_gv: "staff_id",
+        ho_va_ten: "full_name",
+        ten_tk: "nick_name",
+        chuc_vu: "team",
+        ngay_sinh: "birth_date",
+        que_quan: "hometown",
+        cccd: "cccd",
+        ngay_cap: "cccd_issued_date",
+        mst: "tax_code",
+        cmnd: "cmnd",
+        so_bh: "insurance_number",
+        sdt: "phone_number",
+        tk_nh: "bank_account",
+        email: "email",
+        nhom_mau: "blood_type",
+        dia_chi: "address"
+      }[field] || field)) : []
+    };
+    console.log("DEBUG: Schema fetched successfully", schemaByDept);
+    await switchDept();
+  } catch (err) {
+    console.error("❌ Failed to fetch schema:", err.message);
+    //alert("Không thể tải schema. Vui lòng thử lại. Lỗi: " + err.message);
+  }
+}
+
+async function switchDept() {
+  console.log("DEBUG: switchDept bắt đầu");
+
+  // Kiểm tra DOM
+  const deptSelect = document.getElementById("deptSelect");
+  const container = document.getElementById("dynamicInputRow");
+  const tableHS = document.getElementById("table_hs");
+  const tableGV = document.getElementById("table_gv");
+
+  if (!deptSelect || !container || !tableHS || !tableGV) {
+    console.error("❌ Thiếu deptSelect, dynamicInputRow, table_hs, hoặc table_gv trong DOM");
+    //alert("Lỗi: Không tìm thấy các phần tử giao diện cần thiết. Vui lòng thử lại.");
+    return;
+  }
+
+  const dept = deptSelect.value;
+  console.log(`DEBUG: Bộ phận được chọn: ${dept}`);
+  // Hiển thị spinner
+  container.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Đang tải...</span></div></div>';
+  // Ẩn/hiện bảng
+  tableHS.style.display = dept === "HS" ? "block" : "none";
+  tableGV.style.display = dept === "GV" ? "block" : "none";
+  console.log(`DEBUG: Trạng thái hiển thị - table_hs: ${tableHS.style.display}, table_gv: ${tableGV.style.display}`);
+  // Kiểm tra dept và schema
+  if (!dept) {
+    console.log("DEBUG: Chưa chọn bộ phận");
+    //alert("Vui lòng chọn một bộ phận (HS hoặc GV).");
+    container.innerHTML = "";
+    return;
+  }
+  if (!schemaByDept[dept]) {
+    console.log(`DEBUG: Không tìm thấy schema cho ${dept}`);
+    alert(`Lỗi: Không có schema cho bộ phận ${dept}. Vui lòng thử lại.`);
+    container.innerHTML = "";
+    return;
+  }
+  // Tạo trường nhập liệu động và nút Thêm chỉ khi "kimnhung", role là Supervisor hoặc Administrator
+  container.innerHTML = "";
+  if (currentUser === "kimnhung" || userRole === "supervisor" || userRole === "Administrator") {
+    let rowDiv = document.createElement("div");
+    rowDiv.className = "row g-2 mb-2 w-100 d-flex";
+
+    schemaByDept[dept].forEach((field, index) => {
+      const label = field.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      console.log(`DEBUG: Tạo input cho field: ${field}, label: ${label}`);
+      let inputType = "text";
+      if (field.includes("date")) inputType = "date";
+      else if (field.includes("phone")) inputType = "tel";
+      else if (field.includes("email")) inputType = "email";
+      else if (field === "gender") inputType = "select";
+
+      const colDiv = document.createElement("div");
+      colDiv.className = "col-auto input-dynamic";
+      if (inputType === "select") {
+        colDiv.innerHTML = `
+          <label class="form-label fw-bold w-100">${label}</label>
+          <select id="${field}" class="form-control form-control-sm">
+            <option value="">Chọn ${label}</option>
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+          </select>
+        `;
+      } else {
+        colDiv.innerHTML = `
+          <label class="form-label fw-bold w-100">${label}</label>
+          <input type="${inputType}" id="${field}" class="form-control form-control-sm" 
+                placeholder="${label}" 
+                ${field === "ma_hs" || field === "full_name" || field === "staff_id" ? "required" : ""}
+                ${inputType === "tel" ? 'pattern="[0-9]{10,11}" title="Số điện thoại phải có 10-11 chữ số"' : ""}
+                ${inputType === "email" ? 'pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$" title="Email không hợp lệ"' : ""}>
+        `;
+      }
+      rowDiv.appendChild(colDiv);
+      if ((index + 1) % 5 === 0) {
+        container.appendChild(rowDiv);
+        rowDiv = document.createElement("div");
+        rowDiv.className = "row g-2 mb-2 w-100 d-flex";
+      }
+    });
+
+    if (rowDiv.childElementCount > 0) {
+      container.appendChild(rowDiv);
+      console.log(`DEBUG: Đã thêm hàng cuối với ${rowDiv.childElementCount} input`);
+    }
+
+    // Thêm nút Add
+    const buttonRow = document.createElement("div");
+    buttonRow.className = "row g-2 mt-2 w-100 input-dynamic";
+    buttonRow.innerHTML = `
+      <div class="col-auto d-grid">
+        <button class="btn btn-success btn-sm" onclick="addEmployee()">➕ Thêm</button>
+      </div>
+    `;
+    container.appendChild(buttonRow);
+    console.log("DEBUG: Đã thêm nút Thêm");
+  }
+
+  // Tải dữ liệu
+  try {
+    await fetchAndRenderDept(dept);
+    console.log("DEBUG: switchDept hoàn tất");
+  } catch (err) {
+    console.error(`❌ Lỗi khi tải dữ liệu cho ${dept}:`, err);
+    alert(`Không thể tải dữ liệu cho ${dept}. Vui lòng thử lại.`);
+    container.innerHTML += '<div class="text-center text-danger mt-2">Lỗi tải dữ liệu.</div>';
+  }
+}
+
+async function fetchAndRenderDept(dept) {
+  console.log(`DEBUG: fetchAndRenderDept bắt đầu cho ${dept}`);
+  try {
+    const res = await fetch(`/api/employees?dept=${dept}`, { credentials: "include" });
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    const result = await res.json();
+    if (result.error) throw new Error(result.error);
+    const rows = result.rows.map(row => ({
+      // Map backend columns to frontend fields
+      ma_hs: row.ma_hs,
+      ma_gv: row.ma_gv,
+      ma_lop: row.ma_lop,
+      full_name: row.ho_va_ten,
+      birth_date: row.ngay_sinh,
+      gender: row.gioi_tinh,
+      ethnicity: row.dan_toc,
+      identifier_code: row.ma_dinh_danh,
+      father_name: row.ho_ten_bo,
+      father_job: row.nghe_nghiep_bo,
+      mother_name: row.ho_ten_me,
+      mother_job: row.nghe_nghiep_me,
+      household_address: row.ho_khau,
+      parent_id_card: row.cccd_bo_me,
+      parent_phone: row.sdt,
+      staff_id: row.ma_gv,
+      nick_name: row.ten_tk,
+      team: row.chuc_vu,
+      hometown: row.que_quan,
+      cccd: row.cccd,
+      cccd_issued_date: row.ngay_cap,
+      tax_code: row.mst,
+      cmnd: row.cmnd,
+      insurance_number: row.so_bh,
+      phone_number: row.sdt,
+      bank_account: row.tk_nh,
+      email: row.email,
+      blood_type: row.nhom_mau,
+      address: row.dia_chi
+    }));
+    console.log(`DEBUG: Đã lấy ${rows.length} hàng cho ${dept}`);
+    renderTable(`table_${dept.toLowerCase()}`, rows);
+  } catch (err) {
+    console.error(`❌ Lỗi khi lấy dữ liệu cho ${dept}:`, err);
+    throw err;
+  }
+}
+
+function renderTable(tableId, rows) {
+  console.log(`DEBUG: renderTable bắt đầu cho ${tableId}, số hàng: ${rows.length}`);
+  const table = document.getElementById(tableId)?.querySelector("tbody");
+  if (!table) {
+    console.error(`❌ Không tìm thấy tbody trong ${tableId}`);
+    alert(`Lỗi: Không tìm thấy bảng ${tableId}.`);
+    return;
+  }
+  table.innerHTML = "";
+  rows.forEach((row, idx) => {
+    const tr = document.createElement("tr");
+    tr.setAttribute("data-id", row.ma_hs || row.staff_id || idx);
+    tr.innerHTML = generateRowHtml(tableId, row, idx + 1);
+    table.appendChild(tr);
+  });
+  console.log(`DEBUG: renderTable hoàn tất cho ${tableId}`);
+}
+
+function generateRowHtml(tableId, row, index) {
+  console.log(`DEBUG: generateRowHtml cho ${tableId}, hàng ${index}`);
+
+  if (tableId === "table_hs") {
+    console.log(`DEBUG: Tạo hàng HS với dữ liệu: ${JSON.stringify(row)}`);
+
+    const deleteButton = (currentUser === "kimnhung" || userRole === "administrator")
+      ? `<td><button class="btn btn-sm btn-danger" onclick="deleteRowHS('${row.ma_hs || index}')">Xóa</button></td>`
+      : `<td></td>`;
+
+    return `
+      <td>${index}</td>
+      <td>${row.ma_hs || ""}</td>
+      <td>${row.ma_gv || ""}</td>
+      <td>${row.ma_lop || ""}</td>
+      <td>${row.full_name || ""}</td>
+      <td>${formatDate(row.birth_date)}</td>
+      <td>${row.gender || ""}</td>
+      <td>${row.ethnicity || ""}</td>
+      <td>${row.identifier_code || ""}</td>
+      <td>${row.father_name || ""}</td>
+      <td>${row.father_job || ""}</td>
+      <td>${row.mother_name || ""}</td>
+      <td>${row.mother_job || ""}</td>
+      <td>${row.household_address || ""}</td>
+      <td>${row.parent_id_card || ""}</td>
+      <td>${row.parent_phone || ""}</td>
+      ${deleteButton}
+    `;
+  }
+
+  if (tableId === "table_gv") {
+    console.log(`DEBUG: Tạo hàng GV với dữ liệu: ${JSON.stringify(row)}`);
+
+    const deleteButton = (currentUser === "kimnhung" || userRole === "administrator")
+      ? `<td><button class="btn btn-sm btn-danger" onclick="deleteRowGV('${row.staff_id || index}')">Xóa</button></td>`
+      : `<td></td>`;
+
+    return `
+      <td>${index}</td>
+      <td>${row.staff_id || ""}</td>
+      <td>${row.full_name || ""}</td>
+      <td>${row.nick_name || ""}</td>
+      <td>${row.team || ""}</td>
+      <td>${formatDate(row.birth_date)}</td>
+      <td>${row.hometown || ""}</td>
+      <td>${row.cccd || ""}</td>
+      <td>${formatDate(row.cccd_issued_date)}</td>
+      <td>${row.tax_code || ""}</td>
+      <td>${row.cmnd || ""}</td>
+      <td>${row.insurance_number || ""}</td>
+      <td>${row.phone_number || ""}</td>
+      <td>${row.bank_account || ""}</td>
+      <td>${row.email || ""}</td>
+      <td>${row.blood_type || ""}</td>
+      <td>${row.address || ""}</td>
+      ${deleteButton}
+    `;
+  }
+  console.log(`DEBUG: Không khớp tableId: ${tableId}`);
+  return "";
+}
+
+function formatDate(dateStr) {
+  if (!dateStr || isNaN(new Date(dateStr))) return "";
+  const d = new Date(dateStr);
+  return d.getDate().toString().padStart(2, '0') + "/" +
+         (d.getMonth() + 1).toString().padStart(2, '0') + "/" +
+         d.getFullYear();
+}
+async function addEmployee() {
+    const dept = document.getElementById("deptSelect").value;
+    if (!dept || !schemaByDept[dept]) {
+        alert("Please select a department.");
+        return;
+    }
+    const data = { "Dept": dept };
+    schemaByDept[dept].forEach(field => {
+        data[field] = document.getElementById(field)?.value.trim() || "";
+    });
+    if (dept === "GV" && (!data["staff_id"] || !data["full_name"])) {
+        alert("Staff ID and Full Name are required.");
+        return;
+    } else if (dept === "HS" && (!data["ma_hs"] || !data["ho_va_ten"])) {
+        alert("Mã HS và Họ và Tên là bắt buộc.");
+        return;
+    }
+    try {
+        const res = await fetch("/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (result.status === "ok") {
+            window.location.href = "/employees";
+        } else {
+            alert("❌ Failed to add employee: " + (result.message || ""));
+        }
+    } catch (err) {
+        alert("❌ Error adding employee: " + err.message);
+    }
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+    await fetchSchema();
+    const lastFile = localStorage.getItem('lastImportedFile');
+    if (lastFile) {
+        document.getElementById("deptSelect").value = lastFile.includes("hocsinh") ? "HS" : "GV";
+        await switchDept();
+        localStorage.removeItem('lastImportedFile');
+    } else {
+        document.getElementById("deptSelect").value = "HS"; // Default to HS
+        await switchDept();
+    }
+});
+</script>

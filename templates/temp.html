@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="p-4">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>📋 Employee Manager</h2>
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-muted" data-bs-toggle="tooltip" title="Username: {{ user }}&#10;Role: {{ role }}&#10;Password Expiry: {{ password_expiry }}">
+          👤 {{ user }} ({{ role }})
+        </span>
+        <button class="btn btn-outline-secondary btn-sm" onclick="openChangePassModal('{{ user }}')">
+          🔐 Change Pass
+        </button>
+        <a href="/logout" class="btn btn-outline-danger btn-sm">🚪 Logout</a>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-auto ms-auto">
+        {% if session['role'] == 'admin' %}
+        <button class="btn btn-success" onclick="addEmployee()">➕ Add</button>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="row align-items-end g-2 mb-4">
+      {% if session['role'] == 'admin' %}
+      <div class="col-auto"><input type="text" id="employee_id" class="form-control" placeholder="Employee ID"></div>
+      <div class="col-auto"><input type="text" id="full_name" class="form-control" placeholder="Full Name"></div>
+      <div class="col-auto"><input type="text" id="nick_name" class="form-control" placeholder="Nick Name"></div>
+      <div class="col-auto"><input type="text" id="position" class="form-control" placeholder="Position"></div>
+      <div class="col-auto"><input type="text" id="team" class="form-control" placeholder="Team"></div>
+      <div class="col-auto"><input type="date" id="dob" class="form-control"></div>
+      <div class="col-auto"><input type="date" id="contract" class="form-control"></div>
+      {% endif %}
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="btn-group flex-wrap">
+        {% if session['role'] == 'admin' %}
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <a href="/logs" class="btn btn-outline-secondary">📜 Logs</a>
+            <a href="/stats" class="btn btn-outline-secondary">📊 Stats</a>
+            <a href="/users" class="btn btn-outline-secondary">👥 Accounts</a>
+            <a href="/epa_score" class="btn btn-outline-primary">📝 EPA Score</a>
+            <a href="/epa_summary" class="btn btn-outline-info">📊 Final Scores</a>
+            <a href="/export/pdf" class="btn btn-outline-success">📤 Export PDF</a>
+
+            <button class="btn btn-outline-primary" onclick="document.getElementById('excelFileInput').click()">
+              📥 Import Excel
+            </button>
+            <input type="file" id="excelFileInput" accept=".xlsx" hidden onchange="importExcel()">
+
+            <a href="/admin/questions" class="btn btn-warning">Questionare</a>
+          </div>
+        {% endif %}
+
+        {% if session['role'] != 'admin' %}
+          <a href="/user-epa-score" class="btn btn-outline-warning">🧑‍💻 Self-Assessment</a>
+        {% endif %}
+      </div>
+      <!-- Search box -->
+      <div style="width: 250px;">
+        <input type="text" class="form-control" id="searchInput" placeholder="🔍 Search Employee...">
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover text-center align-middle" id="employeeTable">
+        <thead class="table-dark">
+          <tr>
+            <th>No.</th>
+            <th>Employee ID</th>
+            <th>Full Name</th>
+            <th>Nick Name</th>
+            <th>Position</th>
+            <th>Team</th>
+            <th>Date of Birth</th>
+            <th>Contract Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          {% for row in data %}
+          <tr data-index="{{ loop.index0 }}">
+            <td>{{ loop.index }}</td>
+            <td class="editable text-start" ondblclick="editCell(this, 'employee_id')">{{ row['employee_id'] }}</td>
+            <td class="editable" ondblclick="editCell(this, 'full_name')">{{ row['full_name'] }}</td>
+            <td class="editable" ondblclick="editCell(this, 'nick_name')">{{ row['nick_name'] }}</td>
+            <td class="editable" ondblclick="editCell(this, 'position')">{{ row['position'] }}</td>
+            <td class="editable" ondblclick="editCell(this, 'team')">{{ row['team'] }}</td>
+            <td class="editable" ondblclick="editCell(this, 'dob')">
+              {{ row['dob'].strftime('%d/%m/%Y') if row['dob'] and row['dob'].__class__.__name__ == 'date' else row['dob'] or '' }}
+            </td>
+            <td class="editable" ondblclick="editCell(this, 'contract_date')">
+              {{ row['contract_date'].strftime('%d/%m/%Y') if row['contract_date'] and row['contract_date'].__class__.__name__ == 'date' else row['contract_date'] or '' }}
+            </td>
+            {% if session['role'] == 'admin' %}
+            <td><button class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<script>
+function getInputValues() {
+  return {
+    "Employee ID": document.getElementById("employee_id").value.trim(),
+    "Full Name": document.getElementById("full_name").value.trim(),
+    "Nick Name": document.getElementById("nick_name").value.trim(),
+    "Position": document.getElementById("position").value.trim(),
+    "Team": document.getElementById("team").value.trim(),
+    "Date of Birth": document.getElementById("dob").value,
+    "Contract Date": document.getElementById("contract").value
+  };
+}
+
+async function addEmployee() {
+  const data = getInputValues();
+  if (!data["Employee ID"] || !data["Full Name"]) {
+    alert("Employee ID and Full Name are required.");
+    return;
+  }
+
+  const res = await fetch("/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+  if (result.status === "ok") {
+    window.location.href = "/employees";
+  } else {
+    alert("Failed to add employee.");
+  }
+}
+
+function editCell(td, column) {
+  const original = td.innerText.trim();
+  const index = td.parentElement.getAttribute("data-index");
+
+  td.innerHTML = `<input type='text' class='form-control form-control-sm' value='${original}' onkeydown='saveEdit(event, this, "${column}", ${index})'>`;
+  td.querySelector("input").focus();
+}
+
+async function saveEdit(e, input, column, index) {
+  if (e.key === "Enter") {
+    const value = input.value.trim();
+    const data = { [column]: value, index: index };
+
+    const res = await fetch("/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    if (result.status === "ok") {
+      location.reload();
+    } else {
+      alert("Update failed");
+    }
+  } else if (e.key === "Escape") {
+    location.reload();
+  }
+}
+
+async function deleteRow(btn) {
+  if (!confirm("Are you sure you want to delete this employee?")) return;
+
+  const index = btn.closest("tr").getAttribute("data-index");
+
+  const res = await fetch("/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ index: parseInt(index) })
+  });
+
+  const result = await res.json();
+  if (result.status === "ok") {
+    location.reload();
+  } else {
+    alert("Failed to delete.");
+  }
+}
+</script>
