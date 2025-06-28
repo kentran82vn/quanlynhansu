@@ -16,7 +16,9 @@ import json
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
-
+@app.route("/health")
+def health():
+    return "OK", 200
 app.register_blueprint(users_bp)
 app.register_blueprint(import_bp)
 app.register_blueprint(giaovien_epa_bp)
