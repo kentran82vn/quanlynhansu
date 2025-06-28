@@ -16,17 +16,7 @@ import json
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
-@app.route("/health")
-def health():
-    return "OK", 200
 
-@app.route("/")
-def index():
-    return "Hello, world!", 200
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
 app.register_blueprint(users_bp)
 app.register_blueprint(import_bp)
 app.register_blueprint(giaovien_epa_bp)
