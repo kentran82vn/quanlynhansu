@@ -1,0 +1,13 @@
+[phases.setup]
+runtime = "python@3.12"
+
+[phases.build]
+# 1) nâng cấp pip, setuptools, wheel
+commands = [
+  "python -m pip install --upgrade pip setuptools wheel",
+  # 2) cài dependencies
+  "pip install -r requirements.txt"
+]
+
+[phases.start]
+command = "gunicorn app:app --bind 0.0.0.0:$PORT"
