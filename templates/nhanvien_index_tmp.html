@@ -151,10 +151,9 @@
 <body class="p-4">
   <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0 d-flex align-items-center gap-3">
+      <h1 class="mb-0 d-flex align-items-center gap-3">
         📋 - QUẢN LÝ NHÂN SỰ -
-        <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="🔍 Search Employee..." style="width: 250px;">
-      </h2>
+      </h1>
       <div class="d-flex align-items-center gap-2">
         <span class="text-muted" data-bs-toggle="tooltip" title="Username: {{ user }}&#10;Role: {{ role }}&#10;Password Expiry: {{ password_expiry }}">
           👤 {{ user }} ({{ role }})
@@ -165,218 +164,49 @@
       </div>
     </div>
 
-    {% if session['role'] == 'admin' %}
-    <!-- Dept select riêng dòng -->
-    <div class="row g-2 mb-2">
-      <div class="col-auto">
-        <label for="deptSelect" class="form-label fw-bold w-100">Dept</label>
-        <select id="deptSelect" class="form-select form-select-sm" onchange="switchDept()">
-          <option value="">-- Select Dept --</option>
-          <option value="HS">HS</option>
-          <option value="GV">GV</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Các input field sẽ được render động tại đây -->
-    <div class="row g-2 mb-3 input-row text-center small" id="dynamicInputRow"></div>
-    {% endif %}
-
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="btn-group flex-wrap">
-        {% if session['role'] == 'admin' %}
+        {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
         <div class="d-flex flex-wrap align-items-center gap-2 mb-3" style="max-width: 100%; overflow-x: auto; padding: 5px 0;">
-          <a href="/logs" class="btn btn-outline-secondary">📜 Nhật Ký</a>
-          <a href="/stats" class="btn btn-outline-secondary">📊 Thông tin</a>
-          <a href="/users" class="btn btn-outline-secondary">👥 Tài Khoản Người Dùng</a>
-          <a href="/data_epa" class="btn btn-outline-primary">📝 Bảng đánh giá </a>
-          <a href="/epa_summary" class="btn btn-outline-info">📊 Bảng Đánh Giá Chung</a>
+          <a href="/users" class="btn btn-outline-secondary">👥 Tài Khoản</a>
+          <a href="/data_epa" class="btn btn-outline-primary">📝 Bảng Đánh Giá</a>
+          <a href="/epa_summary" class="btn btn-outline-info">📊 Biểu đồ xếp hạng</a>
           <a href="/export-data" class="btn btn-outline-success">📤 Xuất Dữ Liệu</a>
-        
+          <a href="/stats" class="btn btn-outline-secondary">📊 Thông tin</a>
+          <a href="/logs" class="btn btn-outline-secondary">📜 Nhật Ký</a>
           <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-primary" onclick="document.getElementById('excelFileInput').click()">
               📥 Nhập Dữ Liệu Từ Tệp Excel
             </button>
             <input type="file" id="excelFileInput" accept=".xlsx" hidden onchange="importExcel()">
           </div>
-          <button class="btn btn-outline-primary" onclick="updateDataBase()"> Cập Nhật Cơ Sở Dữ Liệu</button> 
+          {% if session['role'] == 'admin' %}
+          <button class="btn btn-outline-primary" onclick="updateDataBase()"> Cập Nhật Dữ Liệu</button> 
           <div id="dbStructureResult" class="mt-3 table-responsive"></div>  
-          <button class="btn btn-warning" onclick="removeDeptData()">🗑 Xóa Bảng Dữ Liệu Chính</button>
-          <a href="/admin/questions" class="btn btn-warning">📝 Bảng Câu Hỏi Đánh Giá</a>
+          <button class="btn btn-warning" onclick="removeDeptData()">🗑 Xóa Bảng Dữ Liệu</button>
+          {% endif %}
+          <a href="/admin/questions" class="btn btn-warning">📝 Câu Hỏi Đánh Giá</a>
         </div>
         {% endif %}
-        {% if session['role'] != 'admin' %}
-          <a href="/user-epa-score" class="btn btn-outline-warning">🧑‍💻 Bảng Đánh Giá - EPA</a>
-        {% endif %}
-      </div>
-    </div>
-    <!-- Kết quả hiển thị riêng -->
-    <div id="dbStructureResultWrapper" class="mt-5">
-      <h5 class="text-primary">📋 Thông tin nhân sự </h5>
-      <div id="dbStructureResult" class="table-responsive"></div>
-    </div>
-    {% if session['role'] != 'admin' %}
-      <div id="non-admin-epa-section">
-        <h3>🧑‍💻 Bảng Đánh Giá - EPA</h3>
-        <div class="input-row" style="margin-bottom: 15px;">
-            <label for="year_epa" style="margin-right: 10px; font-weight: bold;">Chọn Năm:</label>
-            <select id="year_epa" class="form-control-sm">
-                <option value="">-- Chọn Năm --</option>
+        {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
+        <!-- Dept select riêng dòng -->
+        <div class="row g-2 mb-2">
+          <div class="col-auto">
+            <label for="deptSelect" class="form-label fw-bold w-100">Dept</label>
+            <select id="deptSelect" class="form-select form-select-sm" onchange="switchDept()">
+              <option value="">-- Select Dept --</option>
+              <option value="HS">HS</option>
+              <option value="GV">GV</option>
             </select>
+          </div>
+          <div>
+              <label for="searchInput" class="sr-only">Tìm kiếm</label>
+              <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="🔍 Tìm kiếm..." style="width: 250px;">
+          </div>
         </div>
-        <div class="table-responsive">
-            <table class="table-sm" style="border-collapse: collapse; width: 100%;">
-                <thead>
-                    <tr>
-                        <th style="min-width: 120px;">Tên tài khoản</th>
-                        <th style="min-width: 150px;">Họ và tên</th>
-                        <th style="min-width: 80px;">Năm</th>
-                        <th style="min-width: 80px;">Tháng</th>
-                        <th style="min-width: 120px;">Điểm Người Dùng</th>
-                        <th style="min-width: 120px;">Điểm Tổ Trưởng</th>
-                        <th style="min-width: 120px;">Điểm Hiệu Trưởng</th>
-                        <th style="min-width: 200px;">Đánh giá của Hiệu Trưởng</th>
-                        <th style="min-width: 100px;">Hành Động</th>
-                    </tr>
-                </thead>
-                <tbody id="epa-table-body">
-                    <tr>
-                        <td colspan="9" style="text-align: center; color: #888;">
-                            Vui lòng chọn năm để hiển thị dữ liệu.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div id="assessment-title"></div>
-        <div id="period-message"></div>
-        <div id="old-assessment-message"></div>
-        <div id="last-assessment"></div>
-    </div>
-
-        <script>
-        const API_BASE_URL = '/api';
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const section = document.getElementById('non-admin-epa-section');
-            console.log('[DEBUG] non-admin-epa-section exists:', !!section);
-            if (section) {
-                await loadYears();
-                document.getElementById('year_epa').addEventListener('change', loadEPATable);
-            }
-        });
-
-        async function loadYears() {
-            console.log('[DEBUG] Starting loadYears, API_BASE_URL:', API_BASE_URL);
-            try {
-                console.log('[DEBUG] Fetching from:', `${API_BASE_URL}/epa-years`);
-                const response = await fetch(`${API_BASE_URL}/epa-years`);
-                console.log('[DEBUG] Fetch response:', response);
-                const data = await response.json();
-                console.log('[DEBUG] Fetch data:', data);
-                if (!response.ok) throw new Error(data.message || 'Lỗi khi tải danh sách năm');
-                const yearSelect = document.getElementById('year_epa');
-                yearSelect.innerHTML = '<option value="">-- Chọn Năm --</option>';
-                data.years.forEach(year => {
-                    yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
-                });
-            } catch (error) {
-                console.error('[DEBUG] Lỗi tải danh sách năm:', error);
-                document.getElementById('epa-table-body').innerHTML = '<tr><td colspan="9">Lỗi khi tải danh sách năm.</td></tr>';
-            }
-        }
-
-        async function loadEPATable() {
-            const year = document.getElementById('year_epa').value;
-            if (!year) {
-                document.getElementById('epa-table-body').innerHTML = '<tr><td colspan="9">Vui lòng chọn năm.</td></tr>';
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/epa-data?year=${year}`);
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Lỗi khi tải dữ liệu EPA');
-
-                const tableBody = document.getElementById('epa-table-body');
-                if (data.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="9">Không tìm thấy dữ liệu cho năm này.</td></tr>';
-                    return;
-                }
-
-                tableBody.innerHTML = data.map(row => `
-                    <tr>
-                        <td>${row.ten_tk}</td>
-                        <td>${row.ho_va_ten || 'N/A'}</td>
-                        <td>${row.year}</td>
-                        <td>${row.month}</td>
-                        <td>${row.user_total_score || 'N/A'}</td>
-                        <td>${row.sup_total_score || 'N/A'}</td>
-                        <td>${row.pri_total_score || 'N/A'}</td>
-                        <td>${row.pri_comment || 'Không có'}</td>
-                        <td>
-                            <button class="btn-sm" onclick="viewAssessment(${row.id}, ${row.year}, ${row.month})">Xem</button>
-                        </td>
-                    </tr>
-                `).join('');
-            } catch (error) {
-                console.error('[DEBUG] Lỗi tải dữ liệu EPA:', error);
-                document.getElementById('epa-table-body').innerHTML = '<tr><td colspan="9">Lỗi khi tải dữ liệu EPA.</td></tr>';
-            }
-        }
-
-        function viewAssessment(id, year, month) {
-          const ten_tk = event.target.closest("tr").children[0].innerText.trim(); // Lấy từ ô đầu tiên (ten_tk)
-          window.open(`/epa-preview?year=${year}&month=${month}&ten_tk=${ten_tk}`, "_blank");
-        }
-
-        async function loadLastAssessmentNhanVien(year, month) {
-          try {
-              const response = await fetch(`${API_BASE_URL}/last-assessment?year=${year}&month=${month}`);
-              const data = await response.json();
-              console.log('[DEBUG] Kết quả đánh giá trước:', data);
-
-              const assessmentDiv = document.getElementById('last-assessment');
-              const totalScoreTableBody = document.getElementById('total-score-table-body');
-
-              if (data.assessments && data.assessments.length === 0) {
-                  assessmentDiv.innerHTML = '<p>Không tìm thấy kết quả đánh giá trước đây.</p>';
-              } else {
-                  assessmentDiv.innerHTML = (data.assessments || data).map(a => `
-                      <div class="assessment-entry">
-                          <p class="highlight">Năm: ${a.year}, Tháng: ${a.month}</p>
-                          <p><strong>Câu hỏi:</strong> ${a.translate}</p>
-                          <p><strong>Điểm tự chấm:</strong> ${a.user_score || 'N/A'}</p>
-                          <p><strong>Điểm từ Supervisor:</strong> ${a.sup_score || 'Chưa chấm'}</p>
-                          <p><strong>Ý kiến tự đánh giá:</strong> ${a.user_comment || 'Không có ý kiến'}</p>
-                          <p><strong>Ý kiến từ Supervisor:</strong> ${a.sup_comment || 'Không có ý kiến'}</p>
-                      </div>
-                  `).join('<hr>');
-              }
-
-              if (data.total_score) {
-                  totalScoreTableBody.innerHTML = `
-                      <tr>
-                          <td>${data.total_score.year}</td>
-                          <td>${data.total_score.month}</td>
-                          <td>${data.total_score.user_total_score || 0}</td>
-                          <td>${data.total_score.sup_total_score || 0}</td>
-                          <td>${data.total_score.pri_total_score || 'Chưa có'}</td>
-                          <td>${data.total_score.pri_comment || 'Chưa có'}</td>
-                      </tr>
-                  `;
-              } else {
-                  totalScoreTableBody.innerHTML = '<tr><td colspan="6">Không tìm thấy tổng điểm.</td></tr>';
-              }
-          } catch (error) {
-              console.log('[DEBUG] Lỗi tải đánh giá trước:', error);
-              document.getElementById('last-assessment').innerHTML = '<p class="error">Hãy hoàn thành bảng đánh giá tháng.</p>';
-              document.getElementById('total-score-table-body').innerHTML = '<tr><td colspan="6">Lỗi khi tải tổng điểm.</td></tr>';
-          }
-      }
-      </script>
-    {% endif %}
-
+        <!-- Các input field sẽ được render động tại đây -->
+        <div class="row g-2 mb-3 input-row text-center small" id="dynamicInputRow"></div>
+        {% endif %}
     <!-- Hiển thị nội dung bảng dept là HS -->
     <div class="table-responsive" id="table_hs" style="overflow-x: auto; display: none;">
       <table class="table table-bordered table-hover text-center align-middle table-sm" style="min-width: 1200px;">
@@ -397,7 +227,7 @@
             <th>Hộ Khẩu</th>
             <th>CCCD Bố/Mẹ</th>
             <th>SĐT</th>
-            {% if session['role'] == 'admin' %}
+            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
             <th>Action</th>
             {% endif %}
           </tr>
@@ -408,97 +238,97 @@
               <td>{{ loop.index }}</td>
               <td>{{ row['ma_hs'] }}</td> <!-- Mã HS không cho chỉnh sửa -->
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ma_gv'] }}" onkeypress="saveEdit(event, this, 'Ma Gv', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['ma_gv'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ho_va_ten'] }}" onkeypress="saveEdit(event, this, 'Ho Va Ten', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['ho_va_ten'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}" onkeypress="saveEdit(event, this, 'Ngay Sinh', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['gioi_tinh'] }}" onkeypress="saveEdit(event, this, 'Gioi Tinh', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['gioi_tinh'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['dan_toc'] }}" onkeypress="saveEdit(event, this, 'Dan Toc', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['dan_toc'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ma_dinh_danh'] }}" onkeypress="saveEdit(event, this, 'Ma Dinh Danh', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['ma_dinh_danh'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ho_ten_bo'] }}" onkeypress="saveEdit(event, this, 'Ho Ten Bo', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['ho_ten_bo'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['nghe_nghiep_bo'] }}" onkeypress="saveEdit(event, this, 'Nghe Nghiep Bo', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['nghe_nghiep_bo'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ho_ten_me'] }}" onkeypress="saveEdit(event, this, 'Ho Ten Me', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['ho_ten_me'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['nghe_nghiep_me'] }}" onkeypress="saveEdit(event, this, 'Nghe Nghiep Me', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['nghe_nghiep_me'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ho_khau'] }}" onkeypress="saveEdit(event, this, 'Ho Khau', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['ho_khau'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['cccd_bo_me'] }}" onkeypress="saveEdit(event, this, 'Cccd Bo Me', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['cccd_bo_me'] }}
                   {% endif %}
               </td>
               <td>
-                  {% if session['role'] == 'admin' %}
+                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['sdt'] }}" onkeypress="saveEdit(event, this, 'Sdt', '{{ row['ma_hs'] }}', 'HS')">
                   {% else %}
                       {{ row['sdt'] }}
                   {% endif %}
               </td>
-              {% if session['role'] == 'admin' %}
+              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
               <td>
                   <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editModalHS" onclick="populateModalHS('{{ row['ma_hs'] }}', '{{ row['ho_va_ten'] }}', '{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}', '{{ row['gioi_tinh'] }}')">Edit</button>
                   <button class="btn btn-sm btn-danger" onclick="deleteRow('HS', '{{ row['ma_hs'] }}')">Delete</button>
@@ -509,7 +339,6 @@
         </tbody>
       </table>
     </div>
-
     <!-- Hiển thị nội dung bảng dept là GV -->
     <div class="table-responsive" id="table_gv" style="overflow-x: auto; display: none;">
       <table class="table table-bordered table-hover text-center align-middle table-sm" style="min-width: 1200px;">
@@ -532,7 +361,7 @@
             <th>Email</th>
             <th>Nhóm Máu</th>
             <th>Địa Chỉ</th>
-            {% if session['role'] == 'admin' %}
+            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
             <th>Action</th>
             {% endif %}
           </tr>
@@ -557,7 +386,7 @@
             <td>{{ row['email'] }}</td>
             <td>{{ row['nhom_mau'] }}</td>
             <td>{{ row['dia_chi'] }}</td>
-            {% if session['role'] == 'admin' %}
+            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
             <td>
               <button class="btn btn-sm btn-danger" onclick="deleteRowGV('{{ row['ma_gv'] }}')">Delete</button>
             </td>
@@ -567,7 +396,6 @@
         </tbody>
       </table>
     </div>
-
     <!-- Modal cho HS -->
     <div class="modal" id="editModalHS">
         <div class="modal-dialog">
@@ -742,6 +570,119 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 </script>
+<!-- 🔧 Modal chỉnh sửa giáo viên -->
+<div class="modal fade" id="editGVModal" tabindex="-1" aria-labelledby="editGVModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Chỉnh sửa thông tin giáo viên</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editGVForm">
+          <input type="hidden" id="edit_ten_tk">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label>Mã GV</label>
+              <input class="form-control" id="edit_ma_gv">
+            </div>
+            <div class="col-md-6">
+              <label>Họ và tên</label>
+              <input class="form-control" id="edit_ho_va_ten">
+            </div>
+            <div class="col-md-6">
+              <label>Chức vụ</label>
+              <input class="form-control" id="edit_chuc_vu">
+            </div>
+            <div class="col-md-6">
+              <label>Ngày sinh</label>
+              <input type="date" class="form-control" id="edit_ngay_sinh">
+            </div>
+            <div class="col-md-6">
+              <label>Quê quán</label>
+              <input class="form-control" id="edit_que_quan">
+            </div>
+            <div class="col-md-6">
+              <label>CCCD</label>
+              <input class="form-control" id="edit_cccd">
+            </div>
+            <div class="col-md-6">
+              <label>Ngày cấp</label>
+              <input type="date" class="form-control" id="edit_ngay_cap">
+            </div>
+            <div class="col-md-6">
+              <label>MST</label>
+              <input class="form-control" id="edit_mst">
+            </div>
+            <div class="col-md-6">
+              <label>CMND</label>
+              <input class="form-control" id="edit_cmnd">
+            </div>
+            <div class="col-md-6">
+              <label>Sổ BH</label>
+              <input class="form-control" id="edit_so_bh">
+            </div>
+            <div class="col-md-6">
+              <label>SĐT</label>
+              <input class="form-control" id="edit_sdt">
+            </div>
+            <div class="col-md-6">
+              <label>Tài khoản NH</label>
+              <input class="form-control" id="edit_tk_nh">
+            </div>
+            <div class="col-md-6">
+              <label>Email</label>
+              <input class="form-control" id="edit_email">
+            </div>
+            <div class="col-md-6">
+              <label>Nhóm máu</label>
+              <input class="form-control" id="edit_nhom_mau">
+            </div>
+            <div class="col-md-6">
+              <label>Địa chỉ</label>
+              <input class="form-control" id="edit_dia_chi">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button class="btn btn-primary" onclick="submitGVUpdate()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editHSModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Chỉnh sửa thông tin học sinh</h5></div>
+      <div class="modal-body">
+        <form>
+          <input type="hidden" id="edit_ma_hs">
+          <div class="row g-3">
+            <div class="col-md-6"><label>Mã GV</label><input class="form-control" id="edit_ma_gv_hs"></div>
+            <div class="col-md-6"><label>Họ và tên</label><input class="form-control" id="edit_ho_va_ten_hs"></div>
+            <div class="col-md-6"><label>Ngày sinh</label><input type="date" class="form-control" id="edit_ngay_sinh"></div>
+            <div class="col-md-6"><label>Giới tính</label><input class="form-control" id="edit_gioi_tinh"></div>
+            <div class="col-md-6"><label>Dân tộc</label><input class="form-control" id="edit_dan_toc"></div>
+            <div class="col-md-6"><label>Mã định danh</label><input class="form-control" id="edit_ma_dinh_danh"></div>
+            <div class="col-md-6"><label>Họ tên bố</label><input class="form-control" id="edit_ho_ten_bo"></div>
+            <div class="col-md-6"><label>Nghề bố</label><input class="form-control" id="edit_nghe_nghiep_bo"></div>
+            <div class="col-md-6"><label>Họ tên mẹ</label><input class="form-control" id="edit_ho_ten_me"></div>
+            <div class="col-md-6"><label>Nghề mẹ</label><input class="form-control" id="edit_nghe_nghiep_me"></div>
+            <div class="col-md-6"><label>Hộ khẩu</label><input class="form-control" id="edit_ho_khau"></div>
+            <div class="col-md-6"><label>CCCD bố/mẹ</label><input class="form-control" id="edit_cccd_bo_me"></div>
+            <div class="col-md-6"><label>Số điện thoại</label><input class="form-control" id="edit_sdt_hs"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button class="btn btn-primary" onclick="submitHSUpdate()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 <script>
@@ -1147,13 +1088,12 @@ async function fetchAndRenderDept(dept) {
     console.error("❌ Fetch thất bại:", err);
   }
 }
+// Render bảng học sinh
 function renderHS(rows) {
   console.log(`DEBUG: renderHS started, rows: ${rows.length}`);
   const tbody = document.querySelector("#table_hs tbody");
   tbody.innerHTML = "";
-  console.log("DEBUG: Cleared HS table tbody");
   rows.forEach((row, index) => {
-    console.log(`DEBUG: Rendering HS row ${index + 1}: ${JSON.stringify(row)}`);
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${index + 1}</td>
@@ -1174,10 +1114,10 @@ function renderHS(rows) {
       <td><button class="btn btn-sm btn-danger" onclick="deleteRowHS('${row.ma_hs}')">Delete</button></td>
     `;
     tbody.appendChild(tr);
+    tr.ondblclick = () => openEditHSModal(row); // 👈 Gắn double-click
   });
-  console.log("DEBUG: renderHS completed");
 }
-
+// Render bảng giáo viên
 function renderGV(rows) {
   console.log(`DEBUG: renderGV started, rows: ${rows.length}`);
   const tbody = document.querySelector("#table_gv tbody");
@@ -1207,7 +1147,7 @@ function renderGV(rows) {
       <td><button class="btn btn-sm btn-danger" onclick="deleteRowGV('${row.ma_gv}')">Delete</button></td>
     `;
     tbody.appendChild(tr);
-    
+    tr.ondblclick = () => openEditGVModal(row);
   });
   console.log("DEBUG: renderGV completed");
 }
@@ -1275,4 +1215,138 @@ function removeDeptData() {
         console.error("❌ Update DB error:", error);
       });
   }
+</script>
+<script>
+  function formatDateForInput(dateStr) {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    return date.toISOString().split("T")[0]; // yyyy-mm-dd
+  }
+
+  function openEditGVModal(row) {
+    document.getElementById("edit_ten_tk").value = row.ten_tk;
+    document.getElementById("edit_ma_gv").value = row.ma_gv || "";
+    document.getElementById("edit_ho_va_ten").value = row.ho_va_ten || "";
+    document.getElementById("edit_chuc_vu").value = row.chuc_vu || "";
+    document.getElementById("edit_ngay_sinh").value = formatDateForInput(row.ngay_sinh);
+    document.getElementById("edit_que_quan").value = row.que_quan || "";
+    document.getElementById("edit_cccd").value = row.cccd || "";
+    document.getElementById("edit_ngay_cap").value = formatDateForInput(row.ngay_cap);
+    document.getElementById("edit_mst").value = row.mst || "";
+    document.getElementById("edit_cmnd").value = row.cmnd || "";
+    document.getElementById("edit_so_bh").value = row.so_bh || "";
+    document.getElementById("edit_sdt").value = row.sdt || "";
+    document.getElementById("edit_tk_nh").value = row.tk_nh || "";
+    document.getElementById("edit_email").value = row.email || "";
+    document.getElementById("edit_nhom_mau").value = row.nhom_mau || "";
+    document.getElementById("edit_dia_chi").value = row.dia_chi || "";
+
+    new bootstrap.Modal(document.getElementById("editGVModal")).show();
+  }
+
+  async function submitGVUpdate() {
+    const data = {
+      ten_tk: document.getElementById("edit_ten_tk").value,
+      ma_gv: document.getElementById("edit_ma_gv").value,
+      ho_va_ten: document.getElementById("edit_ho_va_ten").value,
+      chuc_vu: document.getElementById("edit_chuc_vu").value,
+      ngay_sinh: document.getElementById("edit_ngay_sinh").value,
+      que_quan: document.getElementById("edit_que_quan").value,
+      cccd: document.getElementById("edit_cccd").value,
+      ngay_cap: document.getElementById("edit_ngay_cap").value,
+      mst: document.getElementById("edit_mst").value,
+      cmnd: document.getElementById("edit_cmnd").value,
+      so_bh: document.getElementById("edit_so_bh").value,
+      sdt: document.getElementById("edit_sdt").value,
+      tk_nh: document.getElementById("edit_tk_nh").value,
+      email: document.getElementById("edit_email").value,
+      nhom_mau: document.getElementById("edit_nhom_mau").value,
+      dia_chi: document.getElementById("edit_dia_chi").value
+    };
+
+    try {
+      const res = await fetch("/api/update_gv", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (result.status === "success") {
+        alert("✅ Dữ liệu đã được cập nhật thành công!");
+
+        // Đóng modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("editGVModal"));
+        if (modal) modal.hide();
+
+        // ✅ Refresh bảng GV
+        if (typeof loadGVData === "function") {
+          loadGVData(); // Gọi lại API nếu có hàm loadGVData()
+        } else {
+          location.reload(); // Nếu không có thì reload toàn trang
+        }
+      } else {
+        alert("❌ Cập nhật thất bại: " + (result.error || "Không rõ lỗi"));
+      }
+    } catch (err) {
+      console.error("Lỗi khi gửi request:", err);
+      alert("❌ Lỗi kết nối hoặc xử lý dữ liệu!");
+    }
+  }
+
+  function openEditHSModal(row) {
+    document.getElementById("edit_ma_hs").value = row.ma_hs || "";
+    document.getElementById("edit_ma_gv_hs").value = row.ma_gv || "";
+    document.getElementById("edit_ho_va_ten_hs").value = row.ho_va_ten || "";
+    document.getElementById("edit_ngay_sinh").value = formatDateForInput(row.ngay_sinh);
+    document.getElementById("edit_gioi_tinh").value = row.gioi_tinh || "";
+    document.getElementById("edit_dan_toc").value = row.dan_toc || "";
+    document.getElementById("edit_ma_dinh_danh").value = row.ma_dinh_danh || "";
+    document.getElementById("edit_ho_ten_bo").value = row.ho_ten_bo || "";
+    document.getElementById("edit_nghe_nghiep_bo").value = row.nghe_nghiep_bo || "";
+    document.getElementById("edit_ho_ten_me").value = row.ho_ten_me || "";
+    document.getElementById("edit_nghe_nghiep_me").value = row.nghe_nghiep_me || "";
+    document.getElementById("edit_ho_khau").value = row.ho_khau || "";
+    document.getElementById("edit_cccd_bo_me").value = row.cccd_bo_me || "";
+    document.getElementById("edit_sdt_hs").value = row.sdt || "";
+
+    new bootstrap.Modal(document.getElementById("editHSModal")).show();
+  }
+
+  async function submitHSUpdate() {
+    const data = {
+      ma_hs: document.getElementById("edit_ma_hs").value,
+      ma_gv: document.getElementById("edit_ma_gv_hs").value,
+      ho_va_ten: document.getElementById("edit_ho_va_ten_hs").value,
+      ngay_sinh: document.getElementById("edit_ngay_sinh").value,
+      gioi_tinh: document.getElementById("edit_gioi_tinh").value,
+      dan_toc: document.getElementById("edit_dan_toc").value,
+      ma_dinh_danh: document.getElementById("edit_ma_dinh_danh").value,
+      ho_ten_bo: document.getElementById("edit_ho_ten_bo").value,
+      nghe_nghiep_bo: document.getElementById("edit_nghe_nghiep_bo").value,
+      ho_ten_me: document.getElementById("edit_ho_ten_me").value,
+      nghe_nghiep_me: document.getElementById("edit_nghe_nghiep_me").value,
+      ho_khau: document.getElementById("edit_ho_khau").value,
+      cccd_bo_me: document.getElementById("edit_cccd_bo_me").value,
+      sdt: document.getElementById("edit_sdt_hs").value
+    };
+
+    const res = await fetch("/api/update_hs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    if (result.status === "success") {
+      alert("✅ Đã cập nhật học sinh!");
+      const modal = bootstrap.Modal.getInstance(document.getElementById("editHSModal"));
+      if (modal) modal.hide();
+      if (typeof loadHSData === "function") loadHSData(); else location.reload();
+    } else {
+      alert("❌ Lỗi cập nhật: " + (result.error || "Không rõ lỗi"));
+    }
+  }
+
 </script>

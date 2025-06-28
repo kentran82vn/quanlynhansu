@@ -804,6 +804,9 @@ def api_danh_sach_ma():
         conn.close()
     return jsonify(result)
 
+@app.route("/export-data")
+def view_export_data():
+    return render_template("export_data.html")
 
 def open_browser():
     webbrowser.open("http://localhost:5000")
