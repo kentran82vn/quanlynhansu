@@ -140,8 +140,3 @@ CREATE TABLE stats (
 );
 
 -- INDEXS
-CREATE INDEX idx_hocsinh_ma_gv ON hocsinh(ma_gv);
-CREATE INDEX idx_phan_lop_ma_lop ON phan_lop(ma_lop);
-CREATE INDEX idx_lop_gv_ma_gv ON lop_gv(ma_gv);
-CREATE INDEX idx_giaovien_scores_ten_tk ON giaovien_scores(ten_tk);
-CREATE INDEX idx_logs_target_staff_id ON logs(target_staff_id);
