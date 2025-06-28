@@ -1,10 +1,16 @@
 import os, pymysql
 
+def _e(keys, default=None):
+    for k in keys:
+        v = os.environ.get(k)
+        if v: return v
+    return default
+
 DB_CONFIG = {
-    "host":     os.environ.get("MYSQL_HOST",    "mysql.railway.internal"),
-    "port":     int(os.environ.get("MYSQL_PORT", 3306)),
-    "user":     os.environ.get("MYSQL_USER",    "root"),
-    "password": os.environ.get("MYSQL_PASSWORD","steven2906"),
-    "db":       os.environ.get("MYSQL_DATABASE","quanlytruonghoc_app"),
+    "host":      _e(["MYSQL_HOST","MYSQLHOST"], "localhost"),
+    "port":      int(_e(["MYSQL_PORT","MYSQLPORT"], 3306)),
+    "user":      _e(["MYSQL_USER","MYSQLUSER"], "root"),
+    "password":  _e(["MYSQL_PASSWORD","MYSQLPASSWORD","MYSQL_ROOT_PASSWORD"], ""),
+    "db":        _e(["MYSQL_DATABASE"], "quanlytruonghoc_app"),
     "cursorclass": pymysql.cursors.DictCursor
 }
