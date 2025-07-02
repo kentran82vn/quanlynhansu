@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh Sách Lớp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    body {
+      background: #f8fafc;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card-custom {
+      border: 1px solid #dee2e6;
+      border-radius: 0.75rem;
+      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+    }
+    .table th, .table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<div class="container py-5">
+  <div class="card card-custom animate__animated animate__fadeIn">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-collection-fill me-2"></i>Quản Lý Danh Sách Lớp</h5>
+      <span class="badge bg-light text-primary">#LopHoc</span>
+    </div>
+    <div class="card-body">
+      <form id="form-add-class" class="row g-3 align-items-center mb-4">
+        <div class="col-md-4">
+          <label for="ma_lop" class="form-label fw-semibold">Mã Lớp</label>
+          <input type="text" class="form-control" id="ma_lop" placeholder="VD: L01">
+        </div>
+        <div class="col-md-5">
+          <label for="ten_lop" class="form-label fw-semibold">Tên Lớp</label>
+          <input type="text" class="form-control" id="ten_lop" placeholder="VD: Mầm Non A">
+        </div>
+        <div class="col-md-3 d-grid pt-2">
+          <button type="submit" class="btn btn-success mt-4">
+            <i class="bi bi-plus-circle-fill me-1"></i>Thêm Lớp
+          </button>
+        </div>
+      </form>
+
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+          <thead class="table-light text-center">
+            <tr>
+              <th onclick="sortTableByColumn(0)">Mã Lớp <i class="bi bi-arrow-down-up"></i></th>
+              <th onclick="sortTableByColumn(1)">Tên Lớp <i class="bi bi-arrow-down-up"></i></th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody id="class-table-body" class="text-center">
+            <!-- Dữ liệu sẽ render tại đây -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="my-4">
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('form-add-class').onsubmit = async function(e) {
+      e.preventDefault();
+      const ma_lop = document.getElementById('ma_lop').value.trim();
+      const ten_lop = document.getElementById('ten_lop').value.trim();
+
+      const isEditing = document.getElementById('form-add-class').dataset.editing === "true";
+      const endpoint = isEditing ? '/api/update-class' : '/api/classes';
+      const payload = { ma_lop, ten_lop };
+
+      console.log(isEditing ? '🔄 Sửa lớp:' : '➕ Thêm lớp:', payload);
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        console.log('✅ Thành công');
+        document.getElementById('form-add-class').reset();
+        document.getElementById('ma_lop').readOnly = false;
+        document.querySelector('#form-add-class button[type="submit"]').innerHTML = '<i class="bi bi-plus-circle-fill me-1"></i>Thêm Lớp';
+        document.getElementById('form-add-class').dataset.editing = "false";
+        await reloadClassTable();
+      } else {
+        console.error('❌ Lỗi khi gửi dữ liệu');
+      }
+    };
+
+    window.onload = async () => {
+      const res = await fetch('/api/classes');
+      const data = await res.json();
+      const tbody = document.getElementById('class-table-body');
+
+      tbody.innerHTML = data.map(row => `
+        <tr>
+          <td class="text-center">${row.ma_lop}</td>
+          <td>${row.ten_lop}</td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="editClass('${row.ma_lop}', '${row.ten_lop}')">
+              <i class="bi bi-pencil"></i> Sửa
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteClass('${row.ma_lop}')">
+              <i class="bi bi-trash"></i> Xóa
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    };
+
+    function editClass(ma_lop, ten_lop) {
+      console.log('✏️ Đang sửa lớp:', ma_lop);
+      document.getElementById('ma_lop').value = ma_lop;
+      document.getElementById('ma_lop').readOnly = true;  // Không cho sửa mã lớp
+      document.getElementById('ten_lop').value = ten_lop;
+      document.querySelector('#form-add-class button[type="submit"]').innerHTML = '<i class="bi bi-save2"></i> Cập Nhật';
+      document.getElementById('form-add-class').dataset.editing = "true";
+    }
+
+    async function deleteClass(ma_lop) {
+      if (confirm("Bạn có chắc muốn xóa lớp này?")) {
+        console.log('🗑️ Xoá lớp:', ma_lop);
+        const res = await fetch('/api/delete-class', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ ma_lop })
+        });
+        if (res.ok) location.reload();
+        else console.error('❌ Lỗi khi xoá lớp');
+      }
+    }
+
+    let currentSortColumn = null;
+    let sortAsc = true;
+
+    function sortTableByColumn(columnIndex) {
+      const tbody = document.getElementById("class-table-body");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      if (currentSortColumn === columnIndex) {
+        sortAsc = !sortAsc;
+      } else {
+        sortAsc = true;
+        currentSortColumn = columnIndex;
+      }
+      rows.sort((a, b) => {
+        const cellA = a.children[columnIndex].textContent.trim().toLowerCase();
+        const cellB = b.children[columnIndex].textContent.trim().toLowerCase();
+        return sortAsc ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+      });
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+    }
+
+    async function reloadClassTable() {
+      const res = await fetch('/api/classes');
+      const data = await res.json();
+      const tbody = document.getElementById('class-table-body');
+      tbody.innerHTML = data.map(row => `
+        <tr>
+          <td class="text-center">${row.ma_lop}</td>
+          <td>${row.ten_lop}</td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="editClass('${row.ma_lop}', '${row.ten_lop}')">
+              <i class="bi bi-pencil"></i> Sửa
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteClass('${row.ma_lop}')">
+              <i class="bi bi-trash"></i> Xóa
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+  </script>
+</body>
+</html>

@@ -804,6 +804,220 @@ def api_danh_sach_ma():
         conn.close()
     return jsonify(result)
 
+# 📄 ROUTE RENDER TEMPLATE
+
+@app.route("/classes")
+def classes_page():
+    return render_template("classes.html")
+
+@app.route("/assign-classes")
+def assign_classes_page():
+    return render_template("assign_classes.html")
+
+@app.route("/assign-teachers")
+def assign_teachers_page():
+    return render_template("assign_teachers.html")
+
+# API: Lấy danh sách lớp
+@app.route("/api/classes", methods=["GET"])
+def get_classes():
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("SELECT * FROM ds_lop")
+        result = cur.fetchall()
+    conn.close()
+    return jsonify(result)
+
+@app.route("/api/delete-class", methods=["POST"])
+def delete_class():
+    data = request.get_json()
+    ma_lop = data.get("ma_lop")
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            # Xoá giáo viên gán với lớp đó
+            cur.execute("DELETE FROM lop_gv WHERE ma_lop = %s", (ma_lop,))
+            # Xoá học sinh phân lớp (nếu có)
+            cur.execute("DELETE FROM phan_lop WHERE ma_lop = %s", (ma_lop,))
+            # Xoá lớp
+            cur.execute("DELETE FROM ds_lop WHERE ma_lop = %s", (ma_lop,))
+            conn.commit()
+        return jsonify({"message": f"Đã xoá lớp {ma_lop} và dữ liệu liên quan"})
+    finally:
+        conn.close()
+
+# API: Thêm lớp mới
+@app.route("/api/classes", methods=["POST"])
+def add_class():
+    data = request.json
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("INSERT INTO ds_lop (ma_lop, ten_lop) VALUES (%s, %s)", (data["ma_lop"], data["ten_lop"]))
+        conn.commit()
+    conn.close()
+    return jsonify({"message": "Lớp đã thêm"})
+
+# Cập nhật nút sửa tên lớp
+@app.route("/api/update-class", methods=["POST"])
+def update_class():
+    data = request.get_json()
+    ma_lop = data.get("ma_lop")
+    ten_lop = data.get("ten_lop")
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("UPDATE ds_lop SET ten_lop = %s WHERE ma_lop = %s", (ten_lop, ma_lop))
+            conn.commit()
+        return jsonify({"message": "success"})
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# API lấy danh sách học sinh kèm tên lớp
+@app.route("/api/students", methods=["GET"])
+def get_students():
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT hs.ma_hs, hs.ho_va_ten, hs.ma_lop, dl.ten_lop,
+                   hs.ngay_sinh, hs.gioi_tinh, hs.ma_dinh_danh
+            FROM hocsinh hs
+            LEFT JOIN ds_lop dl ON hs.ma_lop = dl.ma_lop
+        """)
+        result = cur.fetchall()
+    conn.close()
+    return jsonify(result)
+
+# API cập nhật mã lớp cho học sinh
+@app.route("/api/update-student-class", methods=["POST"])
+def update_student_class():
+    data = request.get_json()
+    ma_hs = data.get("ma_hs")
+    new_ma_lop = data.get("ma_lop")
+
+    conn = get_conn()
+    with conn.cursor() as cur:
+        # Cập nhật bảng hocsinh
+        cur.execute("UPDATE hocsinh SET ma_lop = %s WHERE ma_hs = %s", (new_ma_lop, ma_hs))
+
+        # Đồng bộ bảng phan_lop
+        cur.execute("SELECT 1 FROM phan_lop WHERE ma_hs = %s", (ma_hs,))
+        if cur.fetchone():
+            cur.execute("UPDATE phan_lop SET ma_lop = %s WHERE ma_hs = %s", (new_ma_lop, ma_hs))
+        else:
+            cur.execute("INSERT INTO phan_lop (ma_hs, ma_lop) VALUES (%s, %s)", (ma_hs, new_ma_lop))
+
+        conn.commit()
+    return jsonify({"message": "updated"})
+
+
+# API: Phân lớp học sinh
+@app.route("/api/assign-class", methods=["POST"])
+def assign_class():
+    data = request.json
+    ma_hs = data.get("ma_hs")
+    ma_lop = data.get("ma_lop")
+    
+    if not ma_hs or not ma_lop:
+        return jsonify({"error": "Thiếu mã học sinh hoặc mã lớp"}), 400
+    
+    conn = get_conn()
+    with conn.cursor() as cur:
+        # Kiểm tra học sinh đã được phân lớp chưa
+        cur.execute("SELECT * FROM phan_lop WHERE ma_hs = %s", (ma_hs,))
+        existing = cur.fetchone()
+        
+        if existing:
+            # Cập nhật phân lớp
+            cur.execute("UPDATE phan_lop SET ma_lop = %s WHERE ma_hs = %s", (ma_lop, ma_hs))
+        else:
+            # Thêm mới phân lớp
+            cur.execute("INSERT INTO phan_lop (ma_hs, ma_lop) VALUES (%s, %s)", (ma_hs, ma_lop))
+        
+        conn.commit()
+    
+    conn.close()
+    return jsonify({"message": "Đã gán học sinh vào lớp thành công"})
+
+
+# API: Lấy danh sách giáo viên
+@app.route("/api/teachers", methods=["GET"])
+def get_teachers():
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("SELECT ma_gv, ho_va_ten FROM giaovien")
+        result = cur.fetchall()
+    conn.close()
+    return jsonify(result)
+
+# API: Gán giáo viên cho lớp
+@app.route("/api/assigned-teachers", methods=["GET"])
+def get_assigned_teachers():
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT gv.ma_gv, gv.ho_va_ten, gv.chuc_vu,
+                   l.ten_lop, lg.ma_lop, lg.vai_tro
+            FROM lop_gv lg
+            JOIN giaovien gv ON gv.ma_gv = lg.ma_gv
+            JOIN ds_lop l ON l.ma_lop = lg.ma_lop
+        """)
+        rows = cur.fetchall()
+    conn.close()
+    return jsonify(rows)
+
+#API: Cập nhật vai trò hoặc lớp học
+@app.route("/api/update-assignment", methods=["POST"])
+def update_assignment():
+    data = request.get_json()
+    ma_gv = data.get("ma_gv")
+    field = data.get("field")
+    value = data.get("value")
+    if field not in ("ma_lop", "vai_tro"):
+        return jsonify({"error": "Invalid field"}), 400
+    conn = get_conn()
+    with conn.cursor() as cur:
+        if field == "ma_lop":
+            # Khi đổi lớp, cần biết lớp cũ để cập nhật đúng dòng
+            cur.execute("SELECT ma_lop FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
+            old = cur.fetchone()
+            if not old:
+                return jsonify({"error": "Không tìm thấy phân công"}), 404
+            cur.execute("""
+                UPDATE lop_gv
+                SET ma_lop = %s
+                WHERE ma_gv = %s AND ma_lop = %s
+            """, (value, ma_gv, old["ma_lop"]))
+        elif field == "vai_tro":
+            cur.execute("""
+                UPDATE lop_gv
+                SET vai_tro = %s
+                WHERE ma_gv = %s
+            """, (value, ma_gv))
+        conn.commit()
+    conn.close()
+    return jsonify({"message": "Đã cập nhật"})
+
+#API: Xóa phân công giáo viên khỏi lớp
+@app.route("/api/delete-assignment", methods=["POST"])
+def delete_assignment():
+    data = request.get_json()
+    ma_gv = data.get("ma_gv")
+    ma_lop = data.get("ma_lop")
+
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("""
+            DELETE FROM lop_gv
+            WHERE ma_gv = %s AND ma_lop = %s
+        """, (ma_gv, ma_lop))
+        conn.commit()
+    conn.close()
+    return jsonify({"message": "Đã xóa phân công"})
+
+
 @app.route("/export-data")
 def view_export_data():
     return render_template("export_data.html")

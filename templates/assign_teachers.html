@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Gán Giáo Viên</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+<div class="container py-5">
+  <div class="card shadow animate__animated animate__fadeIn">
+    <div class="card-header bg-warning d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 text-dark"><i class="bi bi-person-lines-fill me-2"></i>Gán Giáo Viên Cho Lớp</h5>
+      <span class="badge bg-dark text-warning">#GiangDay</span>
+    </div>
+    <div class="card-body">
+      <form id="assign-teacher-form" class="row g-3 align-items-center">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Chọn Giáo Viên</label>
+          <select id="ma_gv" class="form-select"></select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Chọn Lớp</label>
+          <select id="ma_lop" class="form-select"></select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Vai Trò</label>
+          <select id="vai_tro" class="form-select">
+            <option value="GVCN">GVCN</option>
+            <option value="Bộ môn">Bộ môn</option>
+            <option value="Bảo mẫu">Bảo mẫu</option>
+          </select>
+        </div>
+        <div class="col-md-1 d-grid pt-4">
+          <button type="submit" class="btn btn-warning"><i class="bi bi-person-plus-fill"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- ✅ Bảng danh sách giáo viên đã gán -->
+  <div class="mt-5">
+    <h5 class="mb-3 text-primary">📋 Danh sách giáo viên đã gán</h5>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped text-center">
+        <thead class="table-warning">
+          <tr>
+            <th onclick="sortTable('ma_gv')">Mã GV</th>
+            <th onclick="sortTable('ho_va_ten')">Họ và Tên</th>
+            <th onclick="sortTable('chuc_vu')">Chức Vụ</th>
+            <th onclick="sortTable('ten_lop')">Tên Lớp</th>
+            <th onclick="sortTable('vai_tro')">Vai Trò</th>
+            <th>Hành Động</th>
+          </tr>
+        </thead>
+        <tbody id="assignmentsTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+window.onload = async () => {
+  const gv = await (await fetch('/api/teachers')).json();
+  const lop = await (await fetch('/api/classes')).json();
+  gv.forEach(g => {
+    ma_gv.innerHTML += `<option value="${g.ma_gv}">${g.ho_va_ten}</option>`;
+  });
+  lop.forEach(l => {
+    ma_lop.innerHTML += `<option value="${l.ma_lop}">${l.ten_lop}</option>`;
+  });
+};
+document.getElementById('assign-teacher-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const res = await fetch('/api/assign-teacher', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ma_lop: ma_lop.value,
+      ma_gv: ma_gv.value,
+      vai_tro: vai_tro.value
+    })
+  });
+  if (res.ok) alert("🎉 Gán giáo viên thành công!");
+};
+</script>
+<script>
+  let sortState = { field: null, asc: true };
+
+  function sortTable(field) {
+    if (sortState.field === field) {
+      sortState.asc = !sortState.asc;
+    } else {
+      sortState.field = field;
+      sortState.asc = true;
+    }
+    loadAssignments(); // Gọi lại bảng đã sort
+  }
+  const assignmentsTable = document.getElementById('assignmentsTable');
+  let classOptions = [];
+
+  async function loadAssignments() {
+    const res = await fetch('/api/assigned-teachers');  // backend trả về danh sách đã gán
+    const data = await res.json();
+    assignmentsTable.innerHTML = '';
+    // Sắp xếp trước khi render
+    if (sortState.field) {
+      data.sort((a, b) => {
+        const valA = (a[sortState.field] || "").toString().toLowerCase();
+        const valB = (b[sortState.field] || "").toString().toLowerCase();
+        if (valA < valB) return sortState.asc ? -1 : 1;
+        if (valA > valB) return sortState.asc ? 1 : -1;
+        return 0;
+      });
+    }
+    data.forEach(item => {
+      assignmentsTable.innerHTML += `
+        <tr>
+          <td>${item.ma_gv}</td>
+          <td>${item.ho_va_ten}</td>
+          <td>${item.chuc_vu}</td>
+          <td>
+            <select onchange="updateField('${item.ma_gv}', 'ma_lop', this.value)">
+              ${classOptions.map(c => `<option value="${c.ma_lop}" ${c.ten_lop === item.ten_lop ? 'selected' : ''}>${c.ten_lop}</option>`).join('')}
+            </select>
+          </td>
+          <td>
+            <select onchange="updateField('${item.ma_gv}', 'vai_tro', this.value)">
+              ${['GVCN','Bộ môn','Bảo mẫu'].map(v => `<option ${v === item.vai_tro ? 'selected' : ''}>${v}</option>`).join('')}
+            </select>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="deleteAssignment('${item.ma_gv}', '${item.ma_lop}')">🗑️ Xóa</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  async function updateField(ma_gv, field, value) {
+    if (!confirm("Xác nhận thay đổi thông tin?")) return;
+    await fetch('/api/update-assignment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ma_gv, field, value })
+    });
+    loadAssignments();
+  }
+
+  async function deleteAssignment(ma_gv, ma_lop) {
+    if (!confirm("Bạn có chắc muốn xoá phân công này?")) return;
+    await fetch('/api/delete-assignment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ma_gv, ma_lop })
+    });
+    loadAssignments();
+  }
+
+  // Cập nhật window.onload để đồng bộ classOptions
+  window.onload = async () => {
+    const gv = await (await fetch('/api/teachers')).json();
+    const lop = await (await fetch('/api/classes')).json();
+    classOptions = lop;
+    gv.forEach(g => {
+      ma_gv.innerHTML += `<option value="${g.ma_gv}">${g.ho_va_ten}</option>`;
+    });
+    lop.forEach(l => {
+      ma_lop.innerHTML += `<option value="${l.ma_lop}">${l.ten_lop}</option>`;
+    });
+    loadAssignments();  // ✅ load bảng ngay sau khi trang tải
+  };
+</script>
+</body>
+</html>

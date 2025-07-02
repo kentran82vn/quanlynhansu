@@ -1,4 +1,3 @@
-
 CREATE DATABASE IF NOT EXISTS quanlytruonghoc_app;
 USE quanlytruonghoc_app;
 
@@ -85,6 +84,18 @@ CREATE TABLE cauhoi_epa (
     translate TEXT
 );
 
+CREATE TABLE thoigianmoepa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ten_tk VARCHAR(255),  -- Liên kết đến giaovien(ten_tk)
+    start_day INT NOT NULL,
+    close_day INT NOT NULL,
+    remark TEXT,
+    make_epa_gv ENUM('yes', 'no') DEFAULT 'no',
+    make_epa_tgv ENUM('yes', 'no') DEFAULT 'no',
+    make_epa_all ENUM('yes', 'no') DEFAULT 'no',
+    FOREIGN KEY (ten_tk) REFERENCES giaovien(ten_tk) ON DELETE SET NULL
+);
+
 -- Bảng đánh giá tổng hợp
 CREATE TABLE bangdanhgia (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -143,5 +154,7 @@ CREATE TABLE stats (
 CREATE INDEX idx_hocsinh_ma_gv ON hocsinh(ma_gv);
 CREATE INDEX idx_phan_lop_ma_lop ON phan_lop(ma_lop);
 CREATE INDEX idx_lop_gv_ma_gv ON lop_gv(ma_gv);
-CREATE INDEX idx_giaovien_scores_ten_tk ON giaovien_scores(ten_tk);
+CREATE INDEX idx_bangdanhgia_ten_tk ON bangdanhgia(ten_tk);
+CREATE INDEX idx_bangdanhgia_ten_tk_year_month ON bangdanhgia(ten_tk, year, month);
+CREATE INDEX idx_tongdiem_epa_year_month ON tongdiem_epa(year, month);
 CREATE INDEX idx_logs_target_staff_id ON logs(target_staff_id);
