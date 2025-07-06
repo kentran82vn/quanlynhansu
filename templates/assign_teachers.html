@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250707">
 </head>
 <body>
 <div class="container py-5">
@@ -46,6 +46,7 @@
       <table class="table table-bordered table-striped text-center">
         <thead class="table-warning">
           <tr>
+            <th>STT</th>
             <th onclick="sortTable('ma_gv')">Mã GV</th>
             <th onclick="sortTable('ho_va_ten')">Họ và Tên</th>
             <th onclick="sortTable('chuc_vu')">Chức Vụ</th>
@@ -113,9 +114,10 @@ document.getElementById('assign-teacher-form').onsubmit = async function(e) {
         return 0;
       });
     }
-    data.forEach(item => {
+    data.forEach((item, index) => {
       assignmentsTable.innerHTML += `
         <tr>
+          <td>${index + 1}</td>
           <td>${item.ma_gv}</td>
           <td>${item.ho_va_ten}</td>
           <td>${item.chuc_vu}</td>

@@ -9,22 +9,8 @@
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Animate.css -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <style>
-    body {
-      background: #f8fafc;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .card-custom {
-      border: 1px solid #dee2e6;
-      border-radius: 0.75rem;
-      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
-    }
-    .table th, .table td {
-      vertical-align: middle;
-    }
-  </style>
-</head>
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250707">
+  </head>
 <body>
 <div class="container py-5">
   <div class="card card-custom animate__animated animate__fadeIn">
@@ -53,6 +39,7 @@
         <table class="table table-hover table-bordered align-middle">
           <thead class="table-light text-center">
             <tr>
+              <th>STT</th>
               <th onclick="sortTableByColumn(0)">Mã Lớp <i class="bi bi-arrow-down-up"></i></th>
               <th onclick="sortTableByColumn(1)">Tên Lớp <i class="bi bi-arrow-down-up"></i></th>
               <th>Hành Động</th>
@@ -74,19 +61,15 @@
       e.preventDefault();
       const ma_lop = document.getElementById('ma_lop').value.trim();
       const ten_lop = document.getElementById('ten_lop').value.trim();
-
       const isEditing = document.getElementById('form-add-class').dataset.editing === "true";
       const endpoint = isEditing ? '/api/update-class' : '/api/classes';
       const payload = { ma_lop, ten_lop };
-
       console.log(isEditing ? '🔄 Sửa lớp:' : '➕ Thêm lớp:', payload);
-
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
       if (res.ok) {
         console.log('✅ Thành công');
         document.getElementById('form-add-class').reset();
@@ -98,14 +81,13 @@
         console.error('❌ Lỗi khi gửi dữ liệu');
       }
     };
-
     window.onload = async () => {
       const res = await fetch('/api/classes');
       const data = await res.json();
       const tbody = document.getElementById('class-table-body');
-
-      tbody.innerHTML = data.map(row => `
+      tbody.innerHTML = data.map((row, index) => `
         <tr>
+          <td class="text-center">${index + 1}</td>
           <td class="text-center">${row.ma_lop}</td>
           <td>${row.ten_lop}</td>
           <td class="text-center">
