@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from apis.users_api import users_bp
 from apis.importdata_api import import_bp
 from apis.giaovien_epa import giaovien_epa_bp
+from apis.thoigianmoepa_api import thoigianmoepa_bp
 from config import DB_CONFIG
 import sqlite3  # Giả sử dùng SQLite, thay bằng DB khác nếu cần
 import mysql.connector
@@ -17,7 +18,7 @@ import re
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
-
+app.register_blueprint(thoigianmoepa_bp)
 app.register_blueprint(users_bp)
 app.register_blueprint(import_bp)
 app.register_blueprint(giaovien_epa_bp)
@@ -622,7 +623,6 @@ def update_gv():
     ten_tk = data.get("ten_tk", "").strip()
     if not ten_tk:
         return jsonify({"error": "Thiếu ten_tk"}), 400
-
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute("""
@@ -680,7 +680,6 @@ def epa_preview():
 def remove_dept_data():
     data = request.get_json()
     dept = data.get("dept")
-
     # Xử lý logic xoá dữ liệu tương ứng
     # Ví dụ:
     if dept == "GV":
@@ -689,7 +688,6 @@ def remove_dept_data():
         table = "hocsinh"
     else:
         return jsonify({"message": "Invalid department."}), 400
-
     conn = get_conn()
     with conn.cursor() as cursor:
         cursor.execute(f"DELETE FROM {table}")
@@ -716,10 +714,8 @@ def add_or_update_question():
     id = data.get('id')
     question = data.get('question', '').strip()
     translate = data.get('translate', '').strip()
-
     if not question:
         return jsonify({"error": "Câu hỏi không được để trống!"}), 400
-
     conn = get_conn()
     with conn.cursor() as cur:
         if id:
@@ -745,10 +741,8 @@ def view_epa_summary():
 def api_epa_summary():
     ten_tk = request.args.get("ten_tk")
     year = request.args.get("year", type=int)
-
     if not ten_tk or not year:
         return jsonify({"error": "Missing parameters"}), 400
-
     conn = get_conn()
     with conn.cursor() as cur:
         cur.execute("""
@@ -775,7 +769,6 @@ def api_epa_monthly_all():
     year = request.args.get("year", type=int)
     if not year:
         return jsonify({"error": "Missing year"}), 400
-
     conn = get_conn()
     with conn.cursor() as cur:
         cur.execute("""
@@ -786,7 +779,6 @@ def api_epa_monthly_all():
         """, (year,))
         rows = cur.fetchall()
     conn.close()
-
     from collections import defaultdict
     result = defaultdict(list)
     for row in rows:
@@ -794,7 +786,6 @@ def api_epa_monthly_all():
             "ten_tk": row["ten_tk"],
             "score": row["total_score"]
         })
-
     return jsonify(result)
 
 #Đọc dữ liệu bảng để lấy danh sách mã
@@ -807,7 +798,6 @@ def api_danh_sach_ma():
             # Lấy danh sách mã giáo viên
             cursor.execute("SELECT ma_gv FROM giaovien")
             result["maGVList"] = [row["ma_gv"] for row in cursor.fetchall()]
-
             # Lấy danh sách mã lớp
             cursor.execute("SELECT ma_lop FROM ds_lop")
             result["maLopList"] = [row["ma_lop"] for row in cursor.fetchall()]
@@ -816,7 +806,6 @@ def api_danh_sach_ma():
     return jsonify(result)
 
 # 📄 ROUTE RENDER TEMPLATE
-
 @app.route("/classes")
 def classes_page():
     return render_template("classes.html")
@@ -895,7 +884,6 @@ def get_last_ma_hs():
         cursor.execute("SELECT ma_hs FROM hocsinh WHERE ma_hs LIKE %s", (f"{prefix}%",))
         ma_list = [row["ma_hs"] for row in cursor.fetchall()]
     conn.close()
-
     # Tìm số lớn nhất
     max_num = 0
     for m in ma_list:
@@ -934,7 +922,6 @@ def get_next_ma_gv():
         cursor.execute("SELECT ma_gv FROM giaovien WHERE ma_gv LIKE %s", (f"{prefix}%",))
         ma_list = [row["ma_gv"] for row in cursor.fetchall()]
     conn.close()
-
     import re
     max_num = 0
     for m in ma_list:
@@ -943,7 +930,6 @@ def get_next_ma_gv():
             num = int(match.group(1))
             if num > max_num:
                 max_num = num
-
     next_code = f"{prefix}{str(max_num + 1).zfill(5)}"
     return jsonify({"next_ma_gv": next_code})
 
@@ -971,7 +957,6 @@ def update_student_class():
     data = request.get_json()
     ma_hs = data.get("ma_hs")
     new_ma_lop = data.get("ma_lop")
-
     conn = get_conn()
     with conn.cursor() as cur:
         # ✅ Chỉ cập nhật bảng phan_lop
@@ -996,28 +981,22 @@ def assign_class():
     data = request.json
     ma_hs = data.get("ma_hs")
     ma_lop = data.get("ma_lop")
-    
     if not ma_hs or not ma_lop:
         return jsonify({"error": "Thiếu mã học sinh hoặc mã lớp"}), 400
-    
     conn = get_conn()
     with conn.cursor() as cur:
         # Kiểm tra học sinh đã được phân lớp chưa
         cur.execute("SELECT * FROM phan_lop WHERE ma_hs = %s", (ma_hs,))
         existing = cur.fetchone()
-        
         if existing:
             # Cập nhật phân lớp
             cur.execute("UPDATE phan_lop SET ma_lop = %s WHERE ma_hs = %s", (ma_lop, ma_hs))
         else:
             # Thêm mới phân lớp
             cur.execute("INSERT INTO phan_lop (ma_hs, ma_lop) VALUES (%s, %s)", (ma_hs, ma_lop))
-        
         conn.commit()
-    
     conn.close()
     return jsonify({"message": "Đã gán học sinh vào lớp thành công"})
-
 
 # API: Lấy danh sách giáo viên
 @app.route("/api/teachers", methods=["GET"])
@@ -1083,7 +1062,6 @@ def delete_assignment():
     data = request.get_json()
     ma_gv = data.get("ma_gv")
     ma_lop = data.get("ma_lop")
-
     conn = get_conn()
     with conn.cursor() as cur:
         cur.execute("""
@@ -1094,10 +1072,12 @@ def delete_assignment():
     conn.close()
     return jsonify({"message": "Đã xóa phân công"})
 
-
 @app.route("/export-data")
 def view_export_data():
     return render_template("export_data.html")
+
+# THời gian mở EPA
+
 
 def open_browser():
     webbrowser.open("http://localhost:5000")

@@ -56,10 +56,10 @@ body {
     gap: 10px;
 }
 
-.form-group label {
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
+.form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
 }
 
 .form-group select {
@@ -103,7 +103,39 @@ body {
 .button-group button:hover {
     background-color: #0056b3;
 }
+.btn {
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 8px 16px;
+  transition: all 0.3s ease-in-out;
+}
 
+.btn-primary {
+  background-color: #0d6efd;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+.btn-outline-info {
+  color: #0dcaf0;
+  border: 1px solid #0dcaf0;
+  background-color: white;
+}
+
+.btn-outline-info:hover {
+  background-color: #0dcaf0;
+  color: white;
+}
+
+.form-select, .form-control {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
 /* Wrapper cho bảng để hỗ trợ cuộn ngang */
 .table-wrapper {
     overflow-x: auto;
@@ -230,3 +262,47 @@ body {
     width: 100%;
   }
 }
+/* ======= BIỂU ĐỒ EPA (CHART) ======= */
+/* Đảm bảo canvas biểu đồ có kích thước tối ưu và không tràn khung */
+.epa-chart-wrapper {
+  width: 100%;
+  max-width: 600px; /* giảm từ 900px xuống còn 600px (25% giảm) */
+  margin: 0 auto 20px auto;
+  padding: 10px;
+}
+
+.epa-chart {
+  max-height: 280px;
+}
+
+canvas.epa-chart {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 160px !important; /* giảm từ 280px xuống còn 160px */
+}
+
+canvas.epa-chart-small {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 120px !important; /* giảm từ 200px xuống 120px */
+}
+
+/* Điều chỉnh nhãn trục X để không bị chồng */
+.chartjs-x-axis-labels {
+  font-size: 10px !important;
+  white-space: nowrap;
+  transform: rotate(45deg);  /* Xoay nhãn nếu tên dài */
+  text-align: right;
+}
+
+/* Nhãn dữ liệu hiển thị trên cột */
+.chartjs-datalabels {
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* Tăng khoảng cách giữa các biểu đồ khi hiển thị tổng hợp */
+.chart-summary-section {
+  margin-bottom: 40px;
+}
+
