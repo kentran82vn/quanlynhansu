@@ -268,7 +268,7 @@ async function switchDept() {
   }
   // Tạo trường nhập liệu động và nút Thêm chỉ khi "kimnhung", role là Supervisor hoặc Administrator
   container.innerHTML = "";
-  if (currentUser === "kimnhung" || userRole === "supervisor" || userRole === "Administrator") {
+  if (["kimnhung", "ngocquy", "admin"].includes(currentUser)) {
     let rowDiv = document.createElement("div");
     rowDiv.className = "row g-2 mb-2 w-100 d-flex";
 
