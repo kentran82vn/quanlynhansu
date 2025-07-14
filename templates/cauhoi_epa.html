@@ -68,7 +68,6 @@
             <td>${q.translate || ''}</td>
             <td>
               <button class="btn btn-sm btn-warning" onclick='editQuestion(${JSON.stringify(q)})'>✏️ Sửa</button>
-              <button class="btn btn-sm btn-danger" onclick='deleteQuestion(${q.id})'>🗑️ Xóa</button>
             </td>
           </tr>`;
       });
@@ -102,12 +101,6 @@
       modal.hide();
       loadQuestions();
     };
-
-    async function deleteQuestion(id) {
-      if (!confirm("Bạn có chắc chắn muốn xóa câu hỏi này?")) return;
-      await fetch(`/api/cauhoi_epa/${id}`, { method: 'DELETE' });
-      loadQuestions(); // Làm mới bảng sau khi xóa
-    }
 
     loadQuestions();
   </script>

@@ -1,201 +1,180 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>📊 Tổng Hợp Kết Quả Đánh Giá EPA</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<style>
-  .section-title { margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
-  .form-label, .form-select, .form-control, .btn { font-size: 0.9rem; }
-  .card { margin-bottom: 20px; }
-</style>
+  <meta charset="UTF-8">
+  <title>📊 Tổng Hợp Kết Quả Đánh Giá EPA</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body class="p-4">
-<h2 class="mb-4">📊 Tổng Hợp Kết Quả Đánh Giá EPA</h2>
+  <h2 class="mb-4">📊 Tổng Hợp Kết Quả Đánh Giá EPA</h2>
 
-<div class="row">
-  <div class="col-md-6">
-    <div class="card p-3">
-      <div class="card-header section-title">🔷 Biểu Đồ Cá Nhân</div>
-      <form class="row g-3 mb-3" onsubmit="event.preventDefault(); loadChart();">
-        <div class="col-md-8">
-          <label for="ten_tk" class="form-label">Tên tài khoản</label>
-          <select class="form-select" id="ten_tk" required>
-            <option value="">-- Chọn tài khoản --</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label for="year" class="form-label">Năm</label>
-          <input type="number" class="form-control" id="year" value="2025" required>
-        </div>
-        <div class="col-md-12">
-          <button type="button" class="btn btn-primary w-100" onclick="loadChart()">Hiển Thị Biểu Đồ Cá Nhân</button>
-        </div>
-      </form>
-      <div style="height:400px">
-        <canvas id="epaChart" style="max-height:100%;"></canvas>
-      </div>
+  <form class="row g-3 mb-4" onsubmit="event.preventDefault(); loadChart();">
+    <div class="col-md-4">
+    <label for="ten_tk" class="form-label">Tên tài khoản</label>
+    <select class="form-select" id="ten_tk" required>
+        <option value="">-- Chọn tài khoản --</option>
+    </select>
     </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="card p-3">
-      <div class="card-header section-title">🔷 Biểu Đồ Tổng Hợp</div>
-      <form class="row g-3 mb-3" onsubmit="event.preventDefault(); loadSummary();">
-        <div class="col-md-6">
-          <label for="summaryYear" class="form-label">Năm</label>
-          <input type="number" class="form-control" id="summaryYear" value="2025" required>
-        </div>
-        <div class="col-md-6">
-          <label for="summaryMonth" class="form-label">Tháng</label>
-          <select id="summaryMonth" class="form-select">
-            <option value="All">Tất cả</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
-        </div>
-        <div class="col-md-12">
-          <button type="button" class="btn btn-outline-info w-100" onclick="loadSummary()">Hiển Thị Tổng Hợp</button>
-        </div>
-      </form>
-      <div id="summaryCharts"></div>
+    <div class="col-md-2">
+      <label for="year" class="form-label">Năm</label>
+      <input type="number" class="form-control" id="year" value="2025" required>
     </div>
-  </div>
-</div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button class="btn btn-primary w-100" onclick="loadChart()">Xem Biểu Đồ</button>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button class="btn btn-outline-info w-100" onclick="loadSummary()">Tổng hợp</button>
+    </div>
+    <div id="summaryCharts" class="mt-4"></div>
+  </form>
 
-<script>
-let chart;
+  <canvas id="epaChart" height="100"></canvas>
 
-async function loadTenTKList() {
-  const res = await fetch("/api/list_ten_tk");
-  const list = await res.json();
-  const select = document.getElementById("ten_tk");
-  const excludeAccounts = ["admin", "kimnhung"];
-  const filteredList = list.filter(name => !excludeAccounts.includes(name));
-  filteredList.forEach(ten_tk => {
-    const option = document.createElement("option");
-    option.value = ten_tk;
-    option.textContent = ten_tk;
-    select.appendChild(option);
-  });
-}
-loadTenTKList();
+  <script>
+    let chart;
+    // Load danh sách ten_tk từ server
+    async function loadTenTKList() {
+    const res = await fetch("/api/list_ten_tk");
+    const list = await res.json();
+    const select = document.getElementById("ten_tk");
+    list.forEach(ten_tk => {
+        const option = document.createElement("option");
+        option.value = ten_tk;
+        option.textContent = ten_tk;
+        select.appendChild(option);
+    });
+    }
 
-async function loadChart() {
-  const ten_tk = document.getElementById('ten_tk').value.trim();
-  const year = document.getElementById('year').value.trim();
-  if (!ten_tk) {
-    alert("Vui lòng chọn tài khoản để xem biểu đồ cá nhân.");
-    return;
-  }
+    loadTenTKList(); // Gọi khi trang tải
+    
+    async function loadChart() {
+      document.getElementById("summaryCharts").innerHTML = ""; // Ẩn biểu đồ tổng hợp
 
-  const res = await fetch(`/api/epa_summary?ten_tk=${ten_tk}&year=${year}`);
-  const data = await res.json();
+      const ten_tk = document.getElementById('ten_tk').value.trim();
+      const year = document.getElementById('year').value.trim();
+      const res = await fetch(`/api/epa_summary?ten_tk=${ten_tk}&year=${year}`);
+      const data = await res.json();
 
-  const ctx = document.getElementById('epaChart').getContext('2d');
-  if (chart) chart.destroy();
-  chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: data.map(d => `Tháng ${d.month}`),
-      datasets: [{
-        label: 'Tổng điểm',
-        data: data.map(d => d.pri_total_score),
-        backgroundColor: data.map(d => getRankLabel(d.pri_total_score).color)
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        title: { display: true, text: `Biểu Đồ Cá Nhân: ${ten_tk} - ${year}` },
-        datalabels: {
-          anchor: 'end', align: 'start', font: { size: 9, weight: 'bold' },
-          formatter: (value) => getRankLabel(value).label,
-          color: (ctx) => getRankLabel(ctx.dataset.data[ctx.dataIndex]).color
+      // Tạo lại canvas nếu cần
+      let chartContainer = document.getElementById('chartContainer');
+      if (!chartContainer) {
+        chartContainer = document.createElement("div");
+        chartContainer.id = "chartContainer";
+        chartContainer.innerHTML = `<canvas id="epaChart" height="100"></canvas>`;
+        document.getElementById("summaryCharts").appendChild(chartContainer);
+      }
+
+      const ctx = document.getElementById('epaChart').getContext('2d');
+      if (window.chart) window.chart.destroy();
+      window.chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.map(d => `Th${d.month}`),
+          datasets: [{
+            label: 'Điểm Hiệu Trưởng',
+            data: data.map(d => d.pri_total_score || 0),
+            backgroundColor: 'steelblue'
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: true },
+            title: {
+              display: true,
+              text: `Biểu Đồ Hiệu Trưởng Đánh Giá: ${ten_tk} - ${year}`
+            }
+          }
         }
-      },
-      scales: { y: { beginAtZero: true, max: 310 } }
-    },
-    plugins: [ChartDataLabels]
-  });
-}
+      });
+    }
 
-function getRankLabel(score) {
-  if (score >= 286) return { label: "A (Giỏi)", color: "green" };
-  if (score >= 271) return { label: "B (Tốt)", color: "gold" };
-  if (score >= 251) return { label: "C (Khá)", color: "orange" };
-  if (score >= 200) return { label: "D (Đạt)", color: "red" };
-  return { label: "F", color: "gray" };
-}
 
-async function loadSummary() {
-  document.getElementById("summaryCharts").innerHTML = "";
-  const year = document.getElementById("summaryYear").value;
-  const monthFilter = document.getElementById("summaryMonth").value;
+    function getRankLabel(score) {
+      if (score >= 286) return { label: "A (Giỏi)", color: "green" };
+      if (score >= 271) return { label: "B (Tốt)", color: "gold" };
+      if (score >= 251) return { label: "C (Khá)", color: "orange" };
+      if (score >= 200) return { label: "D (Đạt)", color: "red" };
+      return { label: "F", color: "gray" };
+    }
 
-  const res = await fetch(`/api/epa_monthly_all?year=${year}`);
-  const data = await res.json();
-  const container = document.getElementById("summaryCharts");
+    async function loadSummary() {
+      // Ẩn biểu đồ đơn lẻ, làm mới giao diện
+      document.getElementById("epaChart")?.remove(); // nếu có
+      document.getElementById("summaryCharts").innerHTML = "";
 
-  Object.keys(data).sort((a, b) => a - b).forEach((month, index) => {
-    if (monthFilter !== "All" && month !== monthFilter) return;
+      const year = document.getElementById("year").value;
+      const res = await fetch(`/api/epa_monthly_all?year=${year}`);
+      const data = await res.json();
+      const container = document.getElementById("summaryCharts");
+      container.innerHTML = ""; // Clear everything
 
-    const monthData = data[month];
-    const labels = monthData.map(d => d.ten_tk);
-    const scores = monthData.map(d => d.score);
-    const bgColors = scores.map(s => getRankLabel(s).color);
+      Object.keys(data).sort((a, b) => a - b).forEach((month, index) => {
+        const monthData = data[month];
+        const labels = monthData.map(d => d.ten_tk);
+        const scores = monthData.map(d => d.score);
+        const rankData = scores.map(score => getRankLabel(score));
 
-    const canvasId = `chart_${index}`;
-    const chartBox = document.createElement("div");
-    chartBox.classList.add("mb-4");
-    chartBox.innerHTML = `
-      <h6>📅 Tháng ${month}</h6>
-      <canvas id="${canvasId}" height="200"></canvas>
-    `;
-    container.appendChild(chartBox);
+        const bgColors = rankData.map(r => r.color);
+        const labelsText = rankData.map((r, i) => `Hạng ${i + 1} - ${r.label}`);
 
-    const ctx = document.getElementById(canvasId).getContext("2d");
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [{ label: "Tổng điểm", data: scores, backgroundColor: bgColors }]
-      },
-      options: {
-        indexAxis: 'x',
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (context) => `Điểm: ${context.parsed.y} - ${getRankLabel(context.parsed.y).label}`
+        const canvasId = `chart_${index}`;
+        const chartBox = document.createElement("div");
+        chartBox.classList.add("mb-5");
+        chartBox.innerHTML = `
+          <h5>📅 Tháng ${month}</h5>
+          <canvas id="${canvasId}" height="120"></canvas>
+        `;
+        container.appendChild(chartBox);
+
+        const ctx = document.getElementById(canvasId).getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Tổng điểm",
+              data: scores,
+              backgroundColor: bgColors
+            }]
+          },
+          options: {
+            indexAxis: 'x',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const score = context.parsed.y;
+                    const rank = getRankLabel(score);
+                    return `Điểm: ${score} - ${rank.label}`;
+                  }
+                }
+              },
+              datalabels: {
+                anchor: 'end',
+                align: 'start',
+                formatter: (value, ctx) => {
+                  const rank = getRankLabel(value);
+                  return `H${ctx.dataIndex + 1} - ${rank.label}`;
+                },
+                color: (ctx) => {
+                  const score = ctx.dataset.data[ctx.dataIndex];
+                  return getRankLabel(score).color;
+                }
+              }
+            },
+            scales: {
+              y: { beginAtZero: true, max: 310 }
             }
           },
-          datalabels: {
-            anchor: 'end', align: 'start', font: { size: 9, weight: 'bold' },
-            formatter: (value) => getRankLabel(value).label,
-            color: (ctx) => getRankLabel(ctx.dataset.data[ctx.dataIndex]).color
-          }
-        },
-        scales: { y: { beginAtZero: true, max: 310 } }
-      },
-      plugins: [ChartDataLabels]
-    });
-  });
-}
-</script>
+          plugins: [ChartDataLabels]
+        });
+      });
+    }
+
+
+  </script>
 </body>
 </html>

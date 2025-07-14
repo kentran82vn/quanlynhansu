@@ -7,364 +7,1551 @@ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
 xmlns:html="http://www.w3.org/TR/REC-html40">
 <Worksheet ss:Name="Table1">
 	<Table>
-		<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="110"/>
-		<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="110"/>
-		<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="8" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="9" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="10" ss:AutoFitWidth="0" ss:Width="110"/>
-		<Column ss:Index="11" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="12" ss:AutoFitWidth="0" ss:Width="110"/>
-		<Column ss:Index="13" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Column ss:Index="14" ss:AutoFitWidth="0" ss:Width="110"/>
-		<Column ss:Index="15" ss:AutoFitWidth="0" ss:Width="110"/>
-		<Column ss:Index="16" ss:AutoFitWidth="0" ss:Width="110"/>
 		<Row>
-			<Cell><Data ss:Type="String">ma_gv</Data></Cell>
-			<Cell><Data ss:Type="String">ho_va_ten</Data></Cell>
+			<Cell><Data ss:Type="String">id</Data></Cell>
 			<Cell><Data ss:Type="String">ten_tk</Data></Cell>
+			<Cell><Data ss:Type="String">ho_va_ten</Data></Cell>
 			<Cell><Data ss:Type="String">chuc_vu</Data></Cell>
 			<Cell><Data ss:Type="String">ngay_sinh</Data></Cell>
-			<Cell><Data ss:Type="String">que_quan</Data></Cell>
-			<Cell><Data ss:Type="String">cccd</Data></Cell>
-			<Cell><Data ss:Type="String">ngay_cap</Data></Cell>
-			<Cell><Data ss:Type="String">mst</Data></Cell>
-			<Cell><Data ss:Type="String">cmnd</Data></Cell>
-			<Cell><Data ss:Type="String">so_bh</Data></Cell>
-			<Cell><Data ss:Type="String">sdt</Data></Cell>
-			<Cell><Data ss:Type="String">tk_nh</Data></Cell>
-			<Cell><Data ss:Type="String">email</Data></Cell>
-			<Cell><Data ss:Type="String">nhom_mau</Data></Cell>
-			<Cell><Data ss:Type="String">dia_chi</Data></Cell>
+			<Cell><Data ss:Type="String">year</Data></Cell>
+			<Cell><Data ss:Type="String">month</Data></Cell>
+			<Cell><Data ss:Type="String">question</Data></Cell>
+			<Cell><Data ss:Type="String">translate</Data></Cell>
+			<Cell><Data ss:Type="String">user_comment</Data></Cell>
+			<Cell><Data ss:Type="String">user_score</Data></Cell>
+			<Cell><Data ss:Type="String">sup_comment</Data></Cell>
+			<Cell><Data ss:Type="String">sup_score</Data></Cell>
+			<Cell><Data ss:Type="String">created_at</Data></Cell>
 		</Row>
 
 		<Row>
-			<Cell><Data ss:Type="String">GV001</Data></Cell>
-			<Cell><Data ss:Type="String">Đặng Thị Kim Nhung</Data></Cell>
-			<Cell><Data ss:Type="String">kimnhung</Data></Cell>
-			<Cell><Data ss:Type="String">HT</Data></Cell>
-			<Cell><Data ss:Type="String">1982-03-06</Data></Cell>
-			<Cell><Data ss:Type="String">Bình Định</Data></Cell>
-			<Cell><Data ss:Type="String">68182012582</Data></Cell>
-			<Cell><Data ss:Type="String">2021-08-12</Data></Cell>
-			<Cell><Data ss:Type="String">5801208827.0</Data></Cell>
-			<Cell><Data ss:Type="String">250581492.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">976896384</Data></Cell>
-			<Cell><Data ss:Type="String">5404215007578</Data></Cell>
-			<Cell><Data ss:Type="String">dangthikimnhung82@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">O</Data></Cell>
-			<Cell><Data ss:Type="String">xóm 4a, Quả+N6:N22ng Đức, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
-		</Row>
-		<Row>
-			<Cell><Data ss:Type="String">GV002</Data></Cell>
-			<Cell><Data ss:Type="String">Đặng Thị Ngọc Qúy</Data></Cell>
-			<Cell><Data ss:Type="String">ngocquy</Data></Cell>
-			<Cell><Data ss:Type="String">PHT</Data></Cell>
-			<Cell><Data ss:Type="String">1986-11-12</Data></Cell>
-			<Cell><Data ss:Type="String">Bình Định</Data></Cell>
-			<Cell><Data ss:Type="String">68186008915</Data></Cell>
-			<Cell><Data ss:Type="String">2021-08-12</Data></Cell>
-			<Cell><Data ss:Type="String">8052739893.0</Data></Cell>
-			<Cell><Data ss:Type="String">250645771.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">345370570</Data></Cell>
-			<Cell><Data ss:Type="String">5404205048499</Data></Cell>
-			<Cell><Data ss:Type="String">ngocquy121186@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">O</Data></Cell>
-			<Cell><Data ss:Type="String">xóm 4a, Quảng Đức, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
-		</Row>
-		<Row>
-			<Cell><Data ss:Type="String">GV003</Data></Cell>
-			<Cell><Data ss:Type="String">Nguyễn Thị Ngọc</Data></Cell>
-			<Cell><Data ss:Type="String">ngocnguyen</Data></Cell>
-			<Cell><Data ss:Type="String">TGV1</Data></Cell>
-			<Cell><Data ss:Type="String">1982-06-08</Data></Cell>
-			<Cell><Data ss:Type="String">Thanh Hóa</Data></Cell>
-			<Cell><Data ss:Type="String">38182044169</Data></Cell>
-			<Cell><Data ss:Type="String">2021-09-01</Data></Cell>
-			<Cell><Data ss:Type="String">8030986867.0</Data></Cell>
-			<Cell><Data ss:Type="String">250490545.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">969797606</Data></Cell>
-			<Cell><Data ss:Type="String">5404205402215</Data></Cell>
-			<Cell><Data ss:Type="String">ngochoahuongduong82@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">TDP Đồng Tâm, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
-		</Row>
-		<Row>
-			<Cell><Data ss:Type="String">GV004</Data></Cell>
-			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="Number">1</Data></Cell>
 			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
 			<Cell><Data ss:Type="String">TGV2</Data></Cell>
 			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
-			<Cell><Data ss:Type="String">Lâm Đồng</Data></Cell>
-			<Cell><Data ss:Type="String">68197011223</Data></Cell>
-			<Cell><Data ss:Type="String">2021-10-02</Data></Cell>
-			<Cell><Data ss:Type="String">8745385991.0</Data></Cell>
-			<Cell><Data ss:Type="String">251153661.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">388448327</Data></Cell>
-			<Cell><Data ss:Type="String">5404205444845</Data></Cell>
-			<Cell><Data ss:Type="String">Kdien0897@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">99 TDP Pót Pe, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16 21:09:00</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV005</Data></Cell>
-			<Cell><Data ss:Type="String">Trần Ngọc Bảo Trân</Data></Cell>
-			<Cell><Data ss:Type="String"></Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">2020-01-19</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String"></Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
+			<Cell><Data ss:Type="Number">2</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16 21:09:00</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV006</Data></Cell>
-			<Cell><Data ss:Type="String">Nguyễn Thị Hoàng Trân</Data></Cell>
+			<Cell><Data ss:Type="Number">3</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16 21:09:00</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">4</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16 21:09:00</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">5</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">test</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-16 21:09:00</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">kimnhung</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Kim Nhung</Data></Cell>
+			<Cell><Data ss:Type="String">HT</Data></Cell>
+			<Cell><Data ss:Type="String">1982-03-06</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">7</Data></Cell>
+			<Cell><Data ss:Type="String">kimnhung</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Kim Nhung</Data></Cell>
+			<Cell><Data ss:Type="String">HT</Data></Cell>
+			<Cell><Data ss:Type="String">1982-03-06</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">8</Data></Cell>
+			<Cell><Data ss:Type="String">kimnhung</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Kim Nhung</Data></Cell>
+			<Cell><Data ss:Type="String">HT</Data></Cell>
+			<Cell><Data ss:Type="String">1982-03-06</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">9</Data></Cell>
+			<Cell><Data ss:Type="String">kimnhung</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Kim Nhung</Data></Cell>
+			<Cell><Data ss:Type="String">HT</Data></Cell>
+			<Cell><Data ss:Type="String">1982-03-06</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">10</Data></Cell>
+			<Cell><Data ss:Type="String">kimnhung</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Kim Nhung</Data></Cell>
+			<Cell><Data ss:Type="String">HT</Data></Cell>
+			<Cell><Data ss:Type="String">1982-03-06</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">11</Data></Cell>
+			<Cell><Data ss:Type="String">ngocquy</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Ngọc Qúy</Data></Cell>
+			<Cell><Data ss:Type="String">PHT</Data></Cell>
+			<Cell><Data ss:Type="String">1986-11-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">12</Data></Cell>
+			<Cell><Data ss:Type="String">ngocquy</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Ngọc Qúy</Data></Cell>
+			<Cell><Data ss:Type="String">PHT</Data></Cell>
+			<Cell><Data ss:Type="String">1986-11-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">13</Data></Cell>
+			<Cell><Data ss:Type="String">ngocquy</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Ngọc Qúy</Data></Cell>
+			<Cell><Data ss:Type="String">PHT</Data></Cell>
+			<Cell><Data ss:Type="String">1986-11-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">14</Data></Cell>
+			<Cell><Data ss:Type="String">ngocquy</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Ngọc Qúy</Data></Cell>
+			<Cell><Data ss:Type="String">PHT</Data></Cell>
+			<Cell><Data ss:Type="String">1986-11-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">15</Data></Cell>
+			<Cell><Data ss:Type="String">ngocquy</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Thị Ngọc Qúy</Data></Cell>
+			<Cell><Data ss:Type="String">PHT</Data></Cell>
+			<Cell><Data ss:Type="String">1986-11-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">16</Data></Cell>
+			<Cell><Data ss:Type="String">ngocnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Ngọc</Data></Cell>
+			<Cell><Data ss:Type="String">TGV1</Data></Cell>
+			<Cell><Data ss:Type="String">1982-06-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">17</Data></Cell>
+			<Cell><Data ss:Type="String">ngocnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Ngọc</Data></Cell>
+			<Cell><Data ss:Type="String">TGV1</Data></Cell>
+			<Cell><Data ss:Type="String">1982-06-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">ngocnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Ngọc</Data></Cell>
+			<Cell><Data ss:Type="String">TGV1</Data></Cell>
+			<Cell><Data ss:Type="String">1982-06-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">ngocnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Ngọc</Data></Cell>
+			<Cell><Data ss:Type="String">TGV1</Data></Cell>
+			<Cell><Data ss:Type="String">1982-06-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">ngocnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Ngọc</Data></Cell>
+			<Cell><Data ss:Type="String">TGV1</Data></Cell>
+			<Cell><Data ss:Type="String">1982-06-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">kdien</Data></Cell>
+			<Cell><Data ss:Type="String">K' Diên</Data></Cell>
+			<Cell><Data ss:Type="String">TGV2</Data></Cell>
+			<Cell><Data ss:Type="String">1997-08-20</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Tự đánh giá và nhận xét giống nhau</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">thuuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Thu Uyên</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2000-03-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">thuuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Thu Uyên</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2000-03-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">thuuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Thu Uyên</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2000-03-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">thuuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Thu Uyên</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2000-03-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">thuuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Thu Uyên</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2000-03-12</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">31</Data></Cell>
 			<Cell><Data ss:Type="String">hoangtran</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hoàng Trân</Data></Cell>
 			<Cell><Data ss:Type="String">GV1</Data></Cell>
 			<Cell><Data ss:Type="String">1988-12-02</Data></Cell>
-			<Cell><Data ss:Type="String">Huế</Data></Cell>
-			<Cell><Data ss:Type="String">68188012742</Data></Cell>
-			<Cell><Data ss:Type="String">2022-07-24</Data></Cell>
-			<Cell><Data ss:Type="String">8745374943.0</Data></Cell>
-			<Cell><Data ss:Type="String">250752066.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">949385443</Data></Cell>
-			<Cell><Data ss:Type="String">5404205340470</Data></Cell>
-			<Cell><Data ss:Type="String">hoangtran0589@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">Tân Đức, Tân Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV007</Data></Cell>
-			<Cell><Data ss:Type="String">Hoàng Thị Phượng</Data></Cell>
+			<Cell><Data ss:Type="Number">32</Data></Cell>
+			<Cell><Data ss:Type="String">hoangtran</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hoàng Trân</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1988-12-02</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">33</Data></Cell>
+			<Cell><Data ss:Type="String">hoangtran</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hoàng Trân</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1988-12-02</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">34</Data></Cell>
+			<Cell><Data ss:Type="String">hoangtran</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hoàng Trân</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1988-12-02</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">35</Data></Cell>
+			<Cell><Data ss:Type="String">hoangtran</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hoàng Trân</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1988-12-02</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">36</Data></Cell>
 			<Cell><Data ss:Type="String">huongphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Hoàng Thị Phượng</Data></Cell>
 			<Cell><Data ss:Type="String">GV1</Data></Cell>
 			<Cell><Data ss:Type="String">1997-06-15</Data></Cell>
-			<Cell><Data ss:Type="String">Nghệ An</Data></Cell>
-			<Cell><Data ss:Type="String">40197017957</Data></Cell>
-			<Cell><Data ss:Type="String">2021-10-02</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">966471596</Data></Cell>
-			<Cell><Data ss:Type="String">15150688 (MB)</Data></Cell>
-			<Cell><Data ss:Type="String">hoangthiphuong257@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">TDP B'Nông Rết, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV008</Data></Cell>
-			<Cell><Data ss:Type="String">Bùi Thị Kim Oanh</Data></Cell>
+			<Cell><Data ss:Type="Number">37</Data></Cell>
+			<Cell><Data ss:Type="String">huongphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Hoàng Thị Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1997-06-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">38</Data></Cell>
+			<Cell><Data ss:Type="String">huongphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Hoàng Thị Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1997-06-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">39</Data></Cell>
+			<Cell><Data ss:Type="String">huongphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Hoàng Thị Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1997-06-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">40</Data></Cell>
+			<Cell><Data ss:Type="String">huongphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Hoàng Thị Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1997-06-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">41</Data></Cell>
 			<Cell><Data ss:Type="String">kimoanh</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi Thị Kim Oanh</Data></Cell>
 			<Cell><Data ss:Type="String">GV1</Data></Cell>
 			<Cell><Data ss:Type="String">1992-10-08</Data></Cell>
-			<Cell><Data ss:Type="String">Quảng Ngãi</Data></Cell>
-			<Cell><Data ss:Type="String">68300009599</Data></Cell>
-			<Cell><Data ss:Type="String">2021-08-12</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">886904044</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">Thôn An Phước, Phú Sơn, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV009</Data></Cell>
-			<Cell><Data ss:Type="String">Nguyễn Thanh Huyền</Data></Cell>
+			<Cell><Data ss:Type="Number">42</Data></Cell>
+			<Cell><Data ss:Type="String">kimoanh</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi Thị Kim Oanh</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1992-10-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">43</Data></Cell>
+			<Cell><Data ss:Type="String">kimoanh</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi Thị Kim Oanh</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1992-10-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">44</Data></Cell>
+			<Cell><Data ss:Type="String">kimoanh</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi Thị Kim Oanh</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1992-10-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">45</Data></Cell>
+			<Cell><Data ss:Type="String">kimoanh</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi Thị Kim Oanh</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1992-10-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">46</Data></Cell>
 			<Cell><Data ss:Type="String">thanhhuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thanh Huyền</Data></Cell>
 			<Cell><Data ss:Type="String">GV1</Data></Cell>
 			<Cell><Data ss:Type="String">1999-12-29</Data></Cell>
-			<Cell><Data ss:Type="String">Hà Nội</Data></Cell>
-			<Cell><Data ss:Type="String">1199035999</Data></Cell>
-			<Cell><Data ss:Type="String">2021-10-02</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">335551673</Data></Cell>
-			<Cell><Data ss:Type="String">21124857 (ACB)</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">Thôn 5, Đạ Đờn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV010</Data></Cell>
-			<Cell><Data ss:Type="String">Cil K' Si Ra</Data></Cell>
+			<Cell><Data ss:Type="Number">47</Data></Cell>
+			<Cell><Data ss:Type="String">thanhhuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thanh Huyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1999-12-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">48</Data></Cell>
+			<Cell><Data ss:Type="String">thanhhuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thanh Huyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1999-12-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">49</Data></Cell>
+			<Cell><Data ss:Type="String">thanhhuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thanh Huyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1999-12-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">50</Data></Cell>
+			<Cell><Data ss:Type="String">thanhhuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thanh Huyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1999-12-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">51</Data></Cell>
 			<Cell><Data ss:Type="String">ksira</Data></Cell>
+			<Cell><Data ss:Type="String">Cil K' Si Ra</Data></Cell>
 			<Cell><Data ss:Type="String">GV1</Data></Cell>
 			<Cell><Data ss:Type="String">2001-03-15</Data></Cell>
-			<Cell><Data ss:Type="String">Lâm Đồng</Data></Cell>
-			<Cell><Data ss:Type="String">68301008967</Data></Cell>
-			<Cell><Data ss:Type="String">2023-09-08</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">251284559.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">837045172</Data></Cell>
-			<Cell><Data ss:Type="String">237128686 (MB)</Data></Cell>
-			<Cell><Data ss:Type="String">ck.sira.m24g@sptwnt.edu.vn</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">TDP B'Nông Rết, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV011</Data></Cell>
-			<Cell><Data ss:Type="String">Phan Thị Thanh Tuyền</Data></Cell>
+			<Cell><Data ss:Type="Number">52</Data></Cell>
+			<Cell><Data ss:Type="String">ksira</Data></Cell>
+			<Cell><Data ss:Type="String">Cil K' Si Ra</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2001-03-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">53</Data></Cell>
+			<Cell><Data ss:Type="String">ksira</Data></Cell>
+			<Cell><Data ss:Type="String">Cil K' Si Ra</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2001-03-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">54</Data></Cell>
+			<Cell><Data ss:Type="String">ksira</Data></Cell>
+			<Cell><Data ss:Type="String">Cil K' Si Ra</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2001-03-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">55</Data></Cell>
+			<Cell><Data ss:Type="String">ksira</Data></Cell>
+			<Cell><Data ss:Type="String">Cil K' Si Ra</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">2001-03-15</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">56</Data></Cell>
 			<Cell><Data ss:Type="String">thanhtuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Phan Thị Thanh Tuyền</Data></Cell>
 			<Cell><Data ss:Type="String">GV1</Data></Cell>
 			<Cell><Data ss:Type="String">1996-08-29</Data></Cell>
-			<Cell><Data ss:Type="String">Huế</Data></Cell>
-			<Cell><Data ss:Type="String">68196007072</Data></Cell>
-			<Cell><Data ss:Type="String">2021-08-12</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">250147020.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">364937896</Data></Cell>
-			<Cell><Data ss:Type="String">5404205334990</Data></Cell>
-			<Cell><Data ss:Type="String">thanhtuyencdspdalat@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">O</Data></Cell>
-			<Cell><Data ss:Type="String">xóm 1, Hòa lạc, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV012</Data></Cell>
-			<Cell><Data ss:Type="String">Hồ Ngọc Anh Thơ</Data></Cell>
+			<Cell><Data ss:Type="Number">57</Data></Cell>
+			<Cell><Data ss:Type="String">thanhtuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Phan Thị Thanh Tuyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1996-08-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">58</Data></Cell>
+			<Cell><Data ss:Type="String">thanhtuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Phan Thị Thanh Tuyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1996-08-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">59</Data></Cell>
+			<Cell><Data ss:Type="String">thanhtuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Phan Thị Thanh Tuyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1996-08-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">60</Data></Cell>
+			<Cell><Data ss:Type="String">thanhtuyen</Data></Cell>
+			<Cell><Data ss:Type="String">Phan Thị Thanh Tuyền</Data></Cell>
+			<Cell><Data ss:Type="String">GV1</Data></Cell>
+			<Cell><Data ss:Type="String">1996-08-29</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">61</Data></Cell>
 			<Cell><Data ss:Type="String">anhtho</Data></Cell>
+			<Cell><Data ss:Type="String">Hồ Ngọc Anh Thơ</Data></Cell>
 			<Cell><Data ss:Type="String">GV2</Data></Cell>
 			<Cell><Data ss:Type="String">2000-04-03</Data></Cell>
-			<Cell><Data ss:Type="String">Quảng Ngãi</Data></Cell>
-			<Cell><Data ss:Type="String">68300009599</Data></Cell>
-			<Cell><Data ss:Type="String">2021-08-12</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">886904044</Data></Cell>
-			<Cell><Data ss:Type="String">1024307198  (VCB)</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">415, Kim Phát, Bình Thạnh, Đức Trọng, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV013</Data></Cell>
-			<Cell><Data ss:Type="String">Nguyễn Thị Hàn</Data></Cell>
+			<Cell><Data ss:Type="Number">62</Data></Cell>
+			<Cell><Data ss:Type="String">anhtho</Data></Cell>
+			<Cell><Data ss:Type="String">Hồ Ngọc Anh Thơ</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">2000-04-03</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">63</Data></Cell>
+			<Cell><Data ss:Type="String">anhtho</Data></Cell>
+			<Cell><Data ss:Type="String">Hồ Ngọc Anh Thơ</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">2000-04-03</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">64</Data></Cell>
+			<Cell><Data ss:Type="String">anhtho</Data></Cell>
+			<Cell><Data ss:Type="String">Hồ Ngọc Anh Thơ</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">2000-04-03</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">65</Data></Cell>
+			<Cell><Data ss:Type="String">anhtho</Data></Cell>
+			<Cell><Data ss:Type="String">Hồ Ngọc Anh Thơ</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">2000-04-03</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">66</Data></Cell>
 			<Cell><Data ss:Type="String">hannguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hàn</Data></Cell>
 			<Cell><Data ss:Type="String">GV2</Data></Cell>
 			<Cell><Data ss:Type="String">1975-10-01</Data></Cell>
-			<Cell><Data ss:Type="String">Nghệ An</Data></Cell>
-			<Cell><Data ss:Type="String">42175005932</Data></Cell>
-			<Cell><Data ss:Type="String">2023-04-01</Data></Cell>
-			<Cell><Data ss:Type="String">8737606950.0</Data></Cell>
-			<Cell><Data ss:Type="String">250937013.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">386708472</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">xóm 3a, Quảng Đức, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV014</Data></Cell>
-			<Cell><Data ss:Type="String">Nguyễn Thị Hằng</Data></Cell>
+			<Cell><Data ss:Type="Number">67</Data></Cell>
+			<Cell><Data ss:Type="String">hannguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hàn</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1975-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">68</Data></Cell>
+			<Cell><Data ss:Type="String">hannguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hàn</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1975-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">69</Data></Cell>
+			<Cell><Data ss:Type="String">hannguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hàn</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1975-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">70</Data></Cell>
+			<Cell><Data ss:Type="String">hannguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hàn</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1975-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">19</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">71</Data></Cell>
 			<Cell><Data ss:Type="String">hangnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hằng</Data></Cell>
 			<Cell><Data ss:Type="String">GV2</Data></Cell>
 			<Cell><Data ss:Type="String">1970-10-01</Data></Cell>
-			<Cell><Data ss:Type="String">Hà Nội</Data></Cell>
-			<Cell><Data ss:Type="String">1170051212</Data></Cell>
-			<Cell><Data ss:Type="String">2021-12-27</Data></Cell>
-			<Cell><Data ss:Type="String">8675993873.0</Data></Cell>
-			<Cell><Data ss:Type="String">251311013.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">943608725</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">Tân Lin,  Tân Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV015</Data></Cell>
-			<Cell><Data ss:Type="String">Đặng Ngọc Ba</Data></Cell>
+			<Cell><Data ss:Type="Number">72</Data></Cell>
+			<Cell><Data ss:Type="String">hangnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hằng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1970-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">73</Data></Cell>
+			<Cell><Data ss:Type="String">hangnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hằng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1970-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">74</Data></Cell>
+			<Cell><Data ss:Type="String">hangnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hằng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1970-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">75</Data></Cell>
+			<Cell><Data ss:Type="String">hangnguyen</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Hằng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1970-10-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">76</Data></Cell>
 			<Cell><Data ss:Type="String">ngocba</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Ngọc Ba</Data></Cell>
 			<Cell><Data ss:Type="String">GV2</Data></Cell>
 			<Cell><Data ss:Type="String">1950-01-01</Data></Cell>
-			<Cell><Data ss:Type="String">Bình Định</Data></Cell>
-			<Cell><Data ss:Type="String">68050001935</Data></Cell>
-			<Cell><Data ss:Type="String"></Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">250581651.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">384251521</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">xóm 4a, Quảng Đức, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV016</Data></Cell>
-			<Cell><Data ss:Type="String">Nguyễn Trọng Hùng</Data></Cell>
+			<Cell><Data ss:Type="Number">77</Data></Cell>
+			<Cell><Data ss:Type="String">ngocba</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Ngọc Ba</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1950-01-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">78</Data></Cell>
+			<Cell><Data ss:Type="String">ngocba</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Ngọc Ba</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1950-01-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">79</Data></Cell>
+			<Cell><Data ss:Type="String">ngocba</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Ngọc Ba</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1950-01-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">80</Data></Cell>
+			<Cell><Data ss:Type="String">ngocba</Data></Cell>
+			<Cell><Data ss:Type="String">Đặng Ngọc Ba</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1950-01-01</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">81</Data></Cell>
 			<Cell><Data ss:Type="String">tronghung</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Trọng Hùng</Data></Cell>
 			<Cell><Data ss:Type="String">GV2</Data></Cell>
 			<Cell><Data ss:Type="String">1987-09-10</Data></Cell>
-			<Cell><Data ss:Type="String">Hà Tĩnh</Data></Cell>
-			<Cell><Data ss:Type="String">42087002690</Data></Cell>
-			<Cell><Data ss:Type="String">2021-04-25</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">250581651.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">384251521</Data></Cell>
-			<Cell><Data ss:Type="String">64610000306574</Data></Cell>
-			<Cell><Data ss:Type="String">BIDV</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">xóm 4a, Quảng Đức, Đinh Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV017</Data></Cell>
-			<Cell><Data ss:Type="String">Trần Thị Thắm</Data></Cell>
+			<Cell><Data ss:Type="Number">82</Data></Cell>
+			<Cell><Data ss:Type="String">tronghung</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Trọng Hùng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1987-09-10</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">22</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">83</Data></Cell>
+			<Cell><Data ss:Type="String">tronghung</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Trọng Hùng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1987-09-10</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">84</Data></Cell>
+			<Cell><Data ss:Type="String">tronghung</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Trọng Hùng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1987-09-10</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">85</Data></Cell>
+			<Cell><Data ss:Type="String">tronghung</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Trọng Hùng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1987-09-10</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">86</Data></Cell>
 			<Cell><Data ss:Type="String">thamtran</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Thắm</Data></Cell>
 			<Cell><Data ss:Type="String">GV2</Data></Cell>
 			<Cell><Data ss:Type="String">1998-05-08</Data></Cell>
-			<Cell><Data ss:Type="String">Đắc Lăk</Data></Cell>
-			<Cell><Data ss:Type="String">66198015174</Data></Cell>
-			<Cell><Data ss:Type="String">2023-08-22</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">251393684.0</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">976322523</Data></Cell>
-			<Cell><Data ss:Type="String">0441000794759</Data></Cell>
-			<Cell><Data ss:Type="String">leluan280796@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">Tân Tiến, Đạ Đờn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT đạt</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>
 		<Row>
-			<Cell><Data ss:Type="String">GV018</Data></Cell>
-			<Cell><Data ss:Type="String">Phạm Thị Ngọc Phượng</Data></Cell>
+			<Cell><Data ss:Type="Number">87</Data></Cell>
+			<Cell><Data ss:Type="String">thamtran</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Thắm</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1998-05-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">88</Data></Cell>
+			<Cell><Data ss:Type="String">thamtran</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Thắm</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1998-05-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">27</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">89</Data></Cell>
+			<Cell><Data ss:Type="String">thamtran</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Thắm</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1998-05-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">28</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">24</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">90</Data></Cell>
+			<Cell><Data ss:Type="String">thamtran</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Thắm</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1998-05-08</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">26</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">91</Data></Cell>
 			<Cell><Data ss:Type="String">ngocphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Thị Ngọc Phượng</Data></Cell>
 			<Cell><Data ss:Type="String">GV2</Data></Cell>
 			<Cell><Data ss:Type="String">1991-11-28</Data></Cell>
-			<Cell><Data ss:Type="String">Lâm Đồng</Data></Cell>
-			<Cell><Data ss:Type="String">68191009504</Data></Cell>
-			<Cell><Data ss:Type="String">2022-05-24</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">None</Data></Cell>
-			<Cell><Data ss:Type="String">354478379</Data></Cell>
-			<Cell><Data ss:Type="String">0220190795818</Data></Cell>
-			<Cell><Data ss:Type="String">Ngocphuongkl@gmail.com</Data></Cell>
-			<Cell><Data ss:Type="String">nan</Data></Cell>
-			<Cell><Data ss:Type="String">Tân Lập, Tân Văn, Lâm Hà, Lâm Đồng</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn cảm thấy hiệu quả công việc trong tháng qua như thế nào?</Data></Cell>
+			<Cell><Data ss:Type="String">How do you evaluate your work performance this month?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">92</Data></Cell>
+			<Cell><Data ss:Type="String">ngocphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Thị Ngọc Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1991-11-28</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có hoàn thành đủ công việc được giao không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you complete all assigned tasks?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">25</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">23</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">93</Data></Cell>
+			<Cell><Data ss:Type="String">ngocphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Thị Ngọc Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1991-11-28</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có gặp khó khăn gì trong quá trình làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you encounter any difficulties during your work?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV khá</Data></Cell>
+			<Cell><Data ss:Type="Number">30</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">21</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">94</Data></Cell>
+			<Cell><Data ss:Type="String">ngocphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Thị Ngọc Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1991-11-28</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn đã chủ động học hỏi thêm kiến thức mới chưa?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you proactively learn new knowledge?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT cần hỗ trợ</Data></Cell>
+			<Cell><Data ss:Type="Number">20</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="Number">95</Data></Cell>
+			<Cell><Data ss:Type="String">ngocphuong</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Thị Ngọc Phượng</Data></Cell>
+			<Cell><Data ss:Type="String">GV2</Data></Cell>
+			<Cell><Data ss:Type="String">1991-11-28</Data></Cell>
+			<Cell><Data ss:Type="Number">2025</Data></Cell>
+			<Cell><Data ss:Type="Number">6</Data></Cell>
+			<Cell><Data ss:Type="String">Bạn có cải tiến hay thay đổi gì trong cách làm việc không?</Data></Cell>
+			<Cell><Data ss:Type="String">Did you make any improvements or changes in your work methods?</Data></Cell>
+			<Cell><Data ss:Type="String">Ý kiến GV cần cải thiện</Data></Cell>
+			<Cell><Data ss:Type="Number">29</Data></Cell>
+			<Cell><Data ss:Type="String">Nhận xét TT tốt</Data></Cell>
+			<Cell><Data ss:Type="Number">18</Data></Cell>
+			<Cell><Data ss:Type="String">2025-06-18 07:26:38</Data></Cell>
 		</Row>	</Table>
 </Worksheet>
 </Workbook>

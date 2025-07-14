@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request, redirect, session, jsonify, send_from_directory
+from flask import Flask, render_template, request, redirect, session, jsonify
 from utils.db import get_conn
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from apis.users_api import users_bp
 from apis.importdata_api import import_bp
 from apis.giaovien_epa import giaovien_epa_bp
-from apis.thoigianmoepa_api import thoigianmoepa_bp
 from config import DB_CONFIG
 import sqlite3  # Giả sử dùng SQLite, thay bằng DB khác nếu cần
 import mysql.connector
@@ -14,11 +13,12 @@ import threading
 import webbrowser
 import os
 import json
-import re
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
-app.register_blueprint(thoigianmoepa_bp)
+@app.route("/health")
+def health():
+    return "OK", 200
 app.register_blueprint(users_bp)
 app.register_blueprint(import_bp)
 app.register_blueprint(giaovien_epa_bp)
@@ -42,10 +42,6 @@ def parse_date(d):
         return datetime.strptime(d, "%d/%m/%Y").date()
     except:
         return None
-
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory('static', filename)
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -201,12 +197,13 @@ def add_employee():
                 return jsonify({"status": "error", "message": f"Student ID '{student_id}' already exists"}), 400
             cursor.execute("""
                 INSERT INTO hocsinh (
-                    ma_hs, ho_va_ten, ngay_sinh, gioi_tinh, dan_toc,
+                    ma_hs, ma_gv, ho_va_ten, ngay_sinh, gioi_tinh, dan_toc,
                     ma_dinh_danh, ho_ten_bo, nghe_nghiep_bo, ho_ten_me,
                     nghe_nghiep_me, ho_khau, cccd_bo_me, sdt
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 student_id,
+                data.get("Ma Gv"),
                 full_name,
                 parse_date(data.get("Ngay Sinh")),
                 data.get("Gioi Tinh"),
@@ -220,7 +217,6 @@ def add_employee():
                 data.get("Cccd Bo Me"),
                 data.get("Sdt")
             ))
-
             log_action(user_ten_tk=session.get("user", "system"),
                        target_table="hocsinh",
                        target_staff_id=student_id,
@@ -228,6 +224,7 @@ def add_employee():
         conn.commit()
         conn.close()
         return jsonify({"status": "ok"})
+
     return jsonify({"status": "error", "message": "Unsupported department"}), 400
 
 @app.route("/delete", methods=["POST"])
@@ -235,33 +232,25 @@ def delete_employee():
     data = request.get_json()
     staff_id = data.get("staff_id")
     dept = data.get("dept", "GV").upper()
+
     table = "giaovien" if dept == "GV" else "hocsinh" if dept == "HS" else None
     key = "ma_gv" if dept == "GV" else "ma_hs"
+
     if not staff_id or not table:
         return jsonify({"status": "error", "reason": "Invalid request"})
+
     conn = get_conn()
-    try:
-        with conn.cursor() as cursor:
-            if dept == "GV":
-                # ❗ Chỉ xóa liên kết ở lop_gv
-                cursor.execute("DELETE FROM lop_gv WHERE ma_gv = %s", (staff_id,))
-            
-            # Xóa chính ở bảng giáo viên/học sinh
-            cursor.execute(f"DELETE FROM {table} WHERE {key} = %s", (staff_id,))
-            if cursor.rowcount > 0:
-                log_action(user_ten_tk=session.get("user", "system"),
-                           target_table=table,
-                           target_staff_id=staff_id,
-                           action=f"Deleted record {staff_id}")
-                conn.commit()
-                return jsonify({"status": "ok"})
-            else:
-                return jsonify({"status": "error", "reason": "ID not found"})
-    except Exception as e:
-        conn.rollback()
-        return jsonify({"status": "error", "reason": str(e)})
-    finally:
-        conn.close()
+    with conn.cursor() as cursor:
+        cursor.execute(f"DELETE FROM {table} WHERE {key} = %s", (staff_id,))
+        if cursor.rowcount > 0:
+            log_action(user_ten_tk=session.get("user", "system"),
+                       target_table=table,
+                       target_staff_id=staff_id,
+                       action=f"Deleted record {staff_id}")
+            conn.commit()
+            return jsonify({"status": "ok"})
+        else:
+            return jsonify({"status": "error", "reason": "ID not found"})
 
 @app.route("/update", methods=["POST"])
 def update_employee():
@@ -300,6 +289,7 @@ def update_employee():
         },
         "HS": {
             "Ma Hs": "ma_hs",
+            "Ma Gv": "ma_gv",
             "Ho Va Ten": "ho_va_ten",
             "Ngay Sinh": "ngay_sinh",
             "Gioi Tinh": "gioi_tinh",
@@ -623,6 +613,7 @@ def update_gv():
     ten_tk = data.get("ten_tk", "").strip()
     if not ten_tk:
         return jsonify({"error": "Thiếu ten_tk"}), 400
+
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute("""
@@ -655,12 +646,12 @@ def update_hs():
     cursor = conn.cursor()
     cursor.execute("""
         UPDATE hocsinh
-        SET ho_va_ten=%s, ngay_sinh=%s, gioi_tinh=%s, dan_toc=%s,
+        SET ma_gv=%s, ho_va_ten=%s, ngay_sinh=%s, gioi_tinh=%s, dan_toc=%s,
             ma_dinh_danh=%s, ho_ten_bo=%s, nghe_nghiep_bo=%s, ho_ten_me=%s,
             nghe_nghiep_me=%s, ho_khau=%s, cccd_bo_me=%s, sdt=%s
         WHERE ma_hs=%s
     """, (
-        data.get("ho_va_ten"), data.get("ngay_sinh"),
+        data.get("ma_gv"), data.get("ho_va_ten"), data.get("ngay_sinh"),
         data.get("gioi_tinh"), data.get("dan_toc"), data.get("ma_dinh_danh"),
         data.get("ho_ten_bo"), data.get("nghe_nghiep_bo"), data.get("ho_ten_me"),
         data.get("nghe_nghiep_me"), data.get("ho_khau"), data.get("cccd_bo_me"),
@@ -680,6 +671,7 @@ def epa_preview():
 def remove_dept_data():
     data = request.get_json()
     dept = data.get("dept")
+
     # Xử lý logic xoá dữ liệu tương ứng
     # Ví dụ:
     if dept == "GV":
@@ -688,6 +680,7 @@ def remove_dept_data():
         table = "hocsinh"
     else:
         return jsonify({"message": "Invalid department."}), 400
+
     conn = get_conn()
     with conn.cursor() as cursor:
         cursor.execute(f"DELETE FROM {table}")
@@ -714,8 +707,10 @@ def add_or_update_question():
     id = data.get('id')
     question = data.get('question', '').strip()
     translate = data.get('translate', '').strip()
+
     if not question:
         return jsonify({"error": "Câu hỏi không được để trống!"}), 400
+
     conn = get_conn()
     with conn.cursor() as cur:
         if id:
@@ -741,8 +736,10 @@ def view_epa_summary():
 def api_epa_summary():
     ten_tk = request.args.get("ten_tk")
     year = request.args.get("year", type=int)
+
     if not ten_tk or not year:
         return jsonify({"error": "Missing parameters"}), 400
+
     conn = get_conn()
     with conn.cursor() as cur:
         cur.execute("""
@@ -769,6 +766,7 @@ def api_epa_monthly_all():
     year = request.args.get("year", type=int)
     if not year:
         return jsonify({"error": "Missing year"}), 400
+
     conn = get_conn()
     with conn.cursor() as cur:
         cur.execute("""
@@ -779,6 +777,7 @@ def api_epa_monthly_all():
         """, (year,))
         rows = cur.fetchall()
     conn.close()
+
     from collections import defaultdict
     result = defaultdict(list)
     for row in rows:
@@ -786,6 +785,7 @@ def api_epa_monthly_all():
             "ten_tk": row["ten_tk"],
             "score": row["total_score"]
         })
+
     return jsonify(result)
 
 #Đọc dữ liệu bảng để lấy danh sách mã
@@ -798,6 +798,7 @@ def api_danh_sach_ma():
             # Lấy danh sách mã giáo viên
             cursor.execute("SELECT ma_gv FROM giaovien")
             result["maGVList"] = [row["ma_gv"] for row in cursor.fetchall()]
+
             # Lấy danh sách mã lớp
             cursor.execute("SELECT ma_lop FROM ds_lop")
             result["maLopList"] = [row["ma_lop"] for row in cursor.fetchall()]
@@ -805,278 +806,14 @@ def api_danh_sach_ma():
         conn.close()
     return jsonify(result)
 
-# 📄 ROUTE RENDER TEMPLATE
-@app.route("/classes")
-def classes_page():
-    return render_template("classes.html")
-
-@app.route("/assign-classes")
-def assign_classes_page():
-    return render_template("assign_classes.html")
-
-@app.route("/assign-teachers")
-def assign_teachers_page():
-    return render_template("assign_teachers.html")
-
-# API: Lấy danh sách lớp
-@app.route("/api/classes", methods=["GET"])
-def get_classes():
-    conn = get_conn()
-    with conn.cursor() as cur:
-        cur.execute("SELECT * FROM ds_lop")
-        result = cur.fetchall()
-    conn.close()
-    return jsonify(result)
-
-@app.route("/api/delete-class", methods=["POST"])
-def delete_class():
-    data = request.get_json()
-    ma_lop = data.get("ma_lop")
-    conn = get_conn()
-    try:
-        with conn.cursor() as cur:
-            # Xoá giáo viên gán với lớp đó
-            cur.execute("DELETE FROM lop_gv WHERE ma_lop = %s", (ma_lop,))
-            # Xoá học sinh phân lớp (nếu có)
-            cur.execute("DELETE FROM phan_lop WHERE ma_lop = %s", (ma_lop,))
-            # Xoá lớp
-            cur.execute("DELETE FROM ds_lop WHERE ma_lop = %s", (ma_lop,))
-            conn.commit()
-        return jsonify({"message": f"Đã xoá lớp {ma_lop} và dữ liệu liên quan"})
-    finally:
-        conn.close()
-
-# API: Thêm lớp mới
-@app.route("/api/classes", methods=["POST"])
-def add_class():
-    data = request.json
-    conn = get_conn()
-    with conn.cursor() as cur:
-        cur.execute("INSERT INTO ds_lop (ma_lop, ten_lop) VALUES (%s, %s)", (data["ma_lop"], data["ten_lop"]))
-        conn.commit()
-    conn.close()
-    return jsonify({"message": "Lớp đã thêm"})
-
-# Cập nhật nút sửa tên lớp
-@app.route("/api/update-class", methods=["POST"])
-def update_class():
-    data = request.get_json()
-    ma_lop = data.get("ma_lop")
-    ten_lop = data.get("ten_lop")
-    conn = get_conn()
-    try:
-        with conn.cursor() as cur:
-            cur.execute("UPDATE ds_lop SET ten_lop = %s WHERE ma_lop = %s", (ten_lop, ma_lop))
-            conn.commit()
-        return jsonify({"message": "success"})
-    except Exception as e:
-        conn.rollback()
-        return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
-
-# Chức năng tự nhận diện số lớn nhất có trong mã HS
-@app.route("/api/last-ma-hs-prefix", methods=["GET"])
-def get_last_ma_hs():
-    prefix = request.args.get("prefix", "HS").upper()
-    conn = get_conn()
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT ma_hs FROM hocsinh WHERE ma_hs LIKE %s", (f"{prefix}%",))
-        ma_list = [row["ma_hs"] for row in cursor.fetchall()]
-    conn.close()
-    # Tìm số lớn nhất
-    max_num = 0
-    for m in ma_list:
-        match = re.match(rf"{prefix}(\d+)", m)
-        if match:
-            num = int(match.group(1))
-            if num > max_num:
-                max_num = num
-    return jsonify({"prefix": prefix, "next_num": max_num + 1})
-
-# Hiển thị gợi ý mã ma_hs tiếp theo trong input động
-@app.route("/api/next-ma-hs", methods=["GET"])
-def get_next_ma_hs():
-    prefix = request.args.get("prefix", "HS").upper()
-    conn = get_conn()
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT ma_hs FROM hocsinh WHERE ma_hs LIKE %s", (f"{prefix}%",))
-        ma_list = [row["ma_hs"] for row in cursor.fetchall()]
-    conn.close()
-    max_num = 0
-    for m in ma_list:
-        match = re.match(rf"{prefix}(\d{{5}})", m)
-        if match:
-            num = int(match.group(1))
-            if num > max_num:
-                max_num = num
-    next_code = f"{prefix}{str(max_num + 1).zfill(5)}"
-    return jsonify({"next_ma_hs": next_code})
-
-# Hiển thị gợi ý mã ma_gv tiếp theo trong input động
-@app.route("/api/next-ma-gv", methods=["GET"])
-def get_next_ma_gv():
-    prefix = request.args.get("prefix", "GV").upper()
-    conn = get_conn()
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT ma_gv FROM giaovien WHERE ma_gv LIKE %s", (f"{prefix}%",))
-        ma_list = [row["ma_gv"] for row in cursor.fetchall()]
-    conn.close()
-    import re
-    max_num = 0
-    for m in ma_list:
-        match = re.match(rf"{prefix}(\d{{5}})", m)
-        if match:
-            num = int(match.group(1))
-            if num > max_num:
-                max_num = num
-    next_code = f"{prefix}{str(max_num + 1).zfill(5)}"
-    return jsonify({"next_ma_gv": next_code})
-
-# API lấy danh sách học sinh kèm tên lớp
-@app.route("/api/students")
-def get_students():
-    conn = get_conn()
-    with conn.cursor() as cur:
-        cur.execute("""
-            SELECT hs.ma_hs, hs.ho_va_ten, hs.ngay_sinh, hs.gioi_tinh,
-                   hs.dan_toc, hs.ma_dinh_danh, hs.ho_ten_bo, hs.nghe_nghiep_bo,
-                   hs.ho_ten_me, hs.nghe_nghiep_me, hs.ho_khau, hs.cccd_bo_me, hs.sdt,
-                   pl.ma_lop, dl.ten_lop
-            FROM hocsinh hs
-            LEFT JOIN phan_lop pl ON hs.ma_hs = pl.ma_hs
-            LEFT JOIN ds_lop dl ON pl.ma_lop = dl.ma_lop
-        """)
-        result = cur.fetchall()
-    conn.close()
-    return jsonify(result)
-
-# API cập nhật mã lớp cho học sinh
-@app.route("/api/update-student-class", methods=["POST"])
-def update_student_class():
-    data = request.get_json()
-    ma_hs = data.get("ma_hs")
-    new_ma_lop = data.get("ma_lop")
-    conn = get_conn()
-    with conn.cursor() as cur:
-        # ✅ Chỉ cập nhật bảng phan_lop
-        cur.execute("SELECT 1 FROM phan_lop WHERE ma_hs = %s", (ma_hs,))
-        if cur.fetchone():
-            cur.execute("""
-                UPDATE phan_lop
-                SET ma_lop = %s
-                WHERE ma_hs = %s
-            """, (new_ma_lop, ma_hs))
-        else:
-            cur.execute("""
-                INSERT INTO phan_lop (ma_hs, ma_lop)
-                VALUES (%s, %s)
-            """, (ma_hs, new_ma_lop))
-        conn.commit()
-    return jsonify({"message": "Cập nhật thành công"})
-
-# API: Phân lớp học sinh
-@app.route("/api/assign-class", methods=["POST"])
-def assign_class():
-    data = request.json
-    ma_hs = data.get("ma_hs")
-    ma_lop = data.get("ma_lop")
-    if not ma_hs or not ma_lop:
-        return jsonify({"error": "Thiếu mã học sinh hoặc mã lớp"}), 400
-    conn = get_conn()
-    with conn.cursor() as cur:
-        # Kiểm tra học sinh đã được phân lớp chưa
-        cur.execute("SELECT * FROM phan_lop WHERE ma_hs = %s", (ma_hs,))
-        existing = cur.fetchone()
-        if existing:
-            # Cập nhật phân lớp
-            cur.execute("UPDATE phan_lop SET ma_lop = %s WHERE ma_hs = %s", (ma_lop, ma_hs))
-        else:
-            # Thêm mới phân lớp
-            cur.execute("INSERT INTO phan_lop (ma_hs, ma_lop) VALUES (%s, %s)", (ma_hs, ma_lop))
-        conn.commit()
-    conn.close()
-    return jsonify({"message": "Đã gán học sinh vào lớp thành công"})
-
-# API: Lấy danh sách giáo viên
-@app.route("/api/teachers", methods=["GET"])
-def get_teachers():
-    conn = get_conn()
-    with conn.cursor() as cur:
-        cur.execute("SELECT ma_gv, ho_va_ten FROM giaovien")
-        result = cur.fetchall()
-    conn.close()
-    return jsonify(result)
-
-# API: Gán giáo viên cho lớp
-@app.route("/api/assigned-teachers", methods=["GET"])
-def get_assigned_teachers():
-    conn = get_conn()
-    with conn.cursor() as cur:
-        cur.execute("""
-            SELECT gv.ma_gv, gv.ho_va_ten, gv.chuc_vu,
-                   l.ten_lop, lg.ma_lop, lg.vai_tro
-            FROM lop_gv lg
-            JOIN giaovien gv ON gv.ma_gv = lg.ma_gv
-            JOIN ds_lop l ON l.ma_lop = lg.ma_lop
-        """)
-        rows = cur.fetchall()
-    conn.close()
-    return jsonify(rows)
-
-#API: Cập nhật vai trò hoặc lớp học
-@app.route("/api/update-assignment", methods=["POST"])
-def update_assignment():
-    data = request.get_json()
-    ma_gv = data.get("ma_gv")
-    field = data.get("field")
-    value = data.get("value")
-    if field not in ("ma_lop", "vai_tro"):
-        return jsonify({"error": "Invalid field"}), 400
-    conn = get_conn()
-    with conn.cursor() as cur:
-        if field == "ma_lop":
-            # Khi đổi lớp, cần biết lớp cũ để cập nhật đúng dòng
-            cur.execute("SELECT ma_lop FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
-            old = cur.fetchone()
-            if not old:
-                return jsonify({"error": "Không tìm thấy phân công"}), 404
-            cur.execute("""
-                UPDATE lop_gv
-                SET ma_lop = %s
-                WHERE ma_gv = %s AND ma_lop = %s
-            """, (value, ma_gv, old["ma_lop"]))
-        elif field == "vai_tro":
-            cur.execute("""
-                UPDATE lop_gv
-                SET vai_tro = %s
-                WHERE ma_gv = %s
-            """, (value, ma_gv))
-        conn.commit()
-    conn.close()
-    return jsonify({"message": "Đã cập nhật"})
-
-#API: Xóa phân công giáo viên khỏi lớp
-@app.route("/api/delete-assignment", methods=["POST"])
-def delete_assignment():
-    data = request.get_json()
-    ma_gv = data.get("ma_gv")
-    ma_lop = data.get("ma_lop")
-    conn = get_conn()
-    with conn.cursor() as cur:
-        cur.execute("""
-            DELETE FROM lop_gv
-            WHERE ma_gv = %s AND ma_lop = %s
-        """, (ma_gv, ma_lop))
-        conn.commit()
-    conn.close()
-    return jsonify({"message": "Đã xóa phân công"})
-
 @app.route("/export-data")
 def view_export_data():
     return render_template("export_data.html")
 
+<<<<<<< HEAD
 # THời gian mở EPA
+=======
+>>>>>>> parent of eceb06f (new)
 def open_browser():
     webbrowser.open("http://localhost:5000")
 
