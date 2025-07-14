@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+
+<resultset statement="SELECT * FROM quanlytruonghoc_app.tk
+LIMIT 0, 1000
+"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<row>
+		<field name="ten_tk">admin</field>
+		<field name="nhom">admin</field>
+		<field name="mat_khau">scrypt:32768:8:1$fjueim7O5rG80zQa$6a7a432c16fc080103edebe5f93097cdca40788180fb1130ac5bf636ba23f36df0ef6f826e58cc4a5686353778602d0953ef4b32605c9feeb8da8faf325f70eb</field>
+		<field name="ngay_tao">2025-06-14</field>
+		<field name="nguoi_tao">system</field>
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">anhtho</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">atran</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau" xsi:nil="true" />
+		<field name="ngay_tao" xsi:nil="true" />
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">hangnguyen</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">hannguyen</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">hoangtran</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">scrypt:32768:8:1$4UHZYeYRkWHNf0lH$bd4cb313342d0276ffbe863bc1b4cc630b242efb9cbe785301e0f25a9e24b8f03a47f427f7e7e989151f43e43ae58d329b4324ca8d6cc7ff7f55f78cb7e12dd4</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">huongphuong</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">kdien</field>
+		<field name="nhom">supervisor</field>
+		<field name="mat_khau">scrypt:32768:8:1$3MiHffTEVQi7NWNN$121fb9fd4d0d36f4274126d481e022fb9943560763a5595b99559053c77d45e21ad1f44aa7c30b83ac58baf8a5647fa2187741cab8be868729deaacc99173680</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh">2025-09-14</field>
+	</row>
+
+	<row>
+		<field name="ten_tk">kimnhung</field>
+		<field name="nhom">admin</field>
+		<field name="mat_khau">scrypt:32768:8:1$PwN6USouDOFliqj4$4b820547a3b9258a834a3fa37b9a620ae4172d5bbaa038dc7e631677a53af66ce27ede714e707ab2a31e3f3a48bf21f720018db5b0ed4eb6492707a23674bc85</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">kimoanh</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">ksira</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">ngocba</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">ngocnguyen</field>
+		<field name="nhom">supervisor</field>
+		<field name="mat_khau">scrypt:32768:8:1$BJSNASEKU1Dqgf6N$76c230d4aea5374339da170b9b60947910fb365a85d7ce2f43b8437624261340c97378d10fdc0651c61a21fc63e3e2a8d1ce31487c7fad66a0e873211a201d90</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh">2025-09-19</field>
+	</row>
+
+	<row>
+		<field name="ten_tk">ngocphuong</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">ngocquy</field>
+		<field name="nhom">admin</field>
+		<field name="mat_khau">scrypt:32768:8:1$Tf0tbQuPU9uHAE1V$9807e13d712cc19be2e74d7a26af4af3494b6be39cb792c7b623c2639d5ec5ecc5d3214504789469af973a2570edf6046e584a67037f2dc751772c71d6008ea9</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">nhungnguyen</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau" xsi:nil="true" />
+		<field name="ngay_tao" xsi:nil="true" />
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">thamtran</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">scrypt:32768:8:1$xSMfzpD7HO9miYRv$02dfe9b9fb8bc6ff94bb82760510a338547770883538fa08ff96b373e9b408593e5f6b2963a4c68d25919420e39fc9167b7715234a93be2ee6ed7a0f3b4349c3</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">thanhhuyen</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">thanhtuyen</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">thuuyen</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+
+	<row>
+		<field name="ten_tk">tronghung</field>
+		<field name="nhom">user</field>
+		<field name="mat_khau">abc123</field>
+		<field name="ngay_tao">2025-06-16</field>
+		<field name="nguoi_tao" xsi:nil="true" />
+		<field name="ngay_hh" xsi:nil="true" />
+	</row>
+</resultset>

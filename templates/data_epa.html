@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>📝 Bảng Đánh Giá EPA</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+.blur {
+  filter: blur(2px);
+  pointer-events: none;
+  opacity: 0.5;
+}
+</style>
+</head>
+<body class="p-4">
+<h2 class="mb-4">📝 Bảng Đánh Giá EPA</h2>
+
+<div class="row mb-3">
+  <div class="col-auto">
+    <label for="yearFilter" class="col-form-label">Chọn năm:</label>
+  </div>
+  <div class="col-auto">
+    <select id="yearFilter" class="form-select form-select-sm" onchange="fetchDataEPA()">
+      <option value="All">All</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <label for="monthFilter" class="col-form-label">Chọn tháng:</label>
+  </div>
+  <div class="col-auto">
+    <select id="monthFilter" class="form-select form-select-sm" onchange="fetchDataEPA()">
+      <option value="All">All</option>
+    </select>
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-12">
+    <input type="checkbox" id="rangeMode" onchange="toggleRangeMode()"> Thống kê đánh giá EPA theo giai đoạn
+  </div>
+  <div id="rangeSelectors" class="row mt-2" style="display:none;">
+    <div class="col">
+      <label>Năm bắt đầu</label>
+      <select id="startYear" class="form-select form-select-sm"></select>
+    </div>
+    <div class="col">
+      <label>Tháng bắt đầu</label>
+      <select id="startMonth" class="form-select form-select-sm"></select>
+    </div>
+    <div class="col">
+      <label>Năm kết thúc</label>
+      <select id="endYear" class="form-select form-select-sm"></select>
+    </div>
+    <div class="col">
+      <label>Tháng kết thúc</label>
+      <select id="endMonth" class="form-select form-select-sm"></select>
+    </div>
+    <div class="col mt-2">
+      <button class="btn btn-primary btn-sm" onclick="fetchDataEPA()">Lọc</button>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3">
+  <button class="btn btn-danger" onclick="exportEPAtoPDF()">📄 Xuất PDF</button>
+</div>
+
+<div id="epa-table-container" class="table-responsive">
+  <table class="table table-bordered table-hover text-center">
+    <thead class="table-primary">
+      <tr>
+        <th>Stt</th>
+        <th>Tên TK</th>
+        <th>Họ và Tên</th>
+        <th>Chức Vụ</th>
+        <th>Năm</th>
+        <th>Tháng</th>
+        <th>GV Chấm</th>
+        <th>T Chấm</th>
+        <th>HT/PHT Chấm</th>
+        <th>Xếp Loại</th>
+        <th>HT/PHT Đánh Giá</th>
+        <th>Xử Lý</th>
+      </tr>
+    </thead>
+    <tbody id="epa-table-body"></tbody>
+  </table>
+</div>
+
+<script>
+const session_user = "{{ session['user'] if 'user' in session else '' }}";
+
+async function fetchDataEPA() {
+  const res = await fetch('/api/epa-full');
+  const data = await res.json();
+
+  const yearSelect = document.getElementById("yearFilter");
+  const monthSelect = document.getElementById("monthFilter");
+  const startYear = document.getElementById("startYear");
+  const endYear = document.getElementById("endYear");
+  const startMonth = document.getElementById("startMonth");
+  const endMonth = document.getElementById("endMonth");
+
+  if (yearSelect.options.length <= 1) {
+    const years = [...new Set(data.map(row => row.year))].sort((a, b) => b - a);
+    years.forEach(year => {
+      [yearSelect, startYear, endYear].forEach(sel => {
+        const opt = document.createElement("option");
+        opt.value = year;
+        opt.textContent = year;
+        sel.appendChild(opt.cloneNode(true));
+      });
+    });
+  }
+
+  if (monthSelect.options.length <= 1) {
+    const months = [...new Set(data.map(row => row.month))].sort((a, b) => a - b);
+    months.forEach(month => {
+      [monthSelect, startMonth, endMonth].forEach(sel => {
+        const opt = document.createElement("option");
+        opt.value = month;
+        opt.textContent = `Tháng ${month}`;
+        sel.appendChild(opt.cloneNode(true));
+      });
+    });
+  }
+
+  const selectedYear = yearSelect.value;
+  const selectedMonth = monthSelect.value;
+  const rangeMode = document.getElementById("rangeMode").checked;
+  const tbody = document.getElementById('epa-table-body');
+  tbody.innerHTML = "";
+
+  let filteredData = [];
+
+  if (rangeMode) {
+    const sYear = parseInt(startYear.value);
+    const sMonth = parseInt(startMonth.value);
+    const eYear = parseInt(endYear.value);
+    const eMonth = parseInt(endMonth.value);
+
+    if (eYear < sYear || (eYear === sYear && eMonth < sMonth)) {
+      alert("Giai đoạn không hợp lệ: kết thúc phải sau bắt đầu.");
+      return;
+    }
+
+    const from = sYear * 12 + sMonth;
+    const to = eYear * 12 + eMonth;
+
+    filteredData = data.filter(row => {
+      const curr = row.year * 12 + row.month;
+      return curr >= from && curr <= to;
+    });
+  } else {
+    filteredData = data.filter(row =>
+      (selectedYear === "All" || row.year.toString() === selectedYear) &&
+      (selectedMonth === "All" || row.month.toString() === selectedMonth)
+    );
+  }
+
+  filteredData.forEach((row, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${row.ten_tk}</td>
+      <td>${row.ho_va_ten}</td>
+      <td>${row.chuc_vu || ''}</td>
+      <td>${row.year}</td>
+      <td>${row.month}</td>
+      <td>${row.user_total_score}</td>
+      <td>${row.sup_total_score}</td>
+      <td>${session_user === "kimnhung" ? `<input type="number" class="form-control form-control-sm" value="${row.pri_total_score ?? ''}" id="score-${row.id}">` : row.pri_total_score ?? ''}</td>
+      <td>${row.xeploai ?? ''}</td>
+      <td>${session_user === "kimnhung" ? `<input type="text" class="form-control form-control-sm" value="${row.pri_comment ?? ''}" id="comment-${row.id}">` : row.pri_comment ?? ''}</td>
+      <td>${session_user === "kimnhung" ? `<button class="btn btn-sm btn-success me-1" onclick="saveEPA(${row.id})">Lưu</button>` : ''}
+      <button class="btn btn-sm btn-primary" onclick="viewAssessment('${row.ten_tk}', ${row.year}, ${row.month})">Chi tiết</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function toggleRangeMode() {
+  const isChecked = document.getElementById("rangeMode").checked;
+  document.getElementById("rangeSelectors").style.display = isChecked ? "flex" : "none";
+
+  const yearSelect = document.getElementById("yearFilter");
+  const monthSelect = document.getElementById("monthFilter");
+  if (isChecked) {
+    yearSelect.classList.add("blur");
+    monthSelect.classList.add("blur");
+  } else {
+    yearSelect.classList.remove("blur");
+    monthSelect.classList.remove("blur");
+  }
+}
+
+function saveEPA(id) {
+  const score = document.getElementById(`score-${id}`).value;
+  const comment = document.getElementById(`comment-${id}`).value;
+  fetch('/api/update-epa-kimnhung', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, pri_total_score: score, pri_comment: comment })
+  }).then(r => r.json()).then(res => {
+    alert(res.message || "Đã lưu!");
+    fetchDataEPA();
+  });
+}
+
+function viewAssessment(ten_tk, year, month) {
+  window.location.href = `/epa_preview?ten_tk=${ten_tk}&year=${year}&month=${month}`;
+}
+
+function exportEPAtoPDF() {
+  const element = document.getElementById("epa-table-container");
+  const opt = {
+    margin: 0.5,
+    filename: `EPA_export.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+  };
+  html2pdf().from(element).set(opt).save();
+}
+
+fetchDataEPA();
+</script>
+</body>
+</html>
