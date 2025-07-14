@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+xmlns:html="http://www.w3.org/TR/REC-html40">
+<Worksheet ss:Name="Table1">
+	<Table>
+		<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="8" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="9" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="10" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="11" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="12" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="13" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Column ss:Index="14" ss:AutoFitWidth="0" ss:Width="110"/>
+		<Row>
+			<Cell><Data ss:Type="String">ma_hs</Data></Cell>
+			<Cell><Data ss:Type="String">ma_lop</Data></Cell>
+			<Cell><Data ss:Type="String">ho_va_ten</Data></Cell>
+			<Cell><Data ss:Type="String">ngay_sinh</Data></Cell>
+			<Cell><Data ss:Type="String">gioi_tinh</Data></Cell>
+			<Cell><Data ss:Type="String">dan_toc</Data></Cell>
+			<Cell><Data ss:Type="String">ma_dinh_danh</Data></Cell>
+			<Cell><Data ss:Type="String">ho_ten_bo</Data></Cell>
+			<Cell><Data ss:Type="String">nghe_nghiep_bo</Data></Cell>
+			<Cell><Data ss:Type="String">ho_ten_me</Data></Cell>
+			<Cell><Data ss:Type="String">nghe_nghiep_me</Data></Cell>
+			<Cell><Data ss:Type="String">ho_khau</Data></Cell>
+			<Cell><Data ss:Type="String">cccd_bo_me</Data></Cell>
+			<Cell><Data ss:Type="String">sdt</Data></Cell>
+		</Row>
+
+		<Row>
+			<Cell><Data ss:Type="String">HS0001</Data></Cell>
+			<Cell><Data ss:Type="String">C01</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Bùi Bảo Hân</Data></Cell>
+			<Cell><Data ss:Type="String">2019-11-06</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">1319027148</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Văn Quân</Data></Cell>
+			<Cell><Data ss:Type="String">Tài xế</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi T Thanh Tâm</Data></Cell>
+			<Cell><Data ss:Type="String">Buôn bán</Data></Cell>
+			<Cell><Data ss:Type="String">Phú Xuyên-HN</Data></Cell>
+			<Cell><Data ss:Type="String">1080046867</Data></Cell>
+			<Cell><Data ss:Type="String">943108127</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0002</Data></Cell>
+			<Cell><Data ss:Type="String">C02</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Ngọc Hân</Data></Cell>
+			<Cell><Data ss:Type="String">2019-12-25</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68319004493</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Minh Tường</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh doanh</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thanh Hiền</Data></Cell>
+			<Cell><Data ss:Type="String">Bác sĩ</Data></Cell>
+			<Cell><Data ss:Type="String">Tân Trung-Tân Hà</Data></Cell>
+			<Cell><Data ss:Type="String">68195003930</Data></Cell>
+			<Cell><Data ss:Type="String">369085268</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0003</Data></Cell>
+			<Cell><Data ss:Type="String">C03</Data></Cell>
+			<Cell><Data ss:Type="String">Ngô Huỳnh Phúc Hưng </Data></Cell>
+			<Cell><Data ss:Type="String">2019-07-22</Data></Cell>
+			<Cell><Data ss:Type="String">Nam</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68219010383</Data></Cell>
+			<Cell><Data ss:Type="String">Ngô Thanh Xuân</Data></Cell>
+			<Cell><Data ss:Type="String">Tự do</Data></Cell>
+			<Cell><Data ss:Type="String">Huỳnh Thị Thắm</Data></Cell>
+			<Cell><Data ss:Type="String">Giáo viên</Data></Cell>
+			<Cell><Data ss:Type="String">Văn Tâm</Data></Cell>
+			<Cell><Data ss:Type="String">49191006461</Data></Cell>
+			<Cell><Data ss:Type="String">327345845</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0004</Data></Cell>
+			<Cell><Data ss:Type="String"></Data></Cell>
+			<Cell><Data ss:Type="String">Dương Đăng Khôi</Data></Cell>
+			<Cell><Data ss:Type="String">2019-01-29</Data></Cell>
+			<Cell><Data ss:Type="String">Nam</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68219003176</Data></Cell>
+			<Cell><Data ss:Type="String">Dương Trung Thạnh</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh doanh</Data></Cell>
+			<Cell><Data ss:Type="String">Trịnh Thị Hà</Data></Cell>
+			<Cell><Data ss:Type="String">Kế toán</Data></Cell>
+			<Cell><Data ss:Type="String">Quảng Đức</Data></Cell>
+			<Cell><Data ss:Type="String">11900453558</Data></Cell>
+			<Cell><Data ss:Type="String">972282708</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0005</Data></Cell>
+			<Cell><Data ss:Type="String">L02</Data></Cell>
+			<Cell><Data ss:Type="String">Tô Nhật Minh</Data></Cell>
+			<Cell><Data ss:Type="String">2019-03-26</Data></Cell>
+			<Cell><Data ss:Type="String">Nam</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68219003997</Data></Cell>
+			<Cell><Data ss:Type="String">Tô Thành Tánh</Data></Cell>
+			<Cell><Data ss:Type="String">Nông</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Kim Ly</Data></Cell>
+			<Cell><Data ss:Type="String">Nông</Data></Cell>
+			<Cell><Data ss:Type="String">Tân Thành-TV</Data></Cell>
+			<Cell><Data ss:Type="String">60091015331</Data></Cell>
+			<Cell><Data ss:Type="String">383050052</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0006</Data></Cell>
+			<Cell><Data ss:Type="String">L03</Data></Cell>
+			<Cell><Data ss:Type="String">Mai Ngọc Nhiên</Data></Cell>
+			<Cell><Data ss:Type="String">2019-12-18</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68319001500</Data></Cell>
+			<Cell><Data ss:Type="String">Mai Văn Hiền</Data></Cell>
+			<Cell><Data ss:Type="String">Cơ khí</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Hằng</Data></Cell>
+			<Cell><Data ss:Type="String">Nông</Data></Cell>
+			<Cell><Data ss:Type="String">CoYa</Data></Cell>
+			<Cell><Data ss:Type="String">36190017299</Data></Cell>
+			<Cell><Data ss:Type="String">984292094</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0007</Data></Cell>
+			<Cell><Data ss:Type="String">M01</Data></Cell>
+			<Cell><Data ss:Type="String">Hoàng Trần An Nhiên</Data></Cell>
+			<Cell><Data ss:Type="String">2019-11-08</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68319003177</Data></Cell>
+			<Cell><Data ss:Type="String">Hoàng Xuân Tiên</Data></Cell>
+			<Cell><Data ss:Type="String">Nông</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Hoa</Data></Cell>
+			<Cell><Data ss:Type="String">Nội trợ</Data></Cell>
+			<Cell><Data ss:Type="String">Quảng Đức</Data></Cell>
+			<Cell><Data ss:Type="String">40199021238</Data></Cell>
+			<Cell><Data ss:Type="String">792281703</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0008</Data></Cell>
+			<Cell><Data ss:Type="String">M02</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Đình Gia Phúc</Data></Cell>
+			<Cell><Data ss:Type="String">2019-05-16</Data></Cell>
+			<Cell><Data ss:Type="String">Nam</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">1219027433</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Đình Nhân</Data></Cell>
+			<Cell><Data ss:Type="String">CT Cấp nước </Data></Cell>
+			<Cell><Data ss:Type="String">Trần T Th. Huyền</Data></Cell>
+			<Cell><Data ss:Type="String">CT Cấp nước </Data></Cell>
+			<Cell><Data ss:Type="String">Sê Nhắc</Data></Cell>
+			<Cell><Data ss:Type="String">19179013442</Data></Cell>
+			<Cell><Data ss:Type="String">02633.506.924</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0009</Data></Cell>
+			<Cell><Data ss:Type="String">M03</Data></Cell>
+			<Cell><Data ss:Type="String">Đỗ Phương Thảo</Data></Cell>
+			<Cell><Data ss:Type="String">2019-02-21</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68319013032</Data></Cell>
+			<Cell><Data ss:Type="String">Đỗ Danh Hưởng</Data></Cell>
+			<Cell><Data ss:Type="String">Tự do</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Huế</Data></Cell>
+			<Cell><Data ss:Type="String">CNV</Data></Cell>
+			<Cell><Data ss:Type="String">Quảng Đức</Data></Cell>
+			<Cell><Data ss:Type="String">68184002360</Data></Cell>
+			<Cell><Data ss:Type="String">917179787</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0010</Data></Cell>
+			<Cell><Data ss:Type="String">C01</Data></Cell>
+			<Cell><Data ss:Type="String">Vũ Ngọc Thanh Trúc</Data></Cell>
+			<Cell><Data ss:Type="String">2019-11-09</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68319000536</Data></Cell>
+			<Cell><Data ss:Type="String">Vũ Mạnh Trinh</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh doanh</Data></Cell>
+			<Cell><Data ss:Type="String">Đinh Thị Phương Anh</Data></Cell>
+			<Cell><Data ss:Type="String">Giáo viên</Data></Cell>
+			<Cell><Data ss:Type="String">Quảng Đức</Data></Cell>
+			<Cell><Data ss:Type="String">1184045829</Data></Cell>
+			<Cell><Data ss:Type="String">965974333</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0011</Data></Cell>
+			<Cell><Data ss:Type="String">C02</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Ngọc Thảo Vy</Data></Cell>
+			<Cell><Data ss:Type="String">2019-06-23</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68319002166</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Ngọc Thảo</Data></Cell>
+			<Cell><Data ss:Type="String">Nhân viên</Data></Cell>
+			<Cell><Data ss:Type="String">Nguyễn Thị Thảo</Data></Cell>
+			<Cell><Data ss:Type="String">Nhân viên</Data></Cell>
+			<Cell><Data ss:Type="String">Đarơmăng</Data></Cell>
+			<Cell><Data ss:Type="String">52191014281</Data></Cell>
+			<Cell><Data ss:Type="String">986955026</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0012</Data></Cell>
+			<Cell><Data ss:Type="String">C03</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Ngọc Huy</Data></Cell>
+			<Cell><Data ss:Type="String">2020-12-20</Data></Cell>
+			<Cell><Data ss:Type="String">Nam</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68220004411</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Ngọc Tuân</Data></Cell>
+			<Cell><Data ss:Type="String">Công an</Data></Cell>
+			<Cell><Data ss:Type="String">Phạm Thị Mỹ Ngân</Data></Cell>
+			<Cell><Data ss:Type="String">Công an</Data></Cell>
+			<Cell><Data ss:Type="String">Quảng Đức</Data></Cell>
+			<Cell><Data ss:Type="String">68102004934</Data></Cell>
+			<Cell><Data ss:Type="String">868207992</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0013</Data></Cell>
+			<Cell><Data ss:Type="String">L01</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi Gia Hân</Data></Cell>
+			<Cell><Data ss:Type="String">2020-08-13</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">đang cập nhật</Data></Cell>
+			<Cell><Data ss:Type="String">Bùi Mạnh Hiệp</Data></Cell>
+			<Cell><Data ss:Type="String">Lái xe</Data></Cell>
+			<Cell><Data ss:Type="String">Vy Thị Thảo Phương</Data></Cell>
+			<Cell><Data ss:Type="String">Giáo viên</Data></Cell>
+			<Cell><Data ss:Type="String">Tân Lợi - TV</Data></Cell>
+			<Cell><Data ss:Type="String">68194000913</Data></Cell>
+			<Cell><Data ss:Type="String">397084438</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0014</Data></Cell>
+			<Cell><Data ss:Type="String">L02</Data></Cell>
+			<Cell><Data ss:Type="String">Võ Kiệt Luân</Data></Cell>
+			<Cell><Data ss:Type="String">2020-07-06</Data></Cell>
+			<Cell><Data ss:Type="String">Nam</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68220006200</Data></Cell>
+			<Cell><Data ss:Type="String">Võ Nguyên Văn</Data></Cell>
+			<Cell><Data ss:Type="String">NVVP</Data></Cell>
+			<Cell><Data ss:Type="String">Phùng T Như Ngọc</Data></Cell>
+			<Cell><Data ss:Type="String">Tự do</Data></Cell>
+			<Cell><Data ss:Type="String">Quảng Đức</Data></Cell>
+			<Cell><Data ss:Type="String">68195009095</Data></Cell>
+			<Cell><Data ss:Type="String">972237797</Data></Cell>
+		</Row>
+		<Row>
+			<Cell><Data ss:Type="String">HS0015</Data></Cell>
+			<Cell><Data ss:Type="String">L03</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Ngọc Bảo Trân</Data></Cell>
+			<Cell><Data ss:Type="String">2020-01-19</Data></Cell>
+			<Cell><Data ss:Type="String">Nữ</Data></Cell>
+			<Cell><Data ss:Type="String">Kinh</Data></Cell>
+			<Cell><Data ss:Type="String">68320005857</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Sỹ Biển</Data></Cell>
+			<Cell><Data ss:Type="String">CNV</Data></Cell>
+			<Cell><Data ss:Type="String">Trần Thị Hương</Data></Cell>
+			<Cell><Data ss:Type="String">Giáo viên</Data></Cell>
+			<Cell><Data ss:Type="String">Văn Tâm</Data></Cell>
+			<Cell><Data ss:Type="String">40180023812</Data></Cell>
+			<Cell><Data ss:Type="String">914248600</Data></Cell>
+		</Row>	</Table>
+</Worksheet>
+</Workbook>

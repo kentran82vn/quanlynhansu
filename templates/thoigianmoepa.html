@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý Thời gian Mở EPA</title>
+<link rel="stylesheet" href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250707">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Quản lý Thời gian Mở EPA</h1>
+    <div class="button-group">
+      <a href="/" class="btn btn-primary">Trang chủ</a>
+      <form method="POST" action="{{ url_for('thoigianmoepa.sync_records') }}" style="display:inline;">
+        <button type="submit" class="btn btn-outline-info">Đồng bộ</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tên Tài Khoản</th>
+          <th>Ngày Bắt Đầu</th>
+          <th>Ngày Kết Thúc</th>
+          <th>Ghi chú</th>
+          <th>GV</th>
+          <th>TGV</th>
+          <th>All</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tk in tk_list %}
+        <tr>
+        <form method="POST" action="{{ url_for('thoigianmoepa.save_record') }}">
+          <input type="hidden" name="ten_tk" value="{{ tk }}">
+          <td>{{ tk }}</td>
+          <td>
+            <input type="number" name="start_day" value="{{ records.get(tk).start_day if records.get(tk) else '' }}" min="1" max="25" class="form-control" required>
+          </td>
+          <td>
+            <input type="number" name="close_day" value="{{ records.get(tk).close_day if records.get(tk) else '' }}" min="2" class="form-control" required>
+          </td>
+          <td>
+            <input type="text" name="remark" value="{{ records.get(tk).remark if records.get(tk) else '' }}" class="form-control">
+          </td>
+          <td>
+            <select name="make_epa_gv" class="form-select">
+              <option value="yes"
+                {% if records.get(tk) and records.get(tk).make_epa_gv=='yes' %}
+                  selected
+                {% elif not records.get(tk) %}
+                  selected
+                {% endif %}
+              >yes</option>
+              <option value="no"
+                {% if records.get(tk) and records.get(tk).make_epa_gv=='no' %}
+                  selected
+                {% endif %}
+              >no</option>
+            </select>
+          </td>
+          <td>
+            <select name="make_epa_tgv" class="form-select">
+              <option value="yes"
+                {% if records.get(tk) and records.get(tk).make_epa_tgv=='yes' %}
+                  selected
+                {% endif %}
+              >yes</option>
+              <option value="no"
+                {% if records.get(tk) and records.get(tk).make_epa_tgv=='no' %}
+                  selected
+                {% elif not records.get(tk) %}
+                  selected
+                {% endif %}
+              >no</option>
+            </select>
+          </td>
+          <td>
+            <select name="make_epa_all" class="form-select">
+              <option value="yes"
+                {% if records.get(tk) and records.get(tk).make_epa_all=='yes' %}
+                  selected
+                {% endif %}
+              >yes</option>
+              <option value="no"
+                {% if records.get(tk) and records.get(tk).make_epa_all=='no' %}
+                  selected
+                {% elif not records.get(tk) %}
+                  selected
+                {% endif %}
+              >no</option>
+            </select>
+          </td>
+          <td>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+          </td>
+        </form>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+const rows = document.querySelectorAll('tbody tr');
+rows.forEach(row => {
+  const startInput = row.querySelector('input[name="start_day"]');
+  const closeInput = row.querySelector('input[name="close_day"]');
+  if (startInput && closeInput) {
+    startInput.addEventListener('input', () => {
+      closeInput.min = parseInt(startInput.value) + 1;
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -186,6 +186,7 @@
           <button class="btn btn-warning" onclick="removeDeptData()">🗑 Xóa Bảng Dữ Liệu</button>
           {% endif %}
           <a href="/admin/questions" class="btn btn-warning">📝 Câu Hỏi Đánh Giá</a>
+          <a href="/thoigianmoepa" class="btn btn-warning">📝 Đặt Thời Gian Chấm EPA</a>
         </div>
         {% endif %}
         {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
@@ -214,7 +215,6 @@
           <tr>
             <th>STT</th>
             <th>Mã HS</th>
-            <th>Mã GV</th>
             <th>Họ và Tên</th>
             <th>Ngày Sinh</th>
             <th>Giới Tính</th>
@@ -237,13 +237,6 @@
           <tr>
               <td>{{ loop.index }}</td>
               <td>{{ row['ma_hs'] }}</td> <!-- Mã HS không cho chỉnh sửa -->
-              <td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
-                      <input type="text" class="form-control inline-edit" value="{{ row['ma_gv'] }}" onkeypress="saveEdit(event, this, 'Ma Gv', '{{ row['ma_hs'] }}', 'HS')">
-                  {% else %}
-                      {{ row['ma_gv'] }}
-                  {% endif %}
-              </td>
               <td>
                   {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
                       <input type="text" class="form-control inline-edit" value="{{ row['ho_va_ten'] }}" onkeypress="saveEdit(event, this, 'Ho Va Ten', '{{ row['ma_hs'] }}', 'HS')">
@@ -660,7 +653,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         <form>
           <input type="hidden" id="edit_ma_hs">
           <div class="row g-3">
-            <div class="col-md-6"><label>Mã GV</label><input class="form-control" id="edit_ma_gv_hs"></div>
             <div class="col-md-6"><label>Họ và tên</label><input class="form-control" id="edit_ho_va_ten_hs"></div>
             <div class="col-md-6"><label>Ngày sinh</label><input type="date" class="form-control" id="edit_ngay_sinh"></div>
             <div class="col-md-6"><label>Giới tính</label><input class="form-control" id="edit_gioi_tinh"></div>
@@ -686,6 +678,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 </body>
 </html>
 <script>
+  async function fetchTeacherOptions() {
+    const res = await fetch("/api/teachers");
+    const data = await res.json();
+    return data; // [{ ma_gv: "...", ho_va_ten: "..." }, ...]
+    }
 function getInputValues() {
   const dept = document.getElementById("deptSelect").value;
   if (dept === "GV") {
@@ -718,6 +715,7 @@ async function fetchSchema() {
   schemaByDept = await res.json();
   switchDept();  // render lần đầu
 }
+
 async function switchDept() {
   console.log("DEBUG: switchDept started");
   const dept = document.getElementById("deptSelect").value;
@@ -735,39 +733,68 @@ async function switchDept() {
     console.log(`DEBUG: Invalid dept or schema not found for ${dept}, exiting`);
     return;
   }
-  // Render input dynamic
+  // Render input động
   console.log(`DEBUG: Rendering inputs for schema: ${schemaByDept[dept]}`);
   let rowDiv = document.createElement("div");
   rowDiv.className = "row g-2 mb-2 w-100 d-flex";
+  const teachers = dept === "HS" ? await fetchTeacherOptions() : [];
 
-  // Đảm bảo mỗi hàng có thể chứa nhiều trường nhập liệu hơn và tự động xuống dòng khi hết không gian
-  schemaByDept[dept].forEach((field, index) => {
+  for (let index = 0; index < schemaByDept[dept].length; index++) {
+    const field = schemaByDept[dept][index];
     const label = field.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-    console.log(`DEBUG: Creating input for field: ${field}, label: ${label}`);
-    
     const colDiv = document.createElement("div");
-    colDiv.className = "col-3 col-sm-2 col-md-1 input-dynamic";  // Đảm bảo cột sẽ thay đổi khi kích thước màn hình thay đổi
-    colDiv.innerHTML = `
-      <label class="form-label fw-bold w-100">${label}</label>
-      <input type="text" id="${field}" class="form-control form-control-sm" placeholder="${label}">
-    `;
+    colDiv.className = "col-3 col-sm-2 col-md-1 input-dynamic";
+
+    if (field.toLowerCase() === "ma_gv" && dept === "HS") {
+      const options = teachers.map(t => `<option value="${t.ma_gv}">${t.ma_gv} - ${t.ho_va_ten}</option>`).join("");
+      colDiv.innerHTML = `
+        <label class="form-label fw-bold w-100">${label}</label>
+        <select id="${field}" class="form-control form-control-sm">
+          <option value="">-- Chọn mã GV --</option>
+          ${options}
+        </select>
+      `;
+    } else {
+      colDiv.innerHTML = `
+        <label class="form-label fw-bold w-100">${label}</label>
+        <input type="text" id="${field}" class="form-control form-control-sm" placeholder="${label}">
+      `;
+    }
+
     rowDiv.appendChild(colDiv);
-    
-    // Sau mỗi khi có đủ cột trong row, sẽ thêm dòng mới
-    if ((index + 1) % 8 === 0) {  // Chuyển sang dòng mới sau khi có đủ số lượng input cần thiết
+
+    if ((index + 1) % 8 === 0) {
       container.appendChild(rowDiv);
-      console.log(`DEBUG: Appended row with ${rowDiv.childElementCount} inputs`);
       rowDiv = document.createElement("div");
       rowDiv.className = "row g-2 mb-2 w-100 d-flex";
     }
-  });
+  }
 
   if (rowDiv.childElementCount > 0) {
     container.appendChild(rowDiv);
-    console.log(`DEBUG: Appended final row with ${rowDiv.childElementCount} inputs`);
+  }
+  if (dept === "GV") {
+    await fetchAndSetNextMaGV();  // ✅ Điền mã GV gợi ý
   }
 
-  // Add button row
+  // ✅ BƯỚC C: Gọi API để hiển thị mã HS tự tạo vào input
+  if (dept === "HS") {
+    try {
+      const res = await fetch("/api/next-ma-hs?prefix=HS");
+      const result = await res.json();
+      if (result.next_ma_hs) {
+        const input = document.getElementById("ma_hs");
+        if (input && !input.value) {
+          input.value = result.next_ma_hs;
+          console.log(`DEBUG: Auto-filled ma_hs = ${result.next_ma_hs}`);
+        }
+      }
+    } catch (err) {
+      console.error("❌ Lỗi khi fetch mã HS tự sinh:", err);
+    }
+  }
+
+  // Nút Add
   const buttonRow = document.createElement("div");
   buttonRow.className = "row g-2 mt-2 w-100 input-dynamic";
   buttonRow.innerHTML = `
@@ -783,6 +810,24 @@ async function switchDept() {
   await fetchAndRenderDept(dept);
   console.log("DEBUG: switchDept completed");
 }
+
+//TỰ ĐIỀN ma_gv KHI CHỌN "GV"
+async function fetchAndSetNextMaGV(prefix = "GV") {
+  try {
+    const res = await fetch(`/api/next-ma-gv?prefix=${prefix}`);
+    const result = await res.json();
+    if (result.next_ma_gv) {
+      const input = document.getElementById("ma_gv");
+      if (input && !input.value) {
+        input.value = result.next_ma_gv;
+        console.log(`DEBUG: Auto-filled ma_gv = ${result.next_ma_gv}`);
+      }
+    }
+  } catch (err) {
+    console.error("❌ Lỗi khi fetch mã GV tự sinh:", err);
+  }
+}
+
 async function fetchAndRenderDept(dept) {
   console.log(`DEBUG: fetchAndRenderDept started for dept: ${dept}`);
   try {
@@ -794,7 +839,7 @@ async function fetchAndRenderDept(dept) {
     if (dept === "HS") {
       console.log("DEBUG: Rendering HS table");
       renderTable("table_hs", rows);
-    } else if (dept === "GV") {
+    } else if (dept === "HS") {
       console.log("DEBUG: Rendering GV table");
       renderTable("table_gv", rows);
     }
@@ -869,19 +914,110 @@ function formatDate(dateStr) {
          (d.getMonth() + 1).toString().padStart(2, '0') + "/" +
          d.getFullYear();
 }
+
+// Hàm chuẩn hóa mã bất kỳ về dạng XY00000
+function normalizeCode(raw) {
+  if (!raw) return "";
+  raw = raw.trim().toUpperCase();
+  const match = raw.match(/^([A-ZÀ-Ỵ]{2})(\d{1,5})$/);
+  if (!match) return raw;
+  const prefix = match[1];
+  const number = match[2].padStart(5, "0");
+  return prefix + number;
+}
+
+// Lấy mã HS tiếp theo
+async function getNextMaHS(prefix = "HS") {
+  const res = await fetch(`/api/last-ma-hs-prefix?prefix=${prefix}`);
+  const result = await res.json();
+  const next = result.next_num;
+  return result.prefix + next.toString().padStart(5, "0");
+}
+
+// Lấy mã GV tiếp theo
+async function getNextMaGV(prefix = "GV") {
+  const res = await fetch(`/api/next-ma-gv?prefix=${prefix}`);
+  const result = await res.json();
+  const next = result.next_num;
+  return result.prefix + next.toString().padStart(5, "0");
+}
+
+// Tự điền mã HS
+async function fetchAndSetNextMaHS(prefix = "HS") {
+  try {
+    const res = await fetch(`/api/next-ma-hs?prefix=${prefix}`);
+    const result = await res.json();
+    if (result.next_ma_hs) {
+      const input = document.getElementById("ma_hs");
+      if (input && !input.value) {
+        input.value = result.next_ma_hs;
+      }
+    }
+  } catch (err) {
+    console.error("❌ Lỗi khi lấy mã HS tự động:", err);
+  }
+}
+
+// Tự điền mã GV
+async function fetchAndSetNextMaGV(prefix = "GV") {
+  try {
+    const res = await fetch(`/api/next-ma-gv?prefix=${prefix}`);
+    const result = await res.json();
+    if (result.next_ma_gv) {
+      const input = document.getElementById("ma_gv");
+      if (input && !input.value) {
+        input.value = result.next_ma_gv;
+      }
+    }
+  } catch (err) {
+    console.error("❌ Lỗi khi lấy mã GV tự động:", err);
+  }
+}
+
 async function addEmployee() {
   const dept = document.getElementById("deptSelect").value;
   if (!dept || !schemaByDept[dept]) {
     alert("Please select a department.");
     return;
   }
-  const data = { "Dept": dept };  // ✅ Thêm dòng này để backend biết bảng nào
+  const data = { "Dept": dept };  // ✅ báo backend
   schemaByDept[dept].forEach(field => {
     const key = field.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-    data[key] = document.getElementById(field)?.value || "";
+    let value = document.getElementById(field)?.value?.trim() || "";
+    if (dept === "HS" && field === "ma_hs") {
+      if (!value) {
+        value = "HS";  // mặc định
+      }
+      const match = value.match(/^([A-ZÀ-Ỵ]{2})(\d{0,5})$/);
+      if (match) {
+        const prefix = match[1];
+        const num = match[2];
+
+        if (!num) {
+          // Gọi API để lấy số tiếp theo
+          getNextMaHS(prefix).then(autoCode => {
+            const confirmed = confirm(`Bạn chưa nhập mã HS hoặc nhập thiếu. Hệ thống gợi ý: ${autoCode}. Bạn có muốn dùng không?`);
+            if (confirmed) {
+              document.getElementById(field).value = autoCode;
+              data[key] = autoCode;
+            }
+          });
+        } else {
+          const normalized = prefix + num.padStart(5, "0");
+          if (normalized !== value) {
+            const confirmed = confirm(`Bạn nhập "${value}", có muốn dùng "${normalized}" không?`);
+            if (!confirmed) return;
+            value = normalized;
+            document.getElementById(field).value = normalized;
+          }
+        }
+      }
+    }
+    data[key] = value;
   });
-  if (!data["Ma Gv"] || !data["Ho Va Ten"]) {
-    alert("Mã GV và Họ và Tên là bắt buộc.");
+
+  if (dept === "HS" && (!data["Ma Hs"] || !data["Ho Va Ten"])) {
+    alert("Mã HS và Họ và Tên là bắt buộc.");
     return;
   }
   const res = await fetch("/add", {
@@ -909,6 +1045,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     localStorage.removeItem('lastImportedFile');
   }
 });
+
 function editCell(td, column) {
   const original = td.innerText.trim();
   const index = td.parentElement.getAttribute("data-index");
@@ -1106,7 +1243,6 @@ function renderHS(rows) {
     tr.innerHTML = `
       <td>${index + 1}</td>
       <td>${row.ma_hs || ""}</td>
-      <td>${row.ma_gv || ""}</td>
       <td>${row.ho_va_ten || ""}</td>
       <td>${formatDate(row.ngay_sinh)}</td>
       <td>${row.gioi_tinh || ""}</td>
@@ -1305,7 +1441,6 @@ function removeDeptData() {
 
   function openEditHSModal(row) {
     document.getElementById("edit_ma_hs").value = row.ma_hs || "";
-    document.getElementById("edit_ma_gv_hs").value = row.ma_gv || "";
     document.getElementById("edit_ho_va_ten_hs").value = row.ho_va_ten || "";
     document.getElementById("edit_ngay_sinh").value = formatDateForInput(row.ngay_sinh);
     document.getElementById("edit_gioi_tinh").value = row.gioi_tinh || "";
@@ -1325,7 +1460,6 @@ function removeDeptData() {
   async function submitHSUpdate() {
     const data = {
       ma_hs: document.getElementById("edit_ma_hs").value,
-      ma_gv: document.getElementById("edit_ma_gv_hs").value,
       ho_va_ten: document.getElementById("edit_ho_va_ten_hs").value,
       ngay_sinh: document.getElementById("edit_ngay_sinh").value,
       gioi_tinh: document.getElementById("edit_gioi_tinh").value,
@@ -1356,5 +1490,4 @@ function removeDeptData() {
       alert("❌ Lỗi cập nhật: " + (result.error || "Không rõ lỗi"));
     }
   }
-
 </script>

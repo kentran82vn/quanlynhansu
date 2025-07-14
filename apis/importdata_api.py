@@ -130,7 +130,6 @@ def import_students_hs():
         # Đổi tên cột cho khớp SQL
         df.rename(columns={
             "MÃ HS": "ma_hs",
-            "MÃ GV": "ma_gv",
             "HỌ VÀ TÊN": "ho_va_ten",
             "NGÀY SINH": "ngay_sinh",
             "GIỚI TÍNH": "gioi_tinh",
@@ -151,7 +150,6 @@ def import_students_hs():
         for _, row in df.iterrows():
             values = {
                 "ma_hs": clean(str(row.get("ma_hs"))),
-                "ma_gv": clean(str(row.get("ma_gv"))),
                 "ho_va_ten": clean(str(row.get("ho_va_ten"))),
                 "ngay_sinh": pd.to_datetime(row.get("ngay_sinh"), dayfirst=True).date() if pd.notnull(row.get("ngay_sinh")) else None,
                 "gioi_tinh": clean(str(row.get("gioi_tinh"))),
@@ -168,16 +166,15 @@ def import_students_hs():
 
             cursor.execute("""
                 INSERT INTO hocsinh (
-                    ma_hs, ma_gv, ho_va_ten, ngay_sinh, gioi_tinh, dan_toc,
+                    ma_hs, ho_va_ten, ngay_sinh, gioi_tinh, dan_toc,
                     ma_dinh_danh, ho_ten_bo, nghe_nghiep_bo, ho_ten_me,
                     nghe_nghiep_me, ho_khau, cccd_bo_me, sdt
                 ) VALUES (
-                    %(ma_hs)s, %(ma_gv)s, %(ho_va_ten)s, %(ngay_sinh)s, %(gioi_tinh)s, %(dan_toc)s,
+                    %(ma_hs)s, %(ho_va_ten)s, %(ngay_sinh)s, %(gioi_tinh)s, %(dan_toc)s,
                     %(ma_dinh_danh)s, %(ho_ten_bo)s, %(nghe_nghiep_bo)s, %(ho_ten_me)s,
                     %(nghe_nghiep_me)s, %(ho_khau)s, %(cccd_bo_me)s, %(sdt)s
                 )
                 ON DUPLICATE KEY UPDATE
-                    ma_gv = VALUES(ma_gv),
                     ho_va_ten = VALUES(ho_va_ten),
                     ngay_sinh = VALUES(ngay_sinh),
                     gioi_tinh = VALUES(gioi_tinh),
