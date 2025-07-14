@@ -101,7 +101,7 @@ def login():
 def dashboard():
     if "user" not in session:
         return redirect("/")
-    return render_template("index.html", user=session["user"])
+    return render_template("index.html", user=session["user"], role=session["role"])
 
 @app.route("/employees")
 def employees():
@@ -1077,10 +1077,120 @@ def view_export_data():
     return render_template("export_data.html")
 
 # THời gian mở EPA
-
-
 def open_browser():
     webbrowser.open("http://localhost:5000")
+
+#Hàm đổi mật khẩu user đang logging
+@app.route('/change-password', methods=['POST'])
+def change_password():
+    data = request.get_json()
+    user = session.get('user')
+    if not user:
+        return jsonify({"status": "fail", "message": "Chưa đăng nhập"})
+
+    old_password = data.get('old_password')
+    new_password = data.get('new_password')
+
+    conn = pymysql.connect(**DB_CONFIG)
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT mat_khau FROM tk WHERE ten_tk=%s", (user,))
+            row = cursor.fetchone()
+            if not row or not check_password_hash(row['mat_khau'], old_password):
+                return jsonify({"status": "fail", "message": "Mật khẩu cũ không đúng!"})
+
+            new_hash = generate_password_hash(new_password)
+            cursor.execute("UPDATE tk SET mat_khau=%s WHERE ten_tk=%s", (new_hash, user))
+            conn.commit()
+            return jsonify({"status": "success"})
+    finally:
+        conn.close()
+
+from datetime import datetime
+
+@app.route('/sup-epa-score')
+def sup_epa_score():
+    user = session.get('user')
+    if not user:
+        return redirect('/login')
+
+    now = datetime.now()
+    current_month = now.month
+    current_year = now.year
+
+    conn = pymysql.connect(**DB_CONFIG)
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT chuc_vu FROM bangdanhgia WHERE ten_tk=%s LIMIT 1", (user,))
+            row = cursor.fetchone()
+            if not row:
+                return "Không tìm thấy người dùng", 404
+
+            chuc_vu = row['chuc_vu']
+            if not chuc_vu.startswith("TGV"):
+                return "Bạn không có quyền xem trang này", 403
+
+            suffix = chuc_vu[3:]  # ví dụ: '2' từ 'TGV2'
+            target_chuc_vu = f"GV{suffix}"
+
+            cursor.execute("""
+                SELECT DISTINCT ten_tk, ho_va_ten
+                FROM bangdanhgia
+                WHERE chuc_vu=%s AND year=%s AND month=%s
+            """, (target_chuc_vu, current_year, current_month))
+            members = cursor.fetchall()
+
+            return render_template("sup_epa_score.html",
+                                   members=members,
+                                   target_chuc_vu=target_chuc_vu,
+                                   current_month=current_month,
+                                   current_year=current_year)
+    finally:
+        conn.close()
+
+@app.route('/sup-epa-detail')
+def sup_epa_detail():
+    ten_tk = request.args.get('ten_tk')
+    thang = request.args.get('thang')
+    nam = request.args.get('nam')
+
+    conn = pymysql.connect(**DB_CONFIG)
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT id, question, user_comment, user_score, sup_comment, sup_score
+                FROM bangdanhgia
+                WHERE ten_tk=%s AND year=%s AND month=%s
+                ORDER BY created_at
+            """, (ten_tk, nam, thang))
+            rows = cursor.fetchall()
+
+            return render_template("sup_epa_detail.html", rows=rows, ten_tk=ten_tk, thang=thang, nam=nam)
+    finally:
+        conn.close()
+
+@app.route('/update-sup-epa', methods=['POST'])
+def update_sup_epa():
+    from flask import request, redirect, url_for
+    import pymysql
+
+    conn = pymysql.connect(**DB_CONFIG)
+    try:
+        with conn.cursor() as cursor:
+            updates = request.form
+            for key, value in updates.items():
+                # chỉ xử lý các input bắt đầu bằng sup_comment_ hoặc sup_score_
+                if key.startswith('sup_comment_') or key.startswith('sup_score_'):
+                    # tách đúng tên cột + id
+                    col, id_ = key.rsplit('_', 1)   # ví dụ: sup_comment_123 → ['sup_comment', '123']
+                    cursor.execute(
+                        f"UPDATE bangdanhgia SET {col}=%s WHERE id=%s",
+                        (value, id_)
+                    )
+            conn.commit()
+        return redirect(url_for('sup_epa_score'))
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
     threading.Timer(1.0, open_browser).start()

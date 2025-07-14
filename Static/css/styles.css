@@ -305,4 +305,51 @@ canvas.epa-chart-small {
 .chart-summary-section {
   margin-bottom: 40px;
 }
+/* === Bổ sung từ file HTML === */
+body {
+  background-color: #f5f7fa;
+}
+
+.sidebar {
+  height: 100vh;
+  background: #343a40;
+  color: #fff;
+  padding-top: 1rem;
+}
+
+.sidebar .nav-link {
+  color: #adb5bd;
+  padding: 12px 20px;
+}
+
+.sidebar .nav-link:hover, 
+.sidebar .nav-link.active {
+  background-color: #495057;
+  color: #fff;
+}
+
+.sidebar .nav-link i {
+  margin-right: 10px;
+}
+
+iframe {
+  width: 100%;
+  height: calc(100vh - 56px);
+  border: none;
+}
+
+.topbar {
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar .user-info {
+  font-weight: 500;
+  color: #495057;
+}
 
