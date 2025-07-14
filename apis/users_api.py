@@ -196,23 +196,18 @@ def update_user_role():
     conn.close()
     return jsonify({"message": f"Role updated to '{new_role}' for '{username}'."})
 
-
 @users_bp.route("/reset-password", methods=["POST"])
 def reset_password():
     data = request.get_json()
     username = data.get("username", "").strip().lower()
-
     if not username:
         return jsonify({"error": "Missing username"}), 400
-
-    new_pass = "abc000"
+    new_pass = "mnhhd000"
     hashed_password = generate_password_hash(new_pass)
-
     conn = get_conn()
     with conn.cursor() as cursor:
         # ✅ Cập nhật mật khẩu
         cursor.execute("UPDATE tk SET mat_khau = %s WHERE ten_tk = %s", (hashed_password, username))
-
         # ✅ Ghi log
         cursor.execute("""
             INSERT INTO logs (user_ten_tk, target_table, target_staff_id, action)
@@ -223,8 +218,6 @@ def reset_password():
             username,
             "Reset password"
         ))
-
         conn.commit()
     conn.close()
-
     return jsonify({"new_pass": new_pass})

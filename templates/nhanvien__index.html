@@ -154,14 +154,6 @@
       <h1 class="mb-0 d-flex align-items-center gap-3">
         📋 - QUẢN LÝ NHÂN SỰ -
       </h1>
-      <div class="d-flex align-items-center gap-2">
-        <span class="text-muted" data-bs-toggle="tooltip" title="Username: {{ user }}&#10;Role: {{ role }}&#10;Password Expiry: {{ password_expiry }}">
-          👤 {{ user }} ({{ role }})
-        </span>
-        <button class="btn btn-outline-secondary btn-sm" onclick="openChangePassModal('{{ user }}')">
-          🔐 Change Pass
-        </button>
-      </div>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -675,6 +667,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     </div>
   </div>
 </div>
+
+
 </body>
 </html>
 <script>
@@ -1490,4 +1484,5 @@ function removeDeptData() {
       alert("❌ Lỗi cập nhật: " + (result.error || "Không rõ lỗi"));
     }
   }
+
 </script>
