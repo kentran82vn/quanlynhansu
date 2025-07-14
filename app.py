@@ -810,13 +810,9 @@ def api_danh_sach_ma():
 def view_export_data():
     return render_template("export_data.html")
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 # THời gian mở EPA
-=======
->>>>>>> parent of eceb06f (new)
-=======
->>>>>>> parent of eceb06f (new)
+
 def open_browser():
     webbrowser.open("http://localhost:5000")
 
