@@ -16,7 +16,7 @@ import os
 import json
 import re
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='Static', static_url_path='/static')
 app.secret_key = "supersecretkey"
 app.register_blueprint(thoigianmoepa_bp)
 app.register_blueprint(users_bp)
@@ -240,7 +240,18 @@ def add_employee():
         conn.close()
         return jsonify({"status": "ok"})
     return jsonify({"status": "error", "message": "Unsupported department"}), 400
-
+@app.route("/debug-static/<path:filename>")
+def debug_static(filename):
+    import os
+    file_path = os.path.join('Static', filename)
+    return f"""
+    <h1>Debug Static File</h1>
+    <p>Requested: {filename}</p>
+    <p>Full path: {file_path}</p>
+    <p>File exists: {os.path.exists(file_path)}</p>
+    <p>Current dir: {os.getcwd()}</p>
+    <p>Static folder content: {os.listdir('Static') if os.path.exists('Static') else 'No folder'}</p>
+    """
 @app.route("/delete", methods=["POST"])
 def delete_employee():
     data = request.get_json()
