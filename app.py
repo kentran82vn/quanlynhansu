@@ -365,19 +365,62 @@ def logout():
 
 @app.route("/api/table-schema")
 def get_table_schema():
-    conn = get_conn()
-    result = {}
     try:
+        conn = get_conn()
+        result = {}
+        
         with conn.cursor() as cursor:
+            # Kiểm tra bảng tồn tại trước
+            cursor.execute("SHOW TABLES")
+            existing_tables = []
+            for row in cursor.fetchall():
+                # Lấy tên bảng từ kết quả SHOW TABLES
+                table_name = list(row.values())[0] if isinstance(row, dict) else row[0]
+                existing_tables.append(table_name)
+            
+            print(f"[DEBUG] Existing tables: {existing_tables}")
+            
             for table in ["giaovien", "hocsinh"]:
-                cursor.execute(f"DESCRIBE {table}")
-                cols = [row["Field"] for row in cursor.fetchall()]
-                result["GV" if table == "giaovien" else "HS"] = cols
-    finally:
+                if table in existing_tables:
+                    cursor.execute(f"DESCRIBE {table}")
+                    cols = [row["Field"] for row in cursor.fetchall()]
+                    result["GV" if table == "giaovien" else "HS"] = cols
+                    print(f"[DEBUG] Table {table} columns: {cols}")
+                else:
+                    print(f"[DEBUG] Table {table} not found")
+                    result["GV" if table == "giaovien" else "HS"] = []
+        
         conn.close()
-    return jsonify(result)
+        print(f"[DEBUG] Schema result: {result}")
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"[ERROR] get_table_schema: {str(e)}")
+        return jsonify({"error": f"Database error: {str(e)}"}), 500
 
-
+@app.route("/api/test-db")
+def test_db():
+    try:
+        conn = get_conn()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT 1 as test")
+            result = cursor.fetchone()
+            
+            # Test bảng tồn tại
+            cursor.execute("SHOW TABLES")
+            tables = cursor.fetchall()
+            
+        conn.close()
+        return jsonify({
+            "status": "success", 
+            "test_query": result,
+            "tables": tables
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error", 
+            "message": str(e)
+        }), 500
 # Example API to get employees
 @app.route("/api/employees")
 def api_employees():
