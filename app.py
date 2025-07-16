@@ -46,7 +46,18 @@ def parse_date(d):
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory('Static', filename)  # Chữ S hoa
-
+@app.route("/test-static")
+def test_static():
+    import os
+    return f"""
+    <h1>Debug Static Files</h1>
+    <p>Static folder exists: {os.path.exists('Static')}</p>
+    <p>CSS file exists: {os.path.exists('Static/css/styles.css')}</p>
+    <p>Files in Static: {os.listdir('Static') if os.path.exists('Static') else 'No Static folder'}</p>
+    <p>Files in Static/css: {os.listdir('Static/css') if os.path.exists('Static/css') else 'No css folder'}</p>
+    <hr>
+    <a href="/static/css/styles.css">Test CSS Link</a>
+    """
 @app.route("/", methods=["GET", "POST"])
 def login():
     conn = get_conn()
