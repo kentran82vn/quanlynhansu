@@ -45,7 +45,7 @@ def parse_date(d):
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
-    return send_from_directory('static', filename)
+    return send_from_directory('Static', filename)  # Chữ S hoa
 
 @app.route("/", methods=["GET", "POST"])
 def login():
