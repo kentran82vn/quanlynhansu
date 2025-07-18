@@ -16,7 +16,7 @@ import os
 import json
 import re
 
-app = Flask(__name__, static_folder='Static', static_url_path='/static')
+app = Flask(__name__)
 app.secret_key = "supersecretkey"
 app.register_blueprint(thoigianmoepa_bp)
 app.register_blueprint(users_bp)
@@ -45,19 +45,8 @@ def parse_date(d):
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
-    return send_from_directory('Static', filename)  # Chữ S hoa
-@app.route("/test-static")
-def test_static():
-    import os
-    return f"""
-    <h1>Debug Static Files</h1>
-    <p>Static folder exists: {os.path.exists('Static')}</p>
-    <p>CSS file exists: {os.path.exists('Static/css/styles.css')}</p>
-    <p>Files in Static: {os.listdir('Static') if os.path.exists('Static') else 'No Static folder'}</p>
-    <p>Files in Static/css: {os.listdir('Static/css') if os.path.exists('Static/css') else 'No css folder'}</p>
-    <hr>
-    <a href="/static/css/styles.css">Test CSS Link</a>
-    """
+    return send_from_directory('static', filename)
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     conn = get_conn()
@@ -240,18 +229,7 @@ def add_employee():
         conn.close()
         return jsonify({"status": "ok"})
     return jsonify({"status": "error", "message": "Unsupported department"}), 400
-@app.route("/debug-static/<path:filename>")
-def debug_static(filename):
-    import os
-    file_path = os.path.join('Static', filename)
-    return f"""
-    <h1>Debug Static File</h1>
-    <p>Requested: {filename}</p>
-    <p>Full path: {file_path}</p>
-    <p>File exists: {os.path.exists(file_path)}</p>
-    <p>Current dir: {os.getcwd()}</p>
-    <p>Static folder content: {os.listdir('Static') if os.path.exists('Static') else 'No folder'}</p>
-    """
+
 @app.route("/delete", methods=["POST"])
 def delete_employee():
     data = request.get_json()
@@ -387,62 +365,19 @@ def logout():
 
 @app.route("/api/table-schema")
 def get_table_schema():
+    conn = get_conn()
+    result = {}
     try:
-        conn = get_conn()
-        result = {}
-        
         with conn.cursor() as cursor:
-            # Kiểm tra bảng tồn tại trước
-            cursor.execute("SHOW TABLES")
-            existing_tables = []
-            for row in cursor.fetchall():
-                # Lấy tên bảng từ kết quả SHOW TABLES
-                table_name = list(row.values())[0] if isinstance(row, dict) else row[0]
-                existing_tables.append(table_name)
-            
-            print(f"[DEBUG] Existing tables: {existing_tables}")
-            
             for table in ["giaovien", "hocsinh"]:
-                if table in existing_tables:
-                    cursor.execute(f"DESCRIBE {table}")
-                    cols = [row["Field"] for row in cursor.fetchall()]
-                    result["GV" if table == "giaovien" else "HS"] = cols
-                    print(f"[DEBUG] Table {table} columns: {cols}")
-                else:
-                    print(f"[DEBUG] Table {table} not found")
-                    result["GV" if table == "giaovien" else "HS"] = []
-        
+                cursor.execute(f"DESCRIBE {table}")
+                cols = [row["Field"] for row in cursor.fetchall()]
+                result["GV" if table == "giaovien" else "HS"] = cols
+    finally:
         conn.close()
-        print(f"[DEBUG] Schema result: {result}")
-        return jsonify(result)
-        
-    except Exception as e:
-        print(f"[ERROR] get_table_schema: {str(e)}")
-        return jsonify({"error": f"Database error: {str(e)}"}), 500
+    return jsonify(result)
 
-@app.route("/api/test-db")
-def test_db():
-    try:
-        conn = get_conn()
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT 1 as test")
-            result = cursor.fetchone()
-            
-            # Test bảng tồn tại
-            cursor.execute("SHOW TABLES")
-            tables = cursor.fetchall()
-            
-        conn.close()
-        return jsonify({
-            "status": "success", 
-            "test_query": result,
-            "tables": tables
-        })
-    except Exception as e:
-        return jsonify({
-            "status": "error", 
-            "message": str(e)
-        }), 500
+
 # Example API to get employees
 @app.route("/api/employees")
 def api_employees():
