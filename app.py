@@ -624,12 +624,10 @@ def update_epa_kimnhung():
     # ✅ Chỉ cho phép nếu user là hiệu trưởng "kimnhung"
     if session.get("user") != "kimnhung":
         return jsonify({"error": "Bạn không có quyền chỉnh sửa"}), 403
-
     data = request.get_json()
     epa_id = data.get("id")
     pri_score = data.get("pri_total_score")
     pri_comment = data.get("pri_comment", "")
-
     conn = get_conn()
     with conn.cursor() as cursor:
         cursor.execute("""
@@ -639,7 +637,6 @@ def update_epa_kimnhung():
             WHERE id = %s
         """, (pri_score, pri_comment, epa_id))
         conn.commit()
-
     return jsonify({"message": "Cập nhật thành công!"})
 
 # Phần cập nhật thông tin giáo viên (GV) đang hiển thị

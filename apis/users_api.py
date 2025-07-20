@@ -150,53 +150,102 @@ def change_password():
 def delete_user():
     data = request.get_json()
     username = data.get("ten_tk", "").strip().lower()
-
     if not username:
         return jsonify({"status": "error", "message": "Missing username"}), 400
-
     if session.get("role") != "admin":
         return jsonify({"status": "error", "message": "Only admin can delete users."}), 403
 
     conn = get_conn()
+    deleted_counts = {}
+    remaining_counts = {}
     with conn.cursor() as cursor:
-        # Lấy ma_gv từ bảng giaovien
-        cursor.execute("""
-            SELECT ma_gv FROM giaovien WHERE ten_tk = %s
-        """, (username,))
-        result = cursor.fetchone()
-        ma_gv = result["ma_gv"] if result else None
+        print(f"[INFO] 🔎 Bắt đầu kiểm tra dữ liệu liên quan đến user: {username}")
+        related_tables = {
+            "giaovien": "ten_tk",
+            "bangdanhgia": "ten_tk",
+            "tongdiem_epa": "ten_tk",
+            "thoigianmoepa": "ten_tk",
+            "logs": "user_ten_tk",
+        }
+        related = {}
+        for table, col in related_tables.items():
+            cursor.execute(f"SELECT COUNT(*) AS cnt FROM {table} WHERE {col} = %s", (username,))
+            cnt = cursor.fetchone()["cnt"]
+            related[table] = cnt
+            print(f"[INFO] 📊 {table}: {cnt}")
 
-        # Nếu tồn tại ma_gv, xử lý các bảng liên quan
+        cursor.execute("SELECT ma_gv FROM giaovien WHERE ten_tk = %s", (username,))
+        ma_gv_row = cursor.fetchone()
+        ma_gv = ma_gv_row["ma_gv"] if ma_gv_row else None
         if ma_gv:
-            # xoá liên quan tới ma_gv ở các bảng có ma_gv
+            cursor.execute("SELECT COUNT(*) AS cnt FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
+            cnt = cursor.fetchone()["cnt"]
+            related["lop_gv"] = cnt
+            print(f"[INFO] 📊 lop_gv: {cnt}")
+        else:
+            related["lop_gv"] = 0
+
+        if str(data.get("confirm")).lower() != "true":
+            print(f"[INFO] 🚦 Đang ở bước xác nhận, chưa xoá.")
+            return jsonify({"status": "pending", "message": "Data found for deletion", "related": related}), 200
+
+        print(f"[INFO] 🗑️ Bắt đầu xoá dữ liệu của user: {username}")
+
+        if ma_gv:
             cursor.execute("DELETE FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
-            # … nếu có thêm bảng khác dùng ma_gv, xử lý tiếp ở đây
+            deleted_counts["lop_gv"] = cursor.rowcount
+            print(f"[INFO] ✅ Đã xoá {deleted_counts['lop_gv']} bản ghi ở lop_gv")
 
-            # cập nhật ma_gv trong giaovien
             new_ma_gv = f"XX{ma_gv[2:]}" if len(ma_gv) >= 2 else f"XX{ma_gv}"
-            cursor.execute("""
-                UPDATE giaovien SET ma_gv = %s WHERE ma_gv = %s
-            """, (new_ma_gv, ma_gv))
+            cursor.execute("UPDATE giaovien SET ma_gv = %s WHERE ma_gv = %s", (new_ma_gv, ma_gv))
+            deleted_counts["giaovien_update"] = cursor.rowcount
+            print(f"[INFO] ✍️ Đã cập nhật ma_gv thành {new_ma_gv} ở giaovien")
 
-        # xoá dữ liệu liên quan tới ten_tk
-        cursor.execute("DELETE FROM bangdanhgia WHERE ten_tk = %s", (username,))
-        cursor.execute("DELETE FROM tongdiem_epa WHERE ten_tk = %s", (username,))
-        cursor.execute("DELETE FROM logs WHERE user_ten_tk = %s", (username,))
-        cursor.execute("DELETE FROM thoigianmoepa WHERE ten_tk = %s", (username,))
-        # xóa user
+        for table in ["bangdanhgia", "tongdiem_epa", "thoigianmoepa", "logs"]:
+            col = "user_ten_tk" if table == "logs" else "ten_tk"
+            cursor.execute(f"DELETE FROM {table} WHERE {col} = %s", (username,))
+            deleted_counts[table] = cursor.rowcount
+            print(f"[INFO] ✅ Đã xoá {deleted_counts[table]} bản ghi ở {table}")
+
         cursor.execute("DELETE FROM tk WHERE ten_tk = %s", (username,))
         if cursor.rowcount == 0:
+            print(f"[ERROR] 🚫 User '{username}' không tìm thấy ở bảng tk.")
             return jsonify({"status": "error", "message": f"User '{username}' not found"}), 404
+        deleted_counts["tk"] = cursor.rowcount
+        print(f"[INFO] 🗑️ Đã xoá user ở bảng tk")
 
-        # log lại thao tác
-        cursor.execute("INSERT INTO logs (target_table, action) VALUES (%s, %s)", (
-            "tk",
-            f"Deleted user '{username}' by {session.get('user', 'system')} (and updated ma_gv if exists)"
-        ))
+        cursor.execute(
+            "INSERT INTO logs (target_table, action) VALUES (%s, %s)",
+            ("tk", f"Deleted user '{username}' and related data by {session.get('user', 'system')}")
+        )
+        print(f"[INFO] 📝 Đã ghi log thao tác")
 
         conn.commit()
+        print(f"[INFO] 💾 Commit transaction thành công")
+
+        # Kiểm tra lại dữ liệu còn không
+        print(f"[INFO] 🔍 Kiểm tra lại dữ liệu còn sót lại của user: {username}")
+        for table, col in related_tables.items():
+            cursor.execute(f"SELECT COUNT(*) AS cnt FROM {table} WHERE {col} = %s", (username,))
+            cnt = cursor.fetchone()["cnt"]
+            remaining_counts[table] = cnt
+            print(f"[CHECK] {table}: còn lại {cnt}")
+        if ma_gv:
+            cursor.execute("SELECT COUNT(*) AS cnt FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
+            cnt = cursor.fetchone()["cnt"]
+            remaining_counts["lop_gv"] = cnt
+            print(f"[CHECK] lop_gv: còn lại {cnt}")
+        else:
+            remaining_counts["lop_gv"] = 0
+
     conn.close()
-    return jsonify({"status": "ok", "message": f"User '{username}' deleted and ma_gv updated (if applicable)."})
+
+    return jsonify({
+        "status": "ok",
+        "message": f"User '{username}' and related data deleted.",
+        "deleted_counts": deleted_counts,
+        "remaining_counts": remaining_counts
+    }), 200
 
 @users_bp.route("/update", methods=["POST"])
 def update_user_role():
