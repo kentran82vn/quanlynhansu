@@ -706,19 +706,35 @@ def epa_preview():
 def remove_dept_data():
     data = request.get_json()
     dept = data.get("dept")
-    # Xử lý logic xoá dữ liệu tương ứng
-    # Ví dụ:
+
+    # Xác định bảng cần xóa
     if dept == "GV":
         table = "giaovien"
     elif dept == "HS":
         table = "hocsinh"
     else:
         return jsonify({"message": "Invalid department."}), 400
+
     conn = get_conn()
-    with conn.cursor() as cursor:
-        cursor.execute(f"DELETE FROM {table}")
+    try:
+        with conn.cursor() as cursor:
+            # 🚨 Tắt kiểm tra ràng buộc khóa ngoại
+            cursor.execute("SET FOREIGN_KEY_CHECKS=0")
+
+            # 🚮 Thực hiện xóa dữ liệu
+            cursor.execute(f"DELETE FROM {table}")
+
+            # 🔒 Bật lại kiểm tra ràng buộc
+            cursor.execute("SET FOREIGN_KEY_CHECKS=1")
+
         conn.commit()
-    return jsonify({"message": f"All data from {dept} removed successfully."})
+        return jsonify({"message": f"All data from {dept} removed successfully."})
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"message": f"Error: {str(e)}"}), 500
+    finally:
+        conn.close()
+
 
 # Phần xử lý câu hỏi EPA
 @app.route("/admin/questions")

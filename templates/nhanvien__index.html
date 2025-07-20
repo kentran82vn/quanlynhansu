@@ -1175,21 +1175,34 @@ async function deleteRow(dept, id) {
     alert("❌ Xóa thất bại: " + (result.reason || ""));
   }
 }
+
 function removeDeptData() {
-    const dept = document.getElementById("deptSelect").value;
+    const deptSelect = document.getElementById("deptSelect");
+    const dept = deptSelect.value;
+
     if (!dept) return alert("Please select a Dept first.");
     if (!confirm(`Are you sure to remove all data from ${dept}?`)) return;
+    if (!confirm(`This action cannot be undone. Are you really sure?`)) return;
+
     fetch(`/remove-dept-data`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ dept }),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ dept }),
     })
     .then(res => res.json())
-    .then(data => alert(data.message))
+    .then(data => {
+        alert(data.message);
+
+        // 🔄 Reload lại trang và set lại lựa chọn dept
+        const currentDept = dept;  // lưu giá trị hiện tại
+        window.location.reload();  // reload
+        // nếu muốn set lại giá trị dept sau reload thì cần logic phía server giữ lại trạng thái dept
+    })
     .catch(err => alert("Error: " + err));
-  }
+}
+
   function updateDataBase() {
     fetch("/update-database", { method: "POST" })
       .then(response => response.json())
