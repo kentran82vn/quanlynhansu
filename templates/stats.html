@@ -1,39 +1,39 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>System Statistics</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="utf-8"/>
+<title>System Statistics</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250716" rel="stylesheet"/>
 </head>
-<body>
-<div class="container mt-4">
-  <h3>📊 System Statistics</h3>
-
-  <!-- Tổng số giáo viên -->
-  <div class="mt-4">
-    <h5>🔢 Total Employees: {{ total }}</h5>
-  </div>
-
-  <!-- Thống kê theo nhóm -->
-  <div class="mt-4">
-    <h5>📌 Team Distribution</h5>
-    <table class="table table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>Team</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody>
+<body><div class="container-fluid mt-4"><div class="card"><div class="card-body">
+<div class="container-fluid mt-4">
+<h3>📊 System Statistics</h3>
+<!-- Tổng số giáo viên -->
+<div class="mt-4">
+<h5>🔢 Total Employees: {{ total }}</h5>
+</div>
+<!-- Thống kê theo nhóm -->
+<div class="mt-4">
+<h5>📌 Team Distribution</h5>
+<table class="table table-bordered">
+<thead class="table-dark">
+<tr>
+<th>Team</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
         {% for team in team_stats %}
         <tr>
-          <td>{{ team.team }}</td>
-          <td>{{ team.count }}</td>
-        </tr>
+<td>{{ team.team }}</td>
+<td>{{ team.count }}</td>
+</tr>
         {% endfor %}
       </tbody>
-    </table>
-  </div>
+</table>
 </div>
-</body>
+</div>
+</div></div></div></body>
 </html>

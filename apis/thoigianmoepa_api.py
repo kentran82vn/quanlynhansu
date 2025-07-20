@@ -18,6 +18,7 @@ def index():
         return render_template('403.html'), 403
 
     with engine.connect() as conn:
+
         tk_list = [row[0] for row in conn.execute(text("SELECT ten_tk FROM tk")).fetchall()]
         rs = conn.execute(text("SELECT * FROM thoigianmoepa")).fetchall()
         records = {r.ten_tk: r for r in rs}
@@ -44,26 +45,35 @@ def save_record():
         return jsonify({'error': 'unauthorized'}), 403
 
     data = request.form
-    record_id = data.get('id')
-    start_day = data.get('start_day')
-    close_day = data.get('close_day')
-    remark = data.get('remark')
+    start_day = data.get('start_day') or 20
+    close_day = data.get('close_day') or 25
+    remark = data.get('remark', '')
     ten_tk = data.get('ten_tk', session.get('user'))
     make_epa_gv = data.get('make_epa_gv', 'yes')
     make_epa_tgv = data.get('make_epa_tgv', 'no')
     make_epa_all = data.get('make_epa_all', 'no')
 
     with engine.connect() as conn:
-        if record_id:
+        giaovien_tk = {row[0] for row in conn.execute(text("SELECT ten_tk FROM giaovien")).fetchall()}
+        if ten_tk not in giaovien_tk:
+            flash(f"Tài khoản {ten_tk} không tồn tại trong bảng giáo viên.", "danger")
+            return redirect(url_for('thoigianmoepa.index'))
+
+        record = conn.execute(
+            text("SELECT id FROM thoigianmoepa WHERE ten_tk=:ten_tk"),
+            {'ten_tk': ten_tk}
+        ).fetchone()
+
+        if record:
             conn.execute(text("""
                 UPDATE thoigianmoepa SET start_day=:start_day, close_day=:close_day, remark=:remark,
                     make_epa_gv=:make_epa_gv, make_epa_tgv=:make_epa_tgv, make_epa_all=:make_epa_all
-                WHERE id=:id
+                WHERE ten_tk=:ten_tk
             """), {
                 'start_day': start_day,
                 'close_day': close_day,
                 'remark': remark,
-                'id': record_id,
+                'ten_tk': ten_tk,
                 'make_epa_gv': make_epa_gv,
                 'make_epa_tgv': make_epa_tgv,
                 'make_epa_all': make_epa_all
@@ -94,17 +104,18 @@ def sync_records():
 
     with engine.connect() as conn:
         tk_list = [row[0] for row in conn.execute(text("SELECT ten_tk FROM tk")).fetchall()]
+        giaovien_tk = {row[0] for row in conn.execute(text("SELECT ten_tk FROM giaovien")).fetchall()}
         existing_tk = {row[0] for row in conn.execute(text("SELECT ten_tk FROM thoigianmoepa")).fetchall()}
 
-        missing_tk = [tk for tk in tk_list if tk not in existing_tk]
+        valid_tk = [tk for tk in tk_list if tk in giaovien_tk and tk not in existing_tk]
 
-        for ten_tk in missing_tk:
+        for ten_tk in valid_tk:
             conn.execute(text("""
                 INSERT INTO thoigianmoepa (ten_tk, start_day, close_day, remark, make_epa_gv, make_epa_tgv, make_epa_all)
-                VALUES (:ten_tk, 1, 2, '', 'no', 'no', 'no')
+                VALUES (:ten_tk, 20, 25, '', 'yes', 'no', 'no')
             """), {'ten_tk': ten_tk})
 
         conn.commit()
 
-    flash(f"Đồng bộ thành công {len(missing_tk)} tài khoản", "success")
+    flash(f"Đồng bộ thành công {len(valid_tk)} tài khoản", "success")
     return redirect(url_for('thoigianmoepa.index'))

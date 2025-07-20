@@ -6,6 +6,7 @@ from apis.users_api import users_bp
 from apis.importdata_api import import_bp
 from apis.giaovien_epa import giaovien_epa_bp
 from apis.thoigianmoepa_api import thoigianmoepa_bp
+from apis.bangdanhgiaepa_api import bangdanhgiaepa_bp
 from config import DB_CONFIG
 import sqlite3  # Giả sử dùng SQLite, thay bằng DB khác nếu cần
 import mysql.connector
@@ -15,6 +16,7 @@ import webbrowser
 import os
 import json
 import re
+import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -22,6 +24,7 @@ app.register_blueprint(thoigianmoepa_bp)
 app.register_blueprint(users_bp)
 app.register_blueprint(import_bp)
 app.register_blueprint(giaovien_epa_bp)
+app.register_blueprint(bangdanhgiaepa_bp)
 
 def log_action(user_ten_tk, action, target_table=None, target_staff_id=None):
     conn = get_conn()
@@ -382,17 +385,40 @@ def get_table_schema():
 @app.route("/api/employees")
 def api_employees():
     dept = request.args.get("dept")
-    table = "giaovien" if dept == "GV" else "hocsinh" if dept == "HS" else None
-    if not table:
+    if dept == "GV":
+        table = "giaovien"
+        query = f"SELECT * FROM {table}"
+    elif dept == "HS":
+        query = """
+            SELECT 
+                h.ma_hs,
+                h.ho_va_ten,
+                h.ngay_sinh,
+                h.gioi_tinh,
+                h.dan_toc,
+                h.ma_dinh_danh,
+                h.ho_ten_bo,
+                h.nghe_nghiep_bo,
+                h.ho_ten_me,
+                h.nghe_nghiep_me,
+                h.ho_khau,
+                h.cccd_bo_me,
+                h.sdt,
+                pl.ma_lop,
+                lg.ma_gv
+            FROM hocsinh h
+            LEFT JOIN phan_lop pl ON h.ma_hs = pl.ma_hs
+            LEFT JOIN lop_gv lg ON pl.ma_lop = lg.ma_lop AND lg.vai_tro = 'GVCN'
+        """
+    else:
         return jsonify({"error": "Invalid department"}), 400
 
     conn = get_conn()
     with conn.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM {table}")
+        cursor.execute(query)
         rows = cursor.fetchall()
     conn.close()
     return jsonify({"rows": rows})
-
 
 # Update schema info
 @app.route("/update-database", methods=["POST"])
@@ -694,7 +720,7 @@ def remove_dept_data():
         conn.commit()
     return jsonify({"message": f"All data from {dept} removed successfully."})
 
-# Câu hỏi EPA
+# Phần xử lý câu hỏi EPA
 @app.route("/admin/questions")
 def admin_questions():
     return render_template("cauhoi_epa.html")
@@ -728,6 +754,15 @@ def add_or_update_question():
                 "INSERT INTO cauhoi_epa (question, translate) VALUES (%s, %s)",
                 (question, translate)
             )
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True})
+
+@app.route('/api/cauhoi_epa/<int:id>', methods=['DELETE'])
+def delete_question(id):
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("DELETE FROM cauhoi_epa WHERE id = %s", (id,))
     conn.commit()
     conn.close()
     return jsonify({"success": True})
@@ -1106,10 +1141,12 @@ def change_password():
     finally:
         conn.close()
 
-from datetime import datetime
-
+#Bảng đánh giá dành cho tổ trưởng 
 @app.route('/sup-epa-score')
 def sup_epa_score():
+    from datetime import datetime
+    import pymysql
+
     user = session.get('user')
     if not user:
         return redirect('/login')
@@ -1120,8 +1157,11 @@ def sup_epa_score():
 
     conn = pymysql.connect(**DB_CONFIG)
     try:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT chuc_vu FROM bangdanhgia WHERE ten_tk=%s LIMIT 1", (user,))
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+            # 📌 Lấy chức vụ của user
+            cursor.execute("""
+                SELECT chuc_vu FROM giaovien WHERE ten_tk=%s
+            """, (user,))
             row = cursor.fetchone()
             if not row:
                 return "Không tìm thấy người dùng", 404
@@ -1133,18 +1173,30 @@ def sup_epa_score():
             suffix = chuc_vu[3:]  # ví dụ: '2' từ 'TGV2'
             target_chuc_vu = f"GV{suffix}"
 
+            # 📌 Lấy danh sách tổ viên và trạng thái đánh giá từ tongdiem_epa
             cursor.execute("""
-                SELECT DISTINCT ten_tk, ho_va_ten
-                FROM bangdanhgia
-                WHERE chuc_vu=%s AND year=%s AND month=%s
-            """, (target_chuc_vu, current_year, current_month))
+                SELECT g.ten_tk, g.ho_va_ten, g.chuc_vu,
+                       t.user_total_score,
+                       t.sup_total_score AS sup_score,
+                       CASE WHEN t.id IS NOT NULL THEN 'Đã đánh giá' ELSE 'Chưa đánh giá' END AS trang_thai
+                FROM giaovien g
+                LEFT JOIN tongdiem_epa t
+                  ON g.ten_tk = t.ten_tk
+                 AND t.year = %s
+                 AND t.month = %s
+                WHERE g.chuc_vu = %s
+            """, (current_year, current_month, target_chuc_vu))
+
             members = cursor.fetchall()
 
-            return render_template("sup_epa_score.html",
-                                   members=members,
-                                   target_chuc_vu=target_chuc_vu,
-                                   current_month=current_month,
-                                   current_year=current_year)
+        return render_template(
+            "sup_epa_score.html",
+            members=members,
+            target_chuc_vu=target_chuc_vu,
+            current_month=current_month,
+            current_year=current_year
+        )
+
     finally:
         conn.close()
 
@@ -1173,22 +1225,55 @@ def sup_epa_detail():
 def update_sup_epa():
     from flask import request, redirect, url_for
     import pymysql
+    from datetime import datetime
+
+    user = session.get('user')
+    if not user:
+        return redirect('/login')
+
+    now = datetime.now()
+    current_year = now.year
+    current_month = now.month
 
     conn = pymysql.connect(**DB_CONFIG)
     try:
-        with conn.cursor() as cursor:
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
             updates = request.form
+
+            # ✅ Cập nhật từng câu hỏi trong bangdanhgia
             for key, value in updates.items():
-                # chỉ xử lý các input bắt đầu bằng sup_comment_ hoặc sup_score_
                 if key.startswith('sup_comment_') or key.startswith('sup_score_'):
-                    # tách đúng tên cột + id
-                    col, id_ = key.rsplit('_', 1)   # ví dụ: sup_comment_123 → ['sup_comment', '123']
+                    col, id_ = key.rsplit('_', 1)
                     cursor.execute(
                         f"UPDATE bangdanhgia SET {col}=%s WHERE id=%s",
                         (value, id_)
                     )
+
+            # ✅ Tổng hợp lại sup_score từ bangdanhgia
+            cursor.execute("""
+                SELECT ten_tk, year, month, SUM(sup_score) AS total_sup
+                FROM bangdanhgia
+                WHERE year=%s AND month=%s
+                GROUP BY ten_tk, year, month
+            """, (current_year, current_month))
+
+            rows = cursor.fetchall()
+
+            # ✅ Cập nhật hoặc chèn mới vào tongdiem_epa
+            for row in rows:
+                cursor.execute("""
+                    INSERT INTO tongdiem_epa (ten_tk, year, month, sup_total_score)
+                    VALUES (%s, %s, %s, %s)
+                    ON DUPLICATE KEY UPDATE sup_total_score=%s
+                """, (
+                    row['ten_tk'], row['year'], row['month'],
+                    row['total_sup'], row['total_sup']
+                ))
+
             conn.commit()
+
         return redirect(url_for('sup_epa_score'))
+
     finally:
         conn.close()
 

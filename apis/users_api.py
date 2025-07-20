@@ -154,20 +154,49 @@ def delete_user():
     if not username:
         return jsonify({"status": "error", "message": "Missing username"}), 400
 
+    if session.get("role") != "admin":
+        return jsonify({"status": "error", "message": "Only admin can delete users."}), 403
+
     conn = get_conn()
     with conn.cursor() as cursor:
+        # Lấy ma_gv từ bảng giaovien
+        cursor.execute("""
+            SELECT ma_gv FROM giaovien WHERE ten_tk = %s
+        """, (username,))
+        result = cursor.fetchone()
+        ma_gv = result["ma_gv"] if result else None
+
+        # Nếu tồn tại ma_gv, xử lý các bảng liên quan
+        if ma_gv:
+            # xoá liên quan tới ma_gv ở các bảng có ma_gv
+            cursor.execute("DELETE FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
+            # … nếu có thêm bảng khác dùng ma_gv, xử lý tiếp ở đây
+
+            # cập nhật ma_gv trong giaovien
+            new_ma_gv = f"XX{ma_gv[2:]}" if len(ma_gv) >= 2 else f"XX{ma_gv}"
+            cursor.execute("""
+                UPDATE giaovien SET ma_gv = %s WHERE ma_gv = %s
+            """, (new_ma_gv, ma_gv))
+
+        # xoá dữ liệu liên quan tới ten_tk
+        cursor.execute("DELETE FROM bangdanhgia WHERE ten_tk = %s", (username,))
+        cursor.execute("DELETE FROM tongdiem_epa WHERE ten_tk = %s", (username,))
+        cursor.execute("DELETE FROM logs WHERE user_ten_tk = %s", (username,))
+        cursor.execute("DELETE FROM thoigianmoepa WHERE ten_tk = %s", (username,))
+        # xóa user
         cursor.execute("DELETE FROM tk WHERE ten_tk = %s", (username,))
         if cursor.rowcount == 0:
             return jsonify({"status": "error", "message": f"User '{username}' not found"}), 404
 
+        # log lại thao tác
         cursor.execute("INSERT INTO logs (target_table, action) VALUES (%s, %s)", (
-            "tk",  # ✅ Sửa ở đây
-            f"Deleted user '{username}' by {session.get('user', 'system')}"
+            "tk",
+            f"Deleted user '{username}' by {session.get('user', 'system')} (and updated ma_gv if exists)"
         ))
 
         conn.commit()
     conn.close()
-    return jsonify({"status": "ok", "message": f"User '{username}' deleted"})
+    return jsonify({"status": "ok", "message": f"User '{username}' deleted and ma_gv updated (if applicable)."})
 
 @users_bp.route("/update", methods=["POST"])
 def update_user_role():
