@@ -17,22 +17,42 @@ logging.basicConfig(
 
 giaovien_epa_bp = Blueprint('giaovien_epa', __name__)
 
-# Hàm lấy thông tin ngày và thời gian đánh giá
-def get_date_info():
+# Hàm lấy thông tin ngày và thời gian đánh giá từ bảng thoigianmoepa sql
+def check_epa_period_for_user(ten_tk):
     now = datetime.now()
+    day = now.day
     year = now.year
     month = now.month
-    day = now.day
-    days_in_month = monthrange(year, month)[1]
-    start_day = 1 #days_in_month - 29
-    return {
-        'year': year,
-        'month': month,
-        'day': day,
-        'days_in_month': days_in_month,
-        'start_day': start_day,
-        'is_open': day >= start_day
-    }
+    conn = get_conn()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    try:
+        cursor.execute(
+            """
+            SELECT start_day, close_day
+            FROM thoigianmoepa
+            WHERE ten_tk = %s
+            """,
+            (ten_tk,)
+        )
+        record = cursor.fetchone()
+        if record:
+            start_day = record['start_day'] or 0
+            close_day = record['close_day'] or 0
+            is_open = start_day <= day <= close_day
+        else:
+            start_day = 0
+            close_day = 0
+            is_open = False
+        return {
+            'is_open': is_open,
+            'start_day': start_day,
+            'close_day': close_day,
+            'year': year,
+            'month': month
+        }
+    finally:
+        cursor.close()
+        conn.close()
 
 # Tải câu hỏi EPA từ cauhoi_epa
 def load_questions():
@@ -141,10 +161,14 @@ def user_epa_score():
 @giaovien_epa_bp.route('/api/assessment-period', methods=['GET'])
 def assessment_period():
     logging.info('Đang kiểm tra thời gian đánh giá')
-    date_info = get_date_info()
+    ten_tk = session.get('user')
+    if not ten_tk:
+        return jsonify({'isOpen': False, 'message': 'Không có người dùng'}), 401
+    date_info = check_epa_period_for_user(ten_tk)
     response = {
         'isOpen': date_info['is_open'],
-        'startDate': f"{date_info['year']}-{date_info['month']:02d}-{date_info['start_day']}",
+        'start_day': date_info['start_day'],
+        'close_day': date_info['close_day'],
         'year': date_info['year'],
         'month': date_info['month']
     }
@@ -178,10 +202,9 @@ def last_assessment():
     month = request.args.get('month')
     print('Giá trị tháng đang sử dụng', month)
     if not year or not month:
-        # Nếu không có year/month từ query, dùng thời gian hiện tại
-        date_info = get_date_info()
-        year = date_info['year']
-        month = date_info['month']
+        now = datetime.now()
+        year = now.year
+        month = now.month
 
     conn = get_conn()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -287,12 +310,12 @@ def submit_assessment():
     if year != current_year or month != current_month:
         logging.warning(f'Kỳ đánh giá không khớp với thời gian hiện tại: Current year={current_year}, month={current_month}, Request year={year}, month={month}')
         return jsonify({'message': 'Chỉ có thể gửi đánh giá cho tháng hiện tại'}), 400
-    date_info = get_date_info()
+    date_info = check_epa_period_for_user(ten_tk)
     if date_info['year'] != year or date_info['month'] != month:
-        logging.warning(f'Kỳ đánh giá không khớp: API year={date_info["year"]}, month={date_info["month"]}, Request year={year}, month={month}')
+        logging.warning(f'Kỳ đánh giá không khớp: DB year={date_info["year"]}, month={date_info["month"]}, Request year={year}, month={month}')
         return jsonify({'message': 'Kỳ đánh giá không khớp'}), 400
     if not date_info['is_open']:
-        logging.warning(f'Thời gian đánh giá đã đóng: day={date_info["day"]}, start_day={date_info["start_day"]}')
+        logging.warning(f'Thời gian đánh giá đã đóng: hôm nay không nằm trong khoảng {date_info["start_day"]} - {date_info["close_day"]}')
         return jsonify({'message': 'Thời gian đánh giá đã đóng'}), 403
     conn = get_conn()
     cursor = conn.cursor(pymysql.cursors.DictCursor)

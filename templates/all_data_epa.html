@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bảng Đánh Giá Giáo Viên</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+  <h2>Bảng Đánh Giá Giáo Viên</h2>
+
+  <div class="row g-2 mb-3">
+    <div class="col">
+      <input type="text" id="filter-ten_tk" class="form-control" placeholder="Tên tài khoản">
+    </div>
+    <div class="col">
+      <input type="number" id="filter-year" class="form-control" placeholder="Năm">
+    </div>
+    <div class="col">
+      <input type="number" id="filter-month" class="form-control" placeholder="Tháng">
+    </div>
+    <div class="col">
+      <button id="btn-filter" class="btn btn-primary w-100">Lọc</button>
+    </div>
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Tên TK</th>
+        <th>Năm</th>
+        <th>Tháng</th>
+        <th>Số câu hỏi</th>
+        <th>Tổng điểm User</th>
+        <th>Tổng điểm Sup</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+</div>
+
+<script>
+function loadData() {
+  let ten_tk = $('#filter-ten_tk').val();
+  let year = $('#filter-year').val();
+  let month = $('#filter-month').val();
+
+  $.getJSON('/api/evaluations', {ten_tk, year, month}, function(data) {
+    let rows = '';
+    data.forEach(function(row) {
+      rows += `
+        <tr>
+          <td>${row.ten_tk}</td>
+          <td>${row.year}</td>
+          <td>${row.month}</td>
+          <td>${row.num_questions}</td>
+          <td>${row.total_user_score}</td>
+          <td>${row.total_sup_score}</td>
+        </tr>`;
+    });
+    $('#table-body').html(rows);
+  });
+}
+
+$('#btn-filter').click(function() {
+  loadData();
+});
+
+$(document).ready(function() {
+  loadData();
+});
+</script>
+</body>
+</html>

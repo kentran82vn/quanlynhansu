@@ -1,93 +1,93 @@
 <!DOCTYPE html>
+
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8"/>
 <title>📝 Bảng Đánh Giá EPA</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<style>
-.blur {
-  filter: blur(2px);
-  pointer-events: none;
-  opacity: 0.5;
-}
-</style>
-</head>
-<body class="p-4">
-<h2 class="mb-4">📝 Bảng Đánh Giá EPA</h2>
+<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250719" rel="stylesheet"/>
 
+</head>
+<body class="p-4"><div class="container-fluid mt-4"><div class="card"><div class="card-body">
+  <h2 class="mb-4">📝 Bảng Đánh Giá EPA</h2>
 <div class="row mb-3">
   <div class="col-auto">
-    <label for="yearFilter" class="col-form-label">Chọn năm:</label>
+    <label class="col-form-label" for="yearFilter">Chọn năm:</label>
   </div>
   <div class="col-auto">
-    <select id="yearFilter" class="form-select form-select-sm" onchange="fetchDataEPA()">
+    <select class="form-select form-select-sm" id="yearFilter" onchange="fetchDataEPA()">
       <option value="All">All</option>
     </select>
   </div>
   <div class="col-auto">
-    <label for="monthFilter" class="col-form-label">Chọn tháng:</label>
+    <label class="col-form-label" for="monthFilter">Chọn tháng:</label>
   </div>
   <div class="col-auto">
-    <select id="monthFilter" class="form-select form-select-sm" onchange="fetchDataEPA()">
+    <select class="form-select form-select-sm" id="monthFilter" onchange="fetchDataEPA()">
       <option value="All">All</option>
     </select>
   </div>
 </div>
-
-<div class="row mb-3">
-  <div class="col-12">
-    <input type="checkbox" id="rangeMode" onchange="toggleRangeMode()"> Thống kê đánh giá EPA theo giai đoạn
+<div class="row mb-3 align-items-center gx-2">
+  <div class="col-auto">
+    <input id="rangeMode" onchange="toggleRangeMode()" type="checkbox"/> 
+    <label for="rangeMode">Thống kê đánh giá EPA theo giai đoạn</label>
   </div>
-  <div id="rangeSelectors" class="row mt-2" style="display:none;">
-    <div class="col">
-      <label>Năm bắt đầu</label>
-      <select id="startYear" class="form-select form-select-sm"></select>
-    </div>
-    <div class="col">
-      <label>Tháng bắt đầu</label>
-      <select id="startMonth" class="form-select form-select-sm"></select>
-    </div>
-    <div class="col">
-      <label>Năm kết thúc</label>
-      <select id="endYear" class="form-select form-select-sm"></select>
-    </div>
-    <div class="col">
-      <label>Tháng kết thúc</label>
-      <select id="endMonth" class="form-select form-select-sm"></select>
-    </div>
-    <div class="col mt-2">
-      <button class="btn btn-primary btn-sm" onclick="fetchDataEPA()">Lọc</button>
+
+  <div class="col-auto" id="rangeSelectors" style="display: none;">
+    <div class="row gx-2 align-items-center">
+      <div class="col-auto">
+        <label for="startYear">Năm bắt đầu</label>
+        <select class="form-select form-select-sm" id="startYear"></select>
+      </div>
+
+      <div class="col-auto">
+        <label for="startMonth">Tháng bắt đầu</label>
+        <select class="form-select form-select-sm" id="startMonth"></select>
+      </div>
+
+      <div class="col-auto">
+        <label for="endYear">Năm kết thúc</label>
+        <select class="form-select form-select-sm" id="endYear"></select>
+      </div>
+
+      <div class="col-auto">
+        <label for="endMonth">Tháng kết thúc</label>
+        <select class="form-select form-select-sm" id="endMonth"></select>
+      </div>
+
+      <div class="col-auto mt-2">
+        <button class="btn btn-primary btn-sm" onclick="fetchDataEPA()">Lọc</button>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="mt-3">
-  <button class="btn btn-danger" onclick="exportEPAtoPDF()">📄 Xuất PDF</button>
+<button class="btn btn-danger" onclick="exportEPAtoPDF()">📄 Xuất PDF</button>
 </div>
-
-<div id="epa-table-container" class="table-responsive">
-  <table class="table table-bordered table-hover text-center">
-    <thead class="table-primary">
-      <tr>
-        <th>Stt</th>
-        <th>Tên TK</th>
-        <th>Họ và Tên</th>
-        <th>Chức Vụ</th>
-        <th>Năm</th>
-        <th>Tháng</th>
-        <th>GV Chấm</th>
-        <th>T Chấm</th>
-        <th>HT/PHT Chấm</th>
-        <th>Xếp Loại</th>
-        <th>HT/PHT Đánh Giá</th>
-        <th>Xử Lý</th>
-      </tr>
-    </thead>
-    <tbody id="epa-table-body"></tbody>
-  </table>
+<div class="table-responsive" id="epa-table-container">
+<table class="table table-bordered table-hover text-center">
+<thead class="table-primary">
+<tr>
+<th>Stt</th>
+<th>Tên TK</th>
+<th>Họ và Tên</th>
+<th>Chức Vụ</th>
+<th>Năm</th>
+<th>Tháng</th>
+<th>GV Chấm</th>
+<th>T Chấm</th>
+<th>HT/PHT Chấm</th>
+<th>Xếp Loại</th>
+<th>HT/PHT Đánh Giá</th>
+<th>Xử Lý</th>
+</tr>
+</thead>
+<tbody id="epa-table-body"></tbody>
+</table>
 </div>
-
 <script>
 const session_user = "{{ session['user'] if 'user' in session else '' }}";
 
@@ -225,5 +225,5 @@ function exportEPAtoPDF() {
 
 fetchDataEPA();
 </script>
-</body>
+</div></div></div></body>
 </html>

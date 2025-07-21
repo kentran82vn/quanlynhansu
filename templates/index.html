@@ -1,141 +1,212 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250707">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>- 🏫 TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG 🎈-</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<!--
+<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250716" rel="stylesheet"/>
+-->
+  <style>
+    body {
+      background-color: #f5f7fa;
+    }
+    .sidebar {
+      background-color: #f8f9fa; /* nền sáng */
+      border-right: 1px solid #dee2e6;
+      min-height: 100vh;
+      padding: 1rem 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+    .sidebar .nav-link {
+      color: #495057;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+    .sidebar .nav-link i {
+      font-size: 16px;
+    }
+    .sidebar .nav-link:hover {
+      background-color: #e9ecef;
+      color: #0d6efd;
+      border-left: 3px solid #0d6efd;
+      text-decoration: none;
+    }
+    .sidebar .nav-link.active {
+      background-color: #0d6efd;
+      color: white;
+      border-left: 3px solid #0b5ed7;
+      font-weight: 600;
+    }
+    .sidebar .nav-link.active i {
+      color: white;
+    }
+    .sidebar .nav-link.text-danger {
+      color: #dc3545;
+    }
+    .sidebar .nav-link.text-danger:hover {
+      background-color: #f8d7da;
+      color: #c82333;
+    }
+    iframe {
+      width: 100%;
+      height: calc(100vh - 56px);
+      border: none;
+    }
+    .topbar {
+      height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #dee2e6;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar .user-info {
+      font-weight: 500;
+      color: #495057;
+    }
+  </style>
 </head>
-<body>
-  <div class="container-fluid">
-    <div class="row">
-      <nav class="col-md-2 d-none d-md-block sidebar">
-        <div class="position-sticky">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#" data-page="/employees">
-                <i class="fas fa-users"></i> Nhân Viên
-              </a>
-            </li>
-            {% if session['role'] == 'user' or session['role'] == 'supervisor' %}
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/user-epa-score">
-                <i class="fas fa-chart-line"></i> Đánh Giá EPA
-              </a>
-            </li>
-            {% endif %}
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/data_epa">
-                <i class="fas fa-chart-line"></i> Điểm Đánh Giá EPA
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/epa_summary">
-                <i class="fas fa-chart-line"></i> Tổng Hợp Kết quả Đánh Giá
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/users">
-                <i class="fas fa-user-shield"></i> Quản Lý Tài Khoản
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/classes">
-                <i class="fas fa-school"></i> Danh Sách Lớp
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/assign-classes">
-                <i class="fas fa-user-plus"></i> Phân Lớp Học Sinh
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/assign-teachers">
-                <i class="fas fa-chalkboard-teacher"></i> Gán Giáo Viên - Lớp
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/admin/questions">
-                <i class="fas fa-scroll"></i> Bảng Câu Hỏi Đánh Giá
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/logs">
-                <i class="fas fa-scroll"></i> Nhật Ký
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-page="/stats">
-                <i class="fas fa-chart-bar"></i> Thông Tin
-              </a>
-            </li>
-            {% endif %}
+<body><div class="container-fluid mt-4"><div class="card"><div class="card-body">
+<div class="container-fluid">
+<div class="row">
+  <nav class="col-md-2 d-none d-md-block sidebar">
+      <div class="position-sticky">
+        <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" data-page="/employees" href="#">
+                  <i class="fas fa-users"></i> Trang Chính
+                </a>
+              </li>
+              {% if session['role'] == 'user' or session['role'] == 'supervisor' %}
+              <li class="nav-item">
+                <a class="nav-link" data-page="/user-epa-score" href="#">
+                  <i class="fas fa-chart-line"></i> Đánh Giá EPA
+                </a>
+              </li>
+              {% endif %}
+              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
+              <li class="nav-item">
+                <a class="nav-link" data-page="/users" href="#">
+                  <i class="fas fa-user-shield"></i> Quản Lý Tài Khoản
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/classes" href="#">
+                  <i class="fas fa-school"></i> Danh Sách Lớp
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/assign-classes" href="#">
+                  <i class="fas fa-user-plus"></i> Phân Lớp Học Sinh
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/assign-teachers" href="#">
+                  <i class="fas fa-chalkboard-teacher"></i> Phân Công Giáo Viên
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/data_epa" href="#">
+                  <i class="fas fa-chart-line"></i> Đánh Giá Giáo Viên
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/epa_summary" href="#">
+                  <i class="fas fa-chart-line"></i> Xếp Hạng Đánh Giá
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/thoigianmoepa" href="#">
+                  <i class="fas fa-scroll"></i> Đặt Thời Gian Đánh Giá
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/admin/questions" href="#">
+                  <i class="fas fa-scroll"></i> Câu Hỏi Đánh Giá
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/logs" href="#">
+                  <i class="fas fa-scroll"></i> Nhật Ký Thay Đổi
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-page="/stats" href="#">
+                  <i class="fas fa-chart-bar"></i> Thông Tin Thống Kê
+                </a>
+              </li>
+              {% endif %}
 
-            <li class="nav-item mt-4">
-              <a class="nav-link text-danger" href="/logout">
-                <i class="fas fa-sign-out-alt"></i> Đăng Xuất
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <main class="col-md-10 ms-sm-auto px-0">
-        <div class="topbar">
-          <h5 class="mb-0">- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</h5>
-          <div class="user-actions d-flex align-items-center justify-content-end gap-2">
-            <a href="/dashboard" class="btn btn-outline-secondary btn-sm">
-              🏠 Trang Chủ
-            </a>
-            <button class="btn btn-outline-secondary btn-sm" onclick="openChangePassModal()">
-              🔐 Change Pass
-            </button>
-            <div class="user-info">
-              👤 <span id="currentUser">{{ user }} ({{ role }})</span>
-            </div>
-          </div>
-        </div>
-        <iframe id="mainFrame" src="/employees"></iframe>
-      </main>
+              <li class="nav-item mt-4">
+                <a class="nav-link text-danger" href="/logout">
+                  <i class="fas fa-sign-out-alt"></i> Đăng Xuất
+                </a>
+              </li>
+      </ul>
     </div>
-  </div>
-
-  <!-- 🔧 Modal đổi mật khẩu user -->
-  <div class="modal fade" id="changePassModal" tabindex="-1" aria-labelledby="changePassModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changePassModalLabel">Đổi Mật Khẩu</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="changePassForm">
-            <div class="mb-3">
-              <label>Mật khẩu hiện tại</label>
-              <input type="password" class="form-control" id="oldPassword" required>
-            </div>
-            <div class="mb-3">
-              <label>Mật khẩu mới</label>
-              <input type="password" class="form-control" id="newPassword" required>
-            </div>
-            <div class="mb-3">
-              <label>Xác nhận mật khẩu mới</label>
-              <input type="password" class="form-control" id="confirmNewPassword" required>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <button class="btn btn-primary" onclick="submitChangePassword()">Đổi Mật Khẩu</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
+  </nav>
+<main class="col-md-10 ms-sm-auto px-0">
+<div class="topbar">
+<h5 class="mb-3">- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</h5>
+<div class="user-actions d-flex align-items-center justify-content-end gap-2">
+<a class="btn btn-outline-secondary btn-sm" href="/dashboard">
+🏠 Trang Chủ
+</a>
+<button class="btn btn-outline-secondary btn-sm" onclick="openChangePassModal()">
+🔐 Đổi Mật Khẩu
+</button>
+<div class="user-info">
+👤 <span id="currentUser">{{ user }} ({{ role }})</span>
+</div>
+</div>
+</div>
+<iframe id="mainFrame" src="/employees"></iframe>
+</main>
+</div>
+</div>
+<!-- 🔧 Modal đổi mật khẩu user -->
+<div aria-hidden="true" aria-labelledby="changePassModalLabel" class="modal fade" id="changePassModal" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="changePassModalLabel">Đổi Mật Khẩu</h5>
+<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<form id="changePassForm">
+<div class="mb-3">
+<label>Mật khẩu hiện tại</label>
+<input class="form-control" id="oldPassword" required="" type="password"/>
+</div>
+<div class="mb-3">
+<label>Mật khẩu mới</label>
+<input class="form-control" id="newPassword" required="" type="password"/>
+</div>
+<div class="mb-3">
+<label>Xác nhận mật khẩu mới</label>
+<input class="form-control" id="confirmNewPassword" required="" type="password"/>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+<button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+<button class="btn btn-primary" onclick="submitChangePassword()">Đổi Mật Khẩu</button>
+</div>
+</div>
+</div>
+</div>
+<script>
     let schemaByDept = {};
     const currentUser = "{{ user|lower }}";
     const userRole = "{{ role }}";
@@ -191,6 +262,6 @@
       }
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div></div></div></body>
 </html>

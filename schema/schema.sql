@@ -11,7 +11,7 @@ CREATE TABLE tk (
     ngay_hh DATE
 );
 
--- Bảng giáo viên
+-- Bảng giáo viên chính
 CREATE TABLE giaovien (
     ma_gv VARCHAR(255) PRIMARY KEY,
     ho_va_ten VARCHAR(255),
