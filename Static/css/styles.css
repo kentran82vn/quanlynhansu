@@ -1,4 +1,150 @@
+/* ====== PDF Export Styles ====== */
+#pdf-export {
+  display: none;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 11px;
+  padding: 20px;
+  color: #000;
+  background-color: #fff;
+}
+#pdf-export h6 {
+  text-align: left;
+  margin: 0;
+}
+#pdf-export h6:first-child {
+  padding-left: 40px;
+}
+#pdf-export h6:nth-child(2) {
+  font-weight: bold;
+  padding-left: 10px;
+}
+#pdf-export h3 {
+  text-align: center;
+  font-weight: bold;
+  margin: 10px 0;
+}
+#pdf-export table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  text-align: center;
+}
+#pdf-export thead {
+  background-color: #cfe2ff;
+}
+#pdf-export th,
+#pdf-export td {
+  border: 0.5px solid #dee2e6;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+#pdf-export .signature {
+  margin-top: 40px;
+  text-align: right;
+  font-size: 12px;
+  padding-right: 40px;
+}
+#pdf-export .signature p {
+  margin: 5px 0;
+}
+#pdf-export .signature p:last-child {
+  margin-top: 50px;
+}
+#pdf-export td:nth-child(4), /* Quê Quán */
+#pdf-export td:last-child,   /* Địa Chỉ */
+#pdf-export th:nth-child(4),
+#pdf-export th:last-child {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+#pdf-export table thead {
+  display: table-header-group;
+}
+#pdf-export table tfoot {
+  display: table-footer-group;
+}
+
+/* === dành cho các button trên nhansu_index === */
+.admin-panel {
+  background: #fff;
+  border: 2px solid #cfe2ff; /* xanh lam nhạt */
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.05), -4px -4px 8px rgba(255,255,255,0.7);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 760px auto;
+}
+
+.admin-panel h2 {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #0d6efd;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.admin-buttons a,
+.admin-buttons button {
+  min-width: 150px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(145deg, #f0f0f0, #ffffff);
+  box-shadow: 3px 3px 6px rgba(0,0,0,0.2), -3px -3px 6px rgba(255,255,255,0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-buttons a:hover,
+.admin-buttons button:hover {
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2), inset -2px -2px 5px rgba(255,255,255,0.5);
+  transform: translateY(1px);
+  background-color: #f9f9f9;
+}
+
+.admin-buttons .btn-outline-primary {
+  color: #0d6efd;
+  border: 1px solid #0d6efd;
+}
+
+.admin-buttons .btn-outline-success {
+  color: #198754;
+  border: 1px solid #198754;
+}
+
+.admin-buttons .btn-outline-info {
+  color: #0dcaf0;
+  border: 1px solid #0dcaf0;
+}
+
+.admin-buttons .btn-outline-secondary {
+  color: #6c757d;
+  border: 1px solid #6c757d;
+}
+
+.admin-buttons .btn-warning {
+  color: #856404;
+  border: 1px solid #ffc107;
+  background: #fff3cd;
+}
+
 /* === styles.css === */
+#info-title {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #e74c3c; /* đỏ cam nổi bật */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  margin-top: 5px;
+}
+
 .logo {
   font-family: 'Segoe UI', Arial, sans-serif;
   color: #2c3e50;
@@ -43,7 +189,7 @@ body {
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 0.5px solid #dee2e6;
 }
 
 .header h1 {
@@ -89,8 +235,8 @@ body {
 .form-group select {
     padding: 8px 12px;
     font-size: 14px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
+    border: 0.5px solid #ced4da;
+    border-radius: 2px;
     background-color: #fff;
     cursor: pointer;
     min-width: 200px;
@@ -147,7 +293,7 @@ body {
 
 .btn-outline-info {
   color: #0dcaf0;
-  border: 1px solid #0dcaf0;
+  border: 0.5px solid #0dcaf0;
   background-color: white;
 }
 
@@ -194,7 +340,7 @@ body {
 .table td,
 .table-bordered th,
 .table-bordered td {
-    border: 1px solid #dee2e6;
+    border: 0.5px solid #dee2e6;
     padding: 8px; /* giảm từ 8px 12px */
     font-size: 14px;
     text-align: center; /* bổ sung */
@@ -352,7 +498,7 @@ body {
 .admin-buttons .btn-outline-secondary {
   background-color: #f8f9fa;
   color: #495057;
-  border: 1px solid #ced4da;
+  border: 0.5px solid #ced4da;
 }
 
 .admin-buttons .btn-outline-secondary:hover {
@@ -363,7 +509,7 @@ body {
 .admin-buttons .btn-outline-primary {
   background-color: #fff;
   color: #0d6efd;
-  border: 1px solid #0d6efd;
+  border: 0.5px solid #0d6efd;
 }
 
 .admin-buttons .btn-outline-primary:hover {
@@ -385,7 +531,7 @@ body {
 .admin-buttons .btn-outline-success {
   background-color: #fff;
   color: #198754;
-  border: 1px solid #198754;
+  border: 0.5px solid #198754;
 }
 
 .admin-buttons .btn-outline-success:hover {
@@ -402,12 +548,15 @@ body {
 .admin-buttons .btn-warning:hover {
   background-color: #e0a800;
 }
+
 .sidebar {
-  background-color: #f8f9fa; /* nền sáng */
-  border-right: 1px solid #dee2e6;
-  min-height: 100vh;
-  padding: 1rem 0;
-  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #fff;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 1rem;
+  margin: 10px;
+  min-height: calc(100vh - 20px);
 }
 
 .sidebar .nav-link {
@@ -484,7 +633,7 @@ canvas.epa-chart-small {
 
 /* Điều chỉnh nhãn trục X để không bị chồng */
 .chartjs-x-axis-labels {
-  font-size: 10px !important;
+  font-size: 9px !important;
   white-space: nowrap;
   transform: rotate(45deg);
   text-align: right;
@@ -494,11 +643,12 @@ canvas.epa-chart-small {
 .chartjs-datalabels {
   font-size: 10px;
   font-weight: bold;
+  text-align: top;
 }
 
 /* Tăng khoảng cách giữa các biểu đồ khi hiển thị tổng hợp */
 .chart-summary-section {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 /* Sidebar và Topbar */
@@ -691,7 +841,7 @@ body {
   color: #333;
 }
 
-h1, h2, h3 {
+h1, h2 {
   color: #2c3e50;
   border-bottom: 2px solid #3498db;
   padding-bottom: 10px;
@@ -701,10 +851,28 @@ h1, h2, h3 {
 }
 
 h1 { font-size: 28px; }
-h1::before { content: '📝'; margin-right: 10px; }
 h2 { font-size: 22px; }
-h2::before { content: '📋'; margin-right: 10px; }
-h3 { font-size: 2rem; font-weight: bold; }
+
+h3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 auto 20px auto;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+
+  /* Hiệu ứng nổi & bóng */
+  color: #2c3e50;
+  letter-spacing: 1px;
+  text-shadow:
+    1px 1px 0 #ccc,
+    2px 2px 0 #bbb,
+    3px 3px 0 #aaa;
+}
+
+
 
 .section-title {
   margin-top: 20px;
