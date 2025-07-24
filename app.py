@@ -50,7 +50,7 @@ def parse_date(d):
 def static_files(filename):
     return send_from_directory('static', filename)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     conn = get_conn()
 
