@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from utils.db import get_conn
 from datetime import datetime
 
-# ✅ Blueprint tên 'thoigianmoepa' để khớp với url_for trong HTML
+# ✅ Blueprint với tên rõ ràng
 thoigianmoepa_bp = Blueprint('thoigianmoepa', __name__)
 
 def is_allowed():
@@ -11,10 +11,10 @@ def is_allowed():
     role = session.get('role', '')
     return user in {'admin', 'kimnhung', 'ngocquy'} or role == 'admin'
 
-# ✅ Route chính - khớp với menu sidebar
-@thoigianmoepa_bp.route('/thoigianmoepa')
+# ✅ Route chính - CHỈ MỘT route duy nhất cho index
+@thoigianmoepa_bp.route('/thoigianmoepa', strict_slashes=False)
 def index():
-    """Trang chính quản lý thời gian mở EPA"""
+    """Trang chính quản lý thời gian mở EPA - chấp nhận cả có và không có trailing slash"""
     if not session.get('user'):
         return redirect('/')
     
@@ -47,7 +47,7 @@ def index():
     
     return render_template('thoigianmoepa.html', tk_list=tk_list, records=records)
 
-# ✅ Route sync_records - khớp với url_for('thoigianmoepa.sync_records') trong HTML
+# ✅ Route sync_records 
 @thoigianmoepa_bp.route('/sync_records', methods=['POST'])
 def sync_records():
     """Đồng bộ tài khoản từ bảng tk"""
@@ -69,10 +69,14 @@ def sync_records():
             existing_rows = cursor.fetchall()
             existing_tk = {row['ten_tk'] for row in existing_rows}
             
-            # Lấy tài khoản có trong bảng giaovien
-            cursor.execute("SELECT ten_tk FROM giaovien WHERE ten_tk IS NOT NULL AND ten_tk != ''")
-            giaovien_rows = cursor.fetchall()
-            giaovien_tk = {row['ten_tk'] for row in giaovien_rows}
+            # Lấy tài khoản có trong bảng giaovien (optional check)
+            try:
+                cursor.execute("SELECT ten_tk FROM giaovien WHERE ten_tk IS NOT NULL AND ten_tk != ''")
+                giaovien_rows = cursor.fetchall()
+                giaovien_tk = {row['ten_tk'] for row in giaovien_rows}
+            except:
+                # Nếu không có bảng giaovien, chấp nhận tất cả tk
+                giaovien_tk = {row['ten_tk'] for row in tk_rows}
             
             count = 0
             for tk_row in tk_rows:
@@ -102,10 +106,9 @@ def sync_records():
     finally:
         conn.close()
     
-    # ✅ Redirect về index() của cùng blueprint
     return redirect(url_for('thoigianmoepa.index'))
 
-# ✅ Route save_record - khớp với url_for('thoigianmoepa.save_record') trong HTML  
+# ✅ Route save_record
 @thoigianmoepa_bp.route('/save_record', methods=['POST'])
 def save_record():
     """Lưu cài đặt thời gian EPA cho một tài khoản"""
@@ -145,7 +148,7 @@ def save_record():
     conn = get_conn()
     try:
         with conn.cursor() as cursor:
-            # Kiểm tra tài khoản có tồn tại trong bảng tk không (thay vì giaovien)
+            # Kiểm tra tài khoản có tồn tại trong bảng tk không
             cursor.execute("SELECT 1 FROM tk WHERE ten_tk = %s", (ten_tk,))
             if not cursor.fetchone():
                 flash(f"❌ Tài khoản {ten_tk} không tồn tại", "danger")
@@ -185,7 +188,6 @@ def save_record():
     finally:
         conn.close()
     
-    # ✅ Redirect về index() của cùng blueprint
     return redirect(url_for('thoigianmoepa.index'))
 
 # ============================
@@ -265,39 +267,3 @@ def get_assessment_period():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
-
-# ✅ Hoặc thêm strict_slashes=False cho route chính (thay thế route hiện tại):
-@thoigianmoepa_bp.route('/thoigianmoepa', strict_slashes=False)
-def index():
-    """Trang chính quản lý thời gian mở EPA - chấp nhận cả có và không có trailing slash"""
-    if not session.get('user'):
-        return redirect('/')
-    
-    if not is_allowed():
-        return render_template('403.html'), 403
-
-    conn = get_conn()
-    try:
-        with conn.cursor() as cursor:
-            # Lấy danh sách tài khoản từ bảng tk
-            cursor.execute("SELECT ten_tk FROM tk WHERE ten_tk IS NOT NULL AND ten_tk != '' ORDER BY ten_tk")
-            tk_rows = cursor.fetchall()
-            tk_list = [row['ten_tk'] for row in tk_rows]
-            
-            # Lấy records hiện có từ bảng thoigianmoepa
-            cursor.execute("SELECT * FROM thoigianmoepa ORDER BY ten_tk")
-            records_rows = cursor.fetchall()
-            
-            # Chuyển thành dict để dễ truy cập
-            records = {}
-            for record in records_rows:
-                records[record['ten_tk']] = record
-                
-    except Exception as e:
-        print(f"❌ Lỗi database trong index(): {e}")
-        tk_list = []
-        records = {}
-    finally:
-        conn.close()
-    
-    return render_template('thoigianmoepa.html', tk_list=tk_list, records=records)
