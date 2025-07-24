@@ -1,7 +1,50 @@
-2025-07-16 16:25:17,740 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+2025-07-23 10:23:51,437 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
-2025-07-16 16:25:17,741 [INFO] [33mPress CTRL+C to quit[0m
-2025-07-16 16:25:29,133 [INFO] 127.0.0.1 - - [16/Jul/2025 16:25:29] "[35m[1mGET / HTTP/1.1[0m" 500 -
-2025-07-16 16:25:29,399 [INFO] 127.0.0.1 - - [16/Jul/2025 16:25:29] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
-2025-07-16 16:25:29,406 [INFO] 127.0.0.1 - - [16/Jul/2025 16:25:29] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
-2025-07-16 16:25:30,068 [INFO] 127.0.0.1 - - [16/Jul/2025 16:25:30] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=MCUgcTjLenuCkNtebRLA HTTP/1.1" 200 -
+2025-07-23 10:23:51,437 [INFO] [33mPress CTRL+C to quit[0m
+2025-07-23 10:23:52,849 [INFO] 127.0.0.1 - - [23/Jul/2025 10:23:52] "GET / HTTP/1.1" 200 -
+2025-07-23 10:23:52,932 [INFO] 127.0.0.1 - - [23/Jul/2025 10:23:52] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-23 10:25:57,178 [INFO] 127.0.0.1 - - [23/Jul/2025 10:25:57] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-07-23 10:25:57,197 [INFO] 127.0.0.1 - - [23/Jul/2025 10:25:57] "GET /dashboard HTTP/1.1" 200 -
+2025-07-23 10:25:57,294 [INFO] 127.0.0.1 - - [23/Jul/2025 10:25:57] "GET /static/mnhhd.jpg HTTP/1.1" 200 -
+2025-07-23 10:25:57,576 [INFO] 127.0.0.1 - - [23/Jul/2025 10:25:57] "GET /employees HTTP/1.1" 200 -
+2025-07-23 10:25:57,905 [INFO] 127.0.0.1 - - [23/Jul/2025 10:25:57] "GET /static/css/styles.css?v=20250719 HTTP/1.1" 200 -
+2025-07-23 10:25:58,165 [INFO] 127.0.0.1 - - [23/Jul/2025 10:25:58] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-23 10:26:03,963 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:03] "GET /api/teachers HTTP/1.1" 200 -
+2025-07-23 10:26:04,305 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:04] "GET /api/next-ma-hs?prefix=HS HTTP/1.1" 200 -
+2025-07-23 10:26:04,551 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:04] "GET /api/employees?dept=HS HTTP/1.1" 200 -
+2025-07-23 10:26:05,776 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:05] "GET /api/next-ma-gv?prefix=GV HTTP/1.1" 200 -
+2025-07-23 10:26:06,100 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:06] "GET /api/employees?dept=GV HTTP/1.1" 200 -
+2025-07-23 10:26:15,141 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:15] "GET /data_epa HTTP/1.1" 200 -
+2025-07-23 10:26:15,462 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:15] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-23 10:26:15,737 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:15] "GET /api/epa-full HTTP/1.1" 200 -
+2025-07-23 10:26:21,318 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:21] "GET /employees HTTP/1.1" 200 -
+2025-07-23 10:26:21,642 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:21] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-23 10:26:21,933 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:21] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-23 10:26:23,037 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:23] "GET /epa_summary HTTP/1.1" 200 -
+2025-07-23 10:26:23,370 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:23] "GET /static/css/styles.css?v=20250716 HTTP/1.1" 200 -
+2025-07-23 10:26:23,641 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:23] "GET /api/list_ten_tk HTTP/1.1" 200 -
+2025-07-23 10:26:25,735 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:25] "GET /employees HTTP/1.1" 200 -
+2025-07-23 10:26:26,054 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:26] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-23 10:26:26,329 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:26] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-23 10:26:28,382 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:28] "GET /api/teachers HTTP/1.1" 200 -
+2025-07-23 10:26:28,720 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:28] "GET /api/next-ma-hs?prefix=HS HTTP/1.1" 200 -
+2025-07-23 10:26:28,990 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:28] "GET /api/employees?dept=HS HTTP/1.1" 200 -
+2025-07-23 10:26:29,783 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:29] "GET /api/next-ma-gv?prefix=GV HTTP/1.1" 200 -
+2025-07-23 10:26:30,122 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:30] "GET /api/employees?dept=GV HTTP/1.1" 200 -
+2025-07-23 10:26:33,048 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:33] "GET /epa_summary HTTP/1.1" 200 -
+2025-07-23 10:26:33,366 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:33] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-23 10:26:33,664 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:33] "GET /api/list_ten_tk HTTP/1.1" 200 -
+2025-07-23 10:26:36,532 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:36] "GET /employees HTTP/1.1" 200 -
+2025-07-23 10:26:36,855 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:36] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-23 10:26:37,123 [INFO] 127.0.0.1 - - [23/Jul/2025 10:26:37] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-23 10:36:31,517 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:31] "GET /export-data HTTP/1.1" 200 -
+2025-07-23 10:36:31,769 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:31] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-23 10:36:33,455 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:33] "GET /api/employees?dept=HS HTTP/1.1" 200 -
+2025-07-23 10:36:35,875 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:35] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-23 10:36:52,801 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:52] "GET /employees HTTP/1.1" 200 -
+2025-07-23 10:36:53,118 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:53] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-23 10:36:53,394 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:53] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-23 10:36:54,405 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:54] "GET /data_epa HTTP/1.1" 200 -
+2025-07-23 10:36:54,725 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:54] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-23 10:36:55,007 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:55] "GET /api/epa-full HTTP/1.1" 200 -
+2025-07-23 10:36:56,718 [INFO] 127.0.0.1 - - [23/Jul/2025 10:36:56] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -

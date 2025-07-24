@@ -9,102 +9,106 @@
 </head>
 <body><div class="container-fluid mt-4"><div class="card"><div class="card-body">
 <div class="container-fluid">
-<div class="header">
-<h1>📤 Xuất Dữ Liệu</h1>
-<div class="nav">
-<a href="#" onclick="exportToPDF()">📄 Xuất file PDF</a>
+    
+    <div class="header">
+        <h1>📤 Xuất Dữ Liệu</h1>
+            <div class="nav">
+                <a href="#" onclick="exportToPDF()">📄 Xuất file PDF</a>
+                <a href="#" onclick="exportData()">📤 Xuất File CSV</a>
+                <a href="#" onclick="printData()">In Dữ Liệu</a>
+            </div>
+    </div>
+
+    <div class="form-group">
+        <label for="deptSelect">Chọn Thông Tin:</label>
+            <select class="form-select form-select-sm" id="deptSelect" style="width: 250px;" onchange="switchDept()">
+                <option value="">-- Chọn --</option>
+                <option value="HS">👧 Học Sinh</option>
+                <option value="GV">👩‍🏫 Giáo Viên</option>
+        </select>
+    </div>
+
+    <div id="preview">
+        <h2 id="info-title" style="text-align:center;">THÔNG TIN <span id="dept-name"></span></h2>
+        <div class="table-wrapper">
+            <table class="table" id="table_hs" style="display: none;">
+            <thead>
+                <tr>
+                <th>STT</th>
+                <th>Họ và Tên</th>
+                <th>Ngày Sinh</th>
+                <th>Giới Tính</th>
+                <th>Dân Tộc</th>
+                <th>Mã Định Danh</th>
+                <th>Họ Tên Cha</th>
+                <th>Ngành Nghề Cha</th>
+                <th>Họ Tên Mẹ</th>
+                <th>Ngành Nghề Mẹ</th>
+                <th>Địa Chỉ</th>
+                <th>Số CMND Cha Mẹ</th>
+                <th>Số Điện Thoại Cha Mẹ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="13">Chưa có dữ liệu</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table" id="table_gv" style="display: none;">
+                <thead>
+                    <tr>
+                    <th>STT</th>
+                    <th>Mã Giáo Viên</th>
+                    <th>Họ và Tên</th>
+                    <th>Tên Gọi</th>
+                    <th>Đội</th>
+                    <th>Ngày Sinh</th>
+                    <th>Quê Quán</th>
+                    <th>CCCD</th>
+                    <th>Ngày Cấp CCCD</th>
+                    <th>Mã Số Thuế</th>
+                    <th>Số CMND</th>
+                    <th>Số BHXH</th>
+                    <th>Số Điện Thoại</th>
+                    <th>Số Tài Khoản</th>
+                    <th>Email</th>
+                    <th>Nhóm Máu</th>
+                    <th>Địa Chỉ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="17">Chưa có dữ liệu</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+<div id="pdf-export" style="display:none; font-family: 'Times New Roman', Times, serif; font-size: 13px; padding: 20px;">
+        <h5 style="text-align:left; padding-left:40px; font-size: 10px;">UBND Xã ĐINH VĂN - LÂM HÀ</h5>
+        <h5 style="text-align:left; font-weight:bold; padding-left:10px; font-size: 10px;">TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG</h5>
+        <h3 style="text-align:center; font-weight:bold;">DANH SÁCH <span id="dept-name"></span></h3>
+    <br/>
+        <table style="width:100%; border-collapse: collapse; text-align:center; font-size: 10px;">
+            <thead style="background-color: #cfe2ff;">
+                <tr id="pdf-header-row"></tr>
+            </thead>
+            <tbody id="pdf-body"></tbody>
+        </table>
+    <div style="margin-top:10px; text-align:right; font-size:12px; padding-right:40px;">
+        <p style="padding-right:60px;">........, Ngày .... tháng .... năm 20....</p>
+        <p style="margin-top:5px; padding-right:80px;"><b>Người Xuất Dữ Liệu</b></p>
+        <p style="margin-top:5px; padding-right:110px;"><b>Ký tên</b></p>
+        <p style="margin-top:55px; padding-right:100px">.................................</p>
+    </div>          
 </div>
-<div class="form-group">
-<label for="deptSelect">Chọn Thông Tin:</label>
-<select id="deptSelect" onchange="switchDept()">
-<option value="">-- Chọn --</option>
-<option value="HS">Học Sinh</option>
-<option value="GV">Giáo Viên</option>
-</select>
-</div>
-<div class="button-group">
-<button onclick="exportData()">📤 Xuất File - CSV</button>
-<button onclick="printData()">In Dữ Liệu</button>
-<button onclick="closePreview()">Đóng</button>
-</div>
-<div id="preview">
-<h2>Xem Trước Dữ Liệu</h2>
-<div class="table-wrapper">
-<table class="table" id="table_hs" style="display: none;">
-<thead>
-<tr>
-<th>STT</th>
-<th>Họ và Tên</th>
-<th>Ngày Sinh</th>
-<th>Giới Tính</th>
-<th>Dân Tộc</th>
-<th>Mã Định Danh</th>
-<th>Họ Tên Cha</th>
-<th>Ngành Nghề Cha</th>
-<th>Họ Tên Mẹ</th>
-<th>Ngành Nghề Mẹ</th>
-<th>Địa Chỉ</th>
-<th>Số CMND Cha Mẹ</th>
-<th>Số Điện Thoại Cha Mẹ</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="13">Chưa có dữ liệu</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper">
-<table class="table" id="table_gv" style="display: none;">
-<thead>
-<tr>
-<th>STT</th>
-<th>Mã Giáo Viên</th>
-<th>Họ và Tên</th>
-<th>Tên Gọi</th>
-<th>Đội</th>
-<th>Ngày Sinh</th>
-<th>Quê Quán</th>
-<th>CCCD</th>
-<th>Ngày Cấp CCCD</th>
-<th>Mã Số Thuế</th>
-<th>Số CMND</th>
-<th>Số BHXH</th>
-<th>Số Điện Thoại</th>
-<th>Số Tài Khoản</th>
-<th>Email</th>
-<th>Nhóm Máu</th>
-<th>Địa Chỉ</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="17">Chưa có dữ liệu</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="pdf-export" style="display:none; font-family: 'Times New Roman', Times, serif; font-size: 11px; padding: 20px;">
-<h6 style="text-align:left; padding-left:40px;">UBND HUYỆN LÂM HÀ</h6>
-<h6 style="text-align:left; font-weight:bold; padding-left:10px;">TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG</h6>
-<h3 style="text-align:center; font-weight:bold;">BẢNG KẾT QUẢ DỮ LIỆU</h3>
-<br/>
-<table style="width:100%; border-collapse: collapse; text-align: center; font-size: 10px;">
-<thead style="background-color: #cfe2ff;">
-<tr id="pdf-header-row"></tr>
-</thead>
-<tbody id="pdf-body"></tbody>
-</table>
-<div style="margin-top:40px; text-align:right; font-size:12px; padding-right:40px;">
-<p>Lâm Hà, Ngày .... tháng .... năm 20....</p>
-<p style="margin-top:5px;"><b>Người Xuất Dữ Liệu</b></p>
-<p style="margin-top:50px;">.................................</p>
-</div>
-</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
         async function switchDept() {
@@ -113,6 +117,11 @@
             const containerGV = document.getElementById("table_gv");
             containerHS.style.display = (dept === "HS") ? "block" : "none";
             containerGV.style.display = (dept === "GV") ? "block" : "none";
+            
+            document.getElementById("dept-name").textContent =
+                dept === "HS" ? "HỌC SINH" :
+                dept === "GV" ? "GIÁO VIÊN" : "";
+                
             await fetchAndRenderDept(dept);
             }
 
@@ -212,6 +221,10 @@
 
             const pdfBody = document.getElementById("pdf-body");
             const pdfHeaderRow = document.getElementById("pdf-header-row");
+            
+            document.querySelector('#pdf-export #dept-name').textContent =
+                dept === "HS" ? "-HỌC SINH" :
+                dept === "GV" ? "-GIÁO VIÊN" : "";
 
             // Xoá nội dung cũ
             pdfBody.innerHTML = "";
@@ -223,19 +236,19 @@
                 if (dept === "GV" && (index === 1 || index === 3 || index === 4)) return; // ❌ Bỏ "Mã GV" và "Tên Gọi"
                 const newTh = document.createElement("th");
                 newTh.textContent = th.textContent;
-                newTh.style.border = "1px solid #000";
+                newTh.style.border = "0.5px solid #000";
                 pdfHeaderRow.appendChild(newTh);
             });
 
             // Chép dữ liệu
             rows.forEach(row => {
                 const newRow = document.createElement("tr");
-                newRow.style.border = "1px solid #000";
+                newRow.style.border = "0.5px solid #000";
                 row.querySelectorAll("td").forEach((cell, index) => {
                     if (dept === "GV" && (index === 1 || index === 3 || index === 4)) return; // ❌ Bỏ "Mã GV" và "Tên Gọi"
                     const td = document.createElement("td");
                     td.textContent = cell.textContent;
-                    td.style.border = "1px solid #000";
+                    td.style.border = "0.5px solid #000";
                     //td.style.whiteSpace = "nowrap";
                     //td.style.overflow = "hidden";
                     //td.style.textOverflow = "ellipsis";
@@ -298,12 +311,12 @@
             printWindow.document.write(`
             <html>
                 <head>
-                <title>In Dữ Liệu</title>
-                ${style}
+                    <title>In Dữ Liệu</title>
+                    ${style}
                 </head>
                 <body>
-                <h2>Dữ Liệu ${dept === "HS" ? "Học Sinh" : "Giáo Viên"}</h2>
-                ${table.outerHTML}
+                    <h2>DANH SÁCH ${dept === "HS" ? "HỌC SINH" : "GIÁO VIÊN"}</h2>
+                    ${table.outerHTML}
                 </body>
             </html>
             `);
@@ -312,7 +325,6 @@
             printWindow.print();
             printWindow.close();
         }
-
 
         function exportData() {
             const dataType = document.getElementById('deptSelect').value;
@@ -326,7 +338,7 @@
             if (dataType === 'HS') {
                 filename = 'student_data.csv';
                 csvContent = [
-                    'STT,Họ và Tên,Ngày Sinh,Giới Tính,Dân Tộc,Mã Định Danh,Họ Tên Cha,Ngành Nghề Cha,Họ Tên Mẹ,Ngành Nghề Mẹ,Địa Chỉ,Số CMND Cha Mẹ,Số Điện Thoại Cha Mẹ',
+                    'STT,Họ và Tên,Ngày Sinh,Giới Tính,Dân Tộc,Mã Định Danh,Họ Tên Cha,Ngành Nghề Cha,Họ Tên Mẹ,Ngành Nghề Mẹ,Địa Chỉ,CMND Cha Mẹ, SĐT PH',
                     ...Array.from(tableRows).map((row, idx) => {
                         const cells = row.querySelectorAll('td');
                         return [
@@ -393,5 +405,8 @@
             document.getElementById('table_gv').style.display = 'none';
         }
     </script>
-</div></div></div></body>
+</div>
+</div>
+</div>
+</body>
 </html>

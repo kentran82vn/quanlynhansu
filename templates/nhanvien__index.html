@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8"/>
-<title>- QUẢN LÝ NHÂN SỰ -</title>
+<title>- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
 <link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250719" rel="stylesheet"/>
 
 </head>
-<body class="p-4"><div class="container-fluid mt-4"><div class="card"><div class="card-body">
-<div class="container-fluid mt-4">
+<body class="p-4">
   
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-3 d-flex align-items-center gap-10">
-        - 🏫 QUẢN LÝ NHÂN SỰ 🏫-
-    </h1>
+    <h3 class="mb-3 d-flex align-items-center gap-10">
+        - 🏫 - TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG - 🏫-
+    </h3>
   </div>
 
 <div class="d-flex justify-content-between align-items-center mb-2">
   <div class="btn-group flex-wrap">
+    <div class="admin-panel p-3 mb-4">
+      <div class="admin-buttons d-flex flex-wrap justify-content-center">
         {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-        <div class="d-flex flex-wrap align-items-center admin-buttons">
+        <div class="admin-buttons d-flex flex-wrap justify-content-center">
           <a class="btn btn-outline-secondary" href="/users">👥 Tài Khoản</a>
           <a class="btn btn-outline-primary" href="/data_epa">📝 Bảng Đánh Giá</a>
           <a class="btn btn-outline-info" href="/epa_summary">📊 Bảng xếp hạng</a>
@@ -44,278 +45,280 @@
           </div>
         
         {% endif %}
-        {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-        <!-- Dept select riêng dòng -->
-<div class="row g-2 mb-2">
-<div class="col-auto">
-<label class="form-label fw-bold w-100" for="deptSelect">Thông Tin</label>
-<select class="form-select form-select-sm" id="deptSelect" style="width: 250px;" onchange="switchDept()">
-<option value="">-- Chọn --</option>
-<option value="HS">👧 Học Sinh</option>
-<option value="GV">👩‍🏫 Giáo Viên</option>
-</select>
-</div>
-<div>
-<label class="sr-only" for="searchInput">Tìm kiếm</label>
-<input class="form-control form-control-sm" id="searchInput" placeholder="🔍 Tìm kiếm..." style="width: 250px;" type="text"/>
-</div>
-</div>
-<!-- Các input field sẽ được render động tại đây -->
-<div class="row g-2 mb-3 input-row text-center small" id="dynamicInputRow"></div>
+      </div>
+    </div>
+  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+  <!-- Dept select riêng dòng -->
+  <div class="row g-2 mb-2">
+    <div class="col-auto">
+      <label class="form-label fw-bold w-100" for="deptSelect">Thông Tin</label>
+        <select class="form-select form-select-sm" id="deptSelect" style="width: 250px;" onchange="switchDept()">
+          <option value="">-- Chọn --</option>
+          <option value="HS">👧 Học Sinh</option>
+          <option value="GV">👩‍🏫 Giáo Viên</option>
+        </select>
+    </div>
+    <div>
+      <label class="sr-only" for="searchInput">Tìm kiếm</label>
+      <input class="form-control form-control-sm" id="searchInput" placeholder="🔍 Tìm kiếm..." style="width: 250px;" type="text"/>
+    </div>
+  </div>
+  <!-- Các input field sẽ được render động tại đây -->
+  <div class="row g-2 mb-3 input-row text-center small" id="dynamicInputRow"></div>
         {% endif %}
     <!-- Hiển thị nội dung bảng dept là HS -->
-<div class="table-responsive" id="table_hs" style="overflow-x: auto; display: none;">
-<table class="table table-bordered table-hover text-center align-middle table-sm" style="min-width: 1200px;">
-<thead class="table-dark">
-<tr>
-<th>STT</th>
-<th>Mã HS</th>
-<th>Họ và Tên</th>
-<th>Ngày Sinh</th>
-<th>Giới Tính</th>
-<th>Dân Tộc</th>
-<th>Mã Định Danh</th>
-<th>Họ Tên Bố</th>
-<th>Nghề Nghiệp Bố</th>
-<th>Họ Tên Mẹ</th>
-<th>Nghề Nghiệp Mẹ</th>
-<th>Hộ Khẩu</th>
-<th>CCCD Bố/Mẹ</th>
-<th>SĐT</th>
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-            <th>Action</th>
-            {% endif %}
-          </tr>
-</thead>
-<tbody>
-          {% for row in data_hs %}
-          <tr>
-<td>{{ loop.index }}</td>
-<td>{{ row['ma_hs'] }}</td> <!-- Mã HS không cho chỉnh sửa -->
-<td>
+  <div class="table-responsive" id="table_hs" style="overflow-x: auto; display: none;">
+    <table class="table table-bordered table-hover text-center align-middle table-sm" style="min-width: 1200px;">
+    <thead class="table-dark">
+    <tr>
+    <th>STT</th>
+    <th>Mã HS</th>
+    <th>Họ và Tên</th>
+    <th>Ngày Sinh</th>
+    <th>Giới Tính</th>
+    <th>Dân Tộc</th>
+    <th>Mã Định Danh</th>
+    <th>Họ Tên Bố</th>
+    <th>Nghề Nghiệp Bố</th>
+    <th>Họ Tên Mẹ</th>
+    <th>Nghề Nghiệp Mẹ</th>
+    <th>Hộ Khẩu</th>
+    <th>CCCD Bố/Mẹ</th>
+    <th>SĐT</th>
+                {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                <th>Action</th>
+                {% endif %}
+              </tr>
+    </thead>
+    <tbody>
+              {% for row in data_hs %}
+              <tr>
+    <td>{{ loop.index }}</td>
+    <td>{{ row['ma_hs'] }}</td> <!-- Mã HS không cho chỉnh sửa -->
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Va Ten', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_va_ten'] }}"/>
+                      {% else %}
+                          {{ row['ho_va_ten'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ngay Sinh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}"/>
+                      {% else %}
+                          {{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Gioi Tinh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['gioi_tinh'] }}"/>
+                      {% else %}
+                          {{ row['gioi_tinh'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Dan Toc', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['dan_toc'] }}"/>
+                      {% else %}
+                          {{ row['dan_toc'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ma Dinh Danh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ma_dinh_danh'] }}"/>
+                      {% else %}
+                          {{ row['ma_dinh_danh'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Ten Bo', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_ten_bo'] }}"/>
+                      {% else %}
+                          {{ row['ho_ten_bo'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Nghe Nghiep Bo', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['nghe_nghiep_bo'] }}"/>
+                      {% else %}
+                          {{ row['nghe_nghiep_bo'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Ten Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_ten_me'] }}"/>
+                      {% else %}
+                          {{ row['ho_ten_me'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Nghe Nghiep Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['nghe_nghiep_me'] }}"/>
+                      {% else %}
+                          {{ row['nghe_nghiep_me'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Khau', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_khau'] }}"/>
+                      {% else %}
+                          {{ row['ho_khau'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Cccd Bo Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['cccd_bo_me'] }}"/>
+                      {% else %}
+                          {{ row['cccd_bo_me'] }}
+                      {% endif %}
+                  </td>
+    <td>
+                      {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                          <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Sdt', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['sdt'] }}"/>
+                      {% else %}
+                          {{ row['sdt'] }}
+                      {% endif %}
+                  </td>
                   {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Va Ten', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_va_ten'] }}"/>
-                  {% else %}
-                      {{ row['ho_va_ten'] }}
+                  <td>
+    <button class="btn btn-sm btn-primary" data-bs-target="#editModalHS" data-bs-toggle="modal" onclick="populateModalHS('{{ row['ma_hs'] }}', '{{ row['ho_va_ten'] }}', '{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}', '{{ row['gioi_tinh'] }}')">Edit</button>
+    <button class="btn btn-sm btn-danger" onclick="deleteRow('HS', '{{ row['ma_hs'] }}')">Delete</button>
+    </td>
                   {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ngay Sinh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}"/>
-                  {% else %}
-                      {{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Gioi Tinh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['gioi_tinh'] }}"/>
-                  {% else %}
-                      {{ row['gioi_tinh'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Dan Toc', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['dan_toc'] }}"/>
-                  {% else %}
-                      {{ row['dan_toc'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ma Dinh Danh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ma_dinh_danh'] }}"/>
-                  {% else %}
-                      {{ row['ma_dinh_danh'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Ten Bo', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_ten_bo'] }}"/>
-                  {% else %}
-                      {{ row['ho_ten_bo'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Nghe Nghiep Bo', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['nghe_nghiep_bo'] }}"/>
-                  {% else %}
-                      {{ row['nghe_nghiep_bo'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Ten Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_ten_me'] }}"/>
-                  {% else %}
-                      {{ row['ho_ten_me'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Nghe Nghiep Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['nghe_nghiep_me'] }}"/>
-                  {% else %}
-                      {{ row['nghe_nghiep_me'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Ho Khau', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_khau'] }}"/>
-                  {% else %}
-                      {{ row['ho_khau'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Cccd Bo Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['cccd_bo_me'] }}"/>
-                  {% else %}
-                      {{ row['cccd_bo_me'] }}
-                  {% endif %}
-              </td>
-<td>
-                  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                      <input class="form-control inline-edit" onkeypress="saveEdit(event, this, 'Sdt', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['sdt'] }}"/>
-                  {% else %}
-                      {{ row['sdt'] }}
-                  {% endif %}
-              </td>
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-              <td>
-<button class="btn btn-sm btn-primary" data-bs-target="#editModalHS" data-bs-toggle="modal" onclick="populateModalHS('{{ row['ma_hs'] }}', '{{ row['ho_va_ten'] }}', '{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}', '{{ row['gioi_tinh'] }}')">Edit</button>
-<button class="btn btn-sm btn-danger" onclick="deleteRow('HS', '{{ row['ma_hs'] }}')">Delete</button>
-</td>
-              {% endif %}
-          </tr>
-          {% endfor %}
-        </tbody>
-</table>
-</div>
+              </tr>
+              {% endfor %}
+            </tbody>
+    </table>
+  </div>
 <!-- Hiển thị nội dung bảng dept là GV -->
-<div class="table-responsive" id="table_gv" style="overflow-x: auto; display: none;">
-<table class="table table-bordered table-hover text-center align-middle table-sm" style="min-width: 1200px;">
-<thead class="table-dark">
-<tr>
-<th>STT</th>
-<th>Mã GV</th>
-<th>Họ và Tên</th>
-<th>Tên TK</th>
-<th>Chức vụ</th>
-<th>Ngày Sinh</th>
-<th>Quê Quán</th>
-<th>CCCD</th>
-<th>Ngày Cấp</th>
-<th>MST</th>
-<th>CMND</th>
-<th>Số BH</th>
-<th>SĐT</th>
-<th>Số TK</th>
-<th>Email</th>
-<th>Nhóm Máu</th>
-<th>Địa Chỉ</th>
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-            <th>Action</th>
-            {% endif %}
-          </tr>
-</thead>
-<tbody>
-          {% for row in data_gv %}
-          <tr data-staff-id="{{ row['ma_gv'] }}">
-<td>{{ loop.index }}</td>
-<td>{{ row['ma_gv'] }}</td>
-<td>{{ row['ho_va_ten'] }}</td>
-<td>{{ row['ten_tk'] }}</td>
-<td>{{ row['chuc_vu'] }}</td>
-<td>{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}</td>
-<td>{{ row['que_quan'] }}</td>
-<td>{{ row['cccd'] }}</td>
-<td>{{ row['ngay_cap'].strftime('%d/%m/%Y') if row['ngay_cap'] else '' }}</td>
-<td>{{ row['mst'] }}</td>
-<td>{{ row['cmnd'] }}</td>
-<td>{{ row['so_bh'] }}</td>
-<td>{{ row['sdt'] }}</td>
-<td>{{ row['tk_nh'] }}</td>
-<td>{{ row['email'] }}</td>
-<td>{{ row['nhom_mau'] }}</td>
-<td>{{ row['dia_chi'] }}</td>
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-            <td>
-<button class="btn btn-sm btn-danger" onclick="deleteRowGV('{{ row['ma_gv'] }}')">Delete</button>
-</td>
-            {% endif %}
-          </tr>
-          {% endfor %}
-        </tbody>
-</table>
-</div>
-<!-- Modal cho HS -->
-<div class="modal" id="editModalHS">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title">Sửa thông tin HS</h5>
-<button class="close" data-dismiss="modal" type="button">×</button>
-</div>
-<div class="modal-body">
-<form id="editFormHS">
-<div class="form-group">
-<label for="ma_hs">Mã HS</label>
-<input class="form-control" id="ma_hs" name="ma_hs" readonly="" type="text"/>
-</div>
-<div class="form-group">
-<label for="ho_va_ten_hs">Họ và Tên</label>
-<input class="form-control" id="ho_va_ten_hs" name="Ho Va Ten" type="text"/>
-</div>
-<div class="form-group">
-<label for="ngay_sinh_hs">Ngày Sinh (dd/mm/yyyy)</label>
-<input class="form-control" id="ngay_sinh_hs" name="Ngay Sinh" type="text"/>
-</div>
-<div class="form-group">
-<label for="gioi_tinh_hs">Giới Tính</label>
-<input class="form-control" id="gioi_tinh_hs" name="Gioi Tinh" type="text"/>
-</div>
-<!-- Thêm các trường khác như ma_gv, dan_toc, v.v. nếu cần -->
-</form>
-</div>
-<div class="modal-footer">
-<button class="btn btn-secondary" data-dismiss="modal" type="button">Hủy</button>
-<button class="btn btn-primary" onclick="saveEdit('HS')" type="button">Lưu</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Modal cho GV -->
-<div class="modal" id="editModalGV">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title">Sửa thông tin GV</h5>
-<button class="close" data-dismiss="modal" type="button">×</button>
-</div>
-<div class="modal-body">
-<form id="editFormGV">
-<div class="form-group">
-<label for="ma_gv">Mã GV</label>
-<input class="form-control" id="ma_gv" name="ma_gv" readonly="" type="text"/>
-</div>
-<div class="form-group">
-<label for="ho_va_ten_gv">Họ và Tên</label>
-<input class="form-control" id="ho_va_ten_gv" name="Ho Va Ten" type="text"/>
-</div>
-<div class="form-group">
-<label for="ngay_sinh_gv">Ngày Sinh (dd/mm/yyyy)</label>
-<input class="form-control" id="ngay_sinh_gv" name="Ngay Sinh" type="text"/>
-</div>
-<div class="form-group">
-<label for="chuc_vu_gv">Chức Vụ</label>
-<input class="form-control" id="chuc_vu_gv" name="Chuc Vu" type="text"/>
-</div>
-<!-- Thêm các trường khác như que_quan, cccd, v.v. nếu cần -->
-</form>
-</div>
-<div class="modal-footer">
-<button class="btn btn-secondary" data-dismiss="modal" type="button">Hủy</button>
-<button class="btn btn-primary" onclick="saveEdit('GV')" type="button">Lưu</button>
-</div>
-</div>
-</div>
-</div>
+  <div class="table-responsive" id="table_gv" style="overflow-x: auto; display: none;">
+    <table class="table table-bordered table-hover text-center align-middle table-sm" style="min-width: 1200px;">
+    <thead class="table-dark">
+    <tr>
+    <th>STT</th>
+    <th>Mã GV</th>
+    <th>Họ và Tên</th>
+    <th>Tên TK</th>
+    <th>Chức vụ</th>
+    <th>Ngày Sinh</th>
+    <th>Quê Quán</th>
+    <th>CCCD</th>
+    <th>Ngày Cấp</th>
+    <th>MST</th>
+    <th>CMND</th>
+    <th>Số BH</th>
+    <th>SĐT</th>
+    <th>Số TK</th>
+    <th>Email</th>
+    <th>Nhóm Máu</th>
+    <th>Địa Chỉ</th>
+                {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                <th>Action</th>
+                {% endif %}
+              </tr>
+    </thead>
+    <tbody>
+              {% for row in data_gv %}
+              <tr data-staff-id="{{ row['ma_gv'] }}">
+    <td>{{ loop.index }}</td>
+    <td>{{ row['ma_gv'] }}</td>
+    <td>{{ row['ho_va_ten'] }}</td>
+    <td>{{ row['ten_tk'] }}</td>
+    <td>{{ row['chuc_vu'] }}</td>
+    <td>{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}</td>
+    <td>{{ row['que_quan'] }}</td>
+    <td>{{ row['cccd'] }}</td>
+    <td>{{ row['ngay_cap'].strftime('%d/%m/%Y') if row['ngay_cap'] else '' }}</td>
+    <td>{{ row['mst'] }}</td>
+    <td>{{ row['cmnd'] }}</td>
+    <td>{{ row['so_bh'] }}</td>
+    <td>{{ row['sdt'] }}</td>
+    <td>{{ row['tk_nh'] }}</td>
+    <td>{{ row['email'] }}</td>
+    <td>{{ row['nhom_mau'] }}</td>
+    <td>{{ row['dia_chi'] }}</td>
+                {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+                <td>
+    <button class="btn btn-sm btn-danger" onclick="deleteRowGV('{{ row['ma_gv'] }}')">Delete</button>
+    </td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+    </table>
+  </div>
+  <!-- Modal cho HS -->
+  <div class="modal" id="editModalHS">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Sửa thông tin HS</h5>
+          <button class="close" data-dismiss="modal" type="button">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="editFormHS">
+            <div class="form-group">
+            <label for="ma_hs">Mã HS</label>
+            <input class="form-control" id="ma_hs" name="ma_hs" readonly="" type="text"/>
+            </div>
+            <div class="form-group">
+            <label for="ho_va_ten_hs">Họ và Tên</label>
+            <input class="form-control" id="ho_va_ten_hs" name="Ho Va Ten" type="text"/>
+            </div>
+            <div class="form-group">
+            <label for="ngay_sinh_hs">Ngày Sinh (dd/mm/yyyy)</label>
+            <input class="form-control" id="ngay_sinh_hs" name="Ngay Sinh" type="text"/>
+            </div>
+            <div class="form-group">
+            <label for="gioi_tinh_hs">Giới Tính</label>
+            <input class="form-control" id="gioi_tinh_hs" name="Gioi Tinh" type="text"/>
+            </div>
+            <!-- Thêm các trường khác như ma_gv, dan_toc, v.v. nếu cần -->
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">Hủy</button>
+          <button class="btn btn-primary" onclick="saveEdit('HS')" type="button">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal cho GV -->
+  <div class="modal" id="editModalGV">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Sửa thông tin GV</h5>
+        <button class="close" data-dismiss="modal" type="button">×</button>
+        </div>
+        <div class="modal-body">
+        <form id="editFormGV">
+        <div class="form-group">
+        <label for="ma_gv">Mã GV</label>
+        <input class="form-control" id="ma_gv" name="ma_gv" readonly="" type="text"/>
+        </div>
+        <div class="form-group">
+        <label for="ho_va_ten_gv">Họ và Tên</label>
+        <input class="form-control" id="ho_va_ten_gv" name="Ho Va Ten" type="text"/>
+        </div>
+        <div class="form-group">
+        <label for="ngay_sinh_gv">Ngày Sinh (dd/mm/yyyy)</label>
+        <input class="form-control" id="ngay_sinh_gv" name="Ngay Sinh" type="text"/>
+        </div>
+        <div class="form-group">
+        <label for="chuc_vu_gv">Chức Vụ</label>
+        <input class="form-control" id="chuc_vu_gv" name="Chuc Vu" type="text"/>
+        </div>
+        <!-- Thêm các trường khác như que_quan, cccd, v.v. nếu cần -->
+        </form>
+        </div>
+        <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal" type="button">Hủy</button>
+        <button class="btn btn-primary" onclick="saveEdit('GV')" type="button">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -530,7 +533,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 </div>
 </div>
 </div>
-</div></div></div></div></div></div></body>
+</div>
+</div>
+
+</body>
 
 <script>
   async function fetchTeacherOptions() {

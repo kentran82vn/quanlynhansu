@@ -9,38 +9,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add User UI</title>
+  <title>QUẢN LÝ TÀI KHOẢN</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <div class="container-fluid px-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>👥 User Management</h3>
+    <h3>👥 QUẢN LÝ TÀI KHOẢN</h3>
     <div class="text-end">
-      <div class="fw-bold">Total: <span id="totalUserCount">0</span></div>
+      <div class="fw-bold">Tổng: <span id="totalUserCount">0</span></div>
       <div class="text-muted" style="font-size: 14px;">
-        Admin: <span id="adminCount" class="badge bg-danger">0</span>
-        Supervisor: <span id="supervisorCount" class="badge bg-danger">0</span>
-        User: <span id="userCount" class="badge bg-secondary">0</span>
+        Quản Trị Viên: <span id="adminCount" class="badge bg-danger">0</span>
+        Tổ Trưởng: <span id="supervisorCount" class="badge bg-danger">0</span>
+        Giáo Viên: <span id="userCount" class="badge bg-secondary">0</span>
       </div>
     </div>
   </div>
 
   <!-- CARD TẠO USER -->
   <div class="card mb-4 shadow-sm">
-    <div class="card-header fw-bold text-white bg-primary">Create New User</div>
+    <div class="card-header fw-bold text-white bg-primary">Tạo Tài Khoản Mới</div>
 
     <div class="card-body">
       <div class="row g-3 align-items-end" id="addUserSection">
         <div class="col-md-2">
-          <label>Username</label>
+          <label>Tên Tài Khoản</label>
           <input type="text" id="newUsername" class="form-control" placeholder="Username">
         </div>
         <div class="col-md-2">
-          <label>Password</label>
+          <label>Mật Khẩu</label>
           <input type="password" id="newPassword" class="form-control" placeholder="Password">
         </div>
         <div class="col-md-2">
-          <label>Role</label>
+          <label>Quyền Hạn</label>
           <select id="newRole" class="form-select">
             <option value="user">User</option>
             <option value="supervisor">Supervisor</option>
@@ -52,10 +52,10 @@
           <input type="date" id="newPasswordExpiry" class="form-control">
         </div>
         <div class="col-md-1 d-grid">
-          <button class="btn btn-success" onclick="addUser()">➕ Add</button>
+          <button class="btn btn-success" onclick="addUser()">➕ Thêm</button>
         </div>
         <div class="col-md-2 d-grid">
-          <button class="btn btn-primary" onclick="syncUser()">🔄 Sync Employee</button>
+          <button class="btn btn-primary" onclick="syncUser()">🔄 Đồng Bộ Dữ Liệu</button>
         </div>
       </div>
     </div>
@@ -63,11 +63,11 @@
 
   <!-- TABLE USERS -->
   <div class="card shadow-sm">
-    <div class="card-header fw-bold text-white bg-dark">List of Users</div>
+    <div class="card-header fw-bold text-white bg-dark">Danh Sách Tài Khoản Giáo Viên</div>
     <!-- SEARCH BOX -->
     <div class="d-flex justify-content-end mb-2">
       <div style="width: 250px;">
-        <input type="text" class="form-control" id="searchUserInput" placeholder="🔍 Search User...">
+        <input type="text" class="form-control" id="searchUserInput" placeholder="🔍 Tìm kiếm...">
       </div>
     </div>
 
@@ -76,11 +76,11 @@
         <table class="table table-bordered table-hover text-center align-middle">
           <thead class="table-dark">
             <tr>
-              <th onclick="sortUserTable(0)">Username <span id="sort-icon-0">▲</span></th>
-              <th onclick="sortUserTable(1)">Role <span id="sort-icon-1">▲</span></th>
-              <th onclick="sortUserTable(2)">Created Date <span id="sort-icon-2">▲</span></th>
-              <th onclick="sortUserTable(3)">Created By <span id="sort-icon-3">▲</span></th>
-              <th onclick="sortUserTable(4)">Password Expiry <span id="sort-icon-4">▲</span></th>
+              <th onclick="sortUserTable(0)">Tên TK <span id="sort-icon-0">▲</span></th>
+              <th onclick="sortUserTable(1)">Quyền <span id="sort-icon-1">▲</span></th>
+              <th onclick="sortUserTable(2)">Ngày Tạo <span id="sort-icon-2">▲</span></th>
+              <th onclick="sortUserTable(3)">Người Tạo <span id="sort-icon-3">▲</span></th>
+              <th onclick="sortUserTable(4)">Ngày Hết Hạn <span id="sort-icon-4">▲</span></th>
               <th>Action</th>
             </tr>
           </thead>
@@ -102,17 +102,17 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">🔐 Change Password</h5>
+        <h5 class="modal-title">🔐 Đổi Mật Khẩu</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="changePassUsername">
         <div class="mb-3">
-          <label class="form-label">New Password</label>
+          <label class="form-label">Mật Khẩu Mới</label>
           <input type="password" class="form-control" id="newPassInput">
         </div>
         <div class="text-end">
-          <button class="btn btn-sm btn-primary" onclick="submitChangePass()">💾 Save</button>
+          <button class="btn btn-sm btn-primary" onclick="submitChangePass()">💾 Lưu</button>
         </div>
       </div>
     </div>
@@ -233,10 +233,10 @@ async function loadUsers() {
         <td>${u.created_by || ''}</td>
         <td>${u.password_expiry || ''}</td>
         <td>
-          <button class="btn btn-sm btn-danger" onclick="deleteUser('${u.username}')" ${userRole !== 'admin' ? 'disabled' : ''}>🗑 Delete</button>
-          ${userRole === 'admin' ? `<button class="btn btn-sm btn-secondary" onclick="openChangePassModal('${u.username}')">🔐 Change Pass</button>` : ''}
+          <button class="btn btn-sm btn-danger" onclick="deleteUser('${u.username}')" ${userRole !== 'admin' ? 'disabled' : ''}>🗑 Xóa</button>
+          ${userRole === 'admin' ? `<button class="btn btn-sm btn-secondary" onclick="openChangePassModal('${u.username}')">🔐 Đổi MK</button>` : ''}
           ${u.password_expiry !== 'Unexpired' && showReset && userRole === 'admin' ? 
-            `<button class="btn btn-sm btn-warning" onclick="resetPassword('${u.username}')">🔁 Reset Pass</button>` 
+            `<button class="btn btn-sm btn-warning" onclick="resetPassword('${u.username}')">🔁 Khởi tạo MK</button>` 
             : ''}
         </td>
       </tr>`;

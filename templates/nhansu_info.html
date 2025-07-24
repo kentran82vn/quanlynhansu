@@ -7,31 +7,36 @@
 <title>Thông Tin Nhân Sự</title>
 <!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250716" rel="stylesheet"/>
+<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250719" rel="stylesheet"/>
 </head>
 <body><div class="container-fluid mt-4"><div class="card"><div class="card-body">
 <div class="container-fluid no-padding"> <!-- container-fluid để full width, no-padding để canh trái -->
 <div class="row no-gutters"> <!-- no-gutters để bỏ padding trái/phải -->
 <div class="col-12">
 <div class="card">
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mt-4 d-flex align-items-center gap-10">
-      - THÔNG TIN NHÂN SỰ -
-    </h2>
-</div>
+
+<div class="admin-panel">
+  <div class="d-flex justify-content-center align-items-center mb-4">
+    <h3 class="mt-4 d-flex align-items-center gap-2" style="font-weight:700; color:#ebca13;">
+      <i class="fas fa-users"></i> - THÔNG TIN NHÂN SỰ -
+    </h3>
+  </div>
+
   <div class="card-body">
-    <div class="row">
-      <div class="col">
-      <a class="btn btn-primary btn-sm mt-0" href="/user-epa-score">📝 Đánh giá EPA </a>
-      <a class="btn btn-info btn-sm mt-0" onclick="loadHistory()">📜 Xem Lịch Sử Đánh Giá</a>
+    <div class="row justify-content-center">
+      <div class="col-auto">
+        <a class="btn btn-primary btn-sm mt-0 shadow-sm" href="/user-epa-score">📝 Đánh giá EPA </a>
+        <a class="btn btn-info btn-sm mt-0 shadow-sm" onclick="loadHistory()">📜 Xem Lịch Sử Đánh Giá</a>
         {% if role == "supervisor" %}
-        <a class="btn btn-primary btn-sm" href="/sup-epa-score">
+        <a class="btn btn-primary btn-sm shadow-sm" href="/sup-epa-score">
           📝 Đánh giá EPA tổ viên
         </a>
         {% endif %}
       </div>
     </div>
   </div>
+</div>
+
 
 <div class="modal fade" id="historyModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-xl" role="document">
@@ -91,10 +96,10 @@
 <option value="GV">GIÁO VIÊN</option>
 </select>
 </div>
-<div>
-<label class="sr-only" for="searchInput">Tìm kiếm</label>
-<input class="form-control form-control-sm" id="searchInput" placeholder="🔍 Tìm kiếm..." style="width: 250px;" type="text"/>
-</div>
+  <div>
+    <label class="sr-only" for="searchInput">Tìm kiếm</label>
+    <input class="form-control form-control-sm" id="searchInput" placeholder="🔍 Tìm kiếm..." style="width: 250px;" type="text"/>
+  </div>
 </div>
 <div id="dynamicInputRow"></div>
 <div class="table-responsive">
