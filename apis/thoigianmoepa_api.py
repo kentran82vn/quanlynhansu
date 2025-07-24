@@ -265,3 +265,43 @@ def get_assessment_period():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
+@thoigianmoepa_bp.route('/thoigianmoepa/')
+def index_with_slash():
+    """Route backup với trailing slash - redirect về route chính"""
+    return redirect(url_for('thoigianmoepa.index'))
+
+# ✅ Hoặc thêm strict_slashes=False cho route chính (thay thế route hiện tại):
+@thoigianmoepa_bp.route('/thoigianmoepa', strict_slashes=False)
+def index():
+    """Trang chính quản lý thời gian mở EPA - chấp nhận cả có và không có trailing slash"""
+    if not session.get('user'):
+        return redirect('/')
+    
+    if not is_allowed():
+        return render_template('403.html'), 403
+
+    conn = get_conn()
+    try:
+        with conn.cursor() as cursor:
+            # Lấy danh sách tài khoản từ bảng tk
+            cursor.execute("SELECT ten_tk FROM tk WHERE ten_tk IS NOT NULL AND ten_tk != '' ORDER BY ten_tk")
+            tk_rows = cursor.fetchall()
+            tk_list = [row['ten_tk'] for row in tk_rows]
+            
+            # Lấy records hiện có từ bảng thoigianmoepa
+            cursor.execute("SELECT * FROM thoigianmoepa ORDER BY ten_tk")
+            records_rows = cursor.fetchall()
+            
+            # Chuyển thành dict để dễ truy cập
+            records = {}
+            for record in records_rows:
+                records[record['ten_tk']] = record
+                
+    except Exception as e:
+        print(f"❌ Lỗi database trong index(): {e}")
+        tk_list = []
+        records = {}
+    finally:
+        conn.close()
+    
+    return render_template('thoigianmoepa.html', tk_list=tk_list, records=records)
