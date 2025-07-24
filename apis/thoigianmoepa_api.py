@@ -265,10 +265,6 @@ def get_assessment_period():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
-@thoigianmoepa_bp.route('/thoigianmoepa/')
-def index_with_slash():
-    """Route backup với trailing slash - redirect về route chính"""
-    return redirect(url_for('thoigianmoepa.index'))
 
 # ✅ Hoặc thêm strict_slashes=False cho route chính (thay thế route hiện tại):
 @thoigianmoepa_bp.route('/thoigianmoepa', strict_slashes=False)
