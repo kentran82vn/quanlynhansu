@@ -25,7 +25,15 @@ app.register_blueprint(users_bp)
 app.register_blueprint(import_bp)
 app.register_blueprint(giaovien_epa_bp)
 app.register_blueprint(bangdanhgiaepa_bp)
-
+@app.route("/")
+def index():
+    """Route gốc - điểm vào chính của ứng dụng"""
+    if "user" not in session:
+        # Nếu chưa đăng nhập, chuyển đến trang login
+        return redirect("/login")
+    else:
+        # Nếu đã đăng nhập, chuyển đến dashboard
+        return redirect("/dashboard")
 def log_action(user_ten_tk, action, target_table=None, target_staff_id=None):
     conn = get_conn()
     try:
