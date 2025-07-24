@@ -217,8 +217,13 @@
 
     // ✅ Load trang và cập nhật active state
     function loadPage(page) {
+        // Force HTTPS cho iframe
+        const baseURL = window.location.protocol === 'https:' ? 'https:' : 'http:';
+        const host = window.location.host;
+        const fullURL = `${baseURL}//${host}${page}`;
+        
         // Cập nhật iframe
-        document.getElementById('mainFrame').src = page;
+        document.getElementById('mainFrame').src = fullURL;
         
         // Cập nhật active state cho sidebar
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
