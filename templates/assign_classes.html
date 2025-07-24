@@ -113,7 +113,7 @@
             <td>${s.ma_hs}</td>
             <td>${s.ho_va_ten}</td>
             <td>
-              <select class="form-select form-select-sm editable-ma-lop" onchange="updateStudentClass(this)">
+              <select class="form-select form-select-sm editable-ma-lop" onchange="updateStudentClass(this)"data-old-value="${s.ma_lop}">
                 ${options}
               </select>
             </td>
@@ -127,36 +127,40 @@
     }
 
     async function updateStudentClass(selectEl) {
-      const newMaLop = selectEl.value;
-      const row = selectEl.closest("tr");
-      const ma_hs = row.dataset.maHs;
+    const newMaLop = selectEl.value;
+    const oldMaLop = selectEl.dataset.oldValue;
+    const row = selectEl.closest("tr");
+    const ma_hs = row.dataset.maHs;
 
-      const lop = classList.find(c => c.ma_lop === newMaLop);
-      if (!lop) {
-        alert("❌ Mã lớp không hợp lệ!");
-        return;
-      }
-
-      const confirmChange = confirm(`Bạn có chắc muốn đổi mã lớp của học sinh ${ma_hs} thành ${newMaLop} không?`);
-      if (!confirmChange) {
-        return;
-      }
-
-      const res = await fetch("/api/update-student-class", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ma_hs, ma_lop: newMaLop })
-      });
-
-      if (res.ok) {
-        alert(`✅ Đã cập nhật lớp cho ${ma_hs} thành công`);
-        await loadData(); // 🔁 Làm mới lại toàn bộ dữ liệu hiển thị
-        // Giữ filter nếu đang chọn mã lớp
-        filterByClass();
-      } else {
-        alert("❌ Không thể cập nhật vào cơ sở dữ liệu.");
-      }
+    const lop = classList.find(c => c.ma_lop === newMaLop);
+    if (!lop) {
+      alert("❌ Mã lớp không hợp lệ!");
+      selectEl.value = oldMaLop; // reset nếu không hợp lệ
+      return;
     }
+
+    const confirmChange = confirm(`Bạn có chắc muốn đổi mã lớp của học sinh ${ma_hs} thành ${newMaLop} không?`);
+    if (!confirmChange) {
+      // Khôi phục lại giá trị cũ nếu người dùng cancel
+      selectEl.value = oldMaLop;
+      return;
+    }
+
+    const res = await fetch("/api/update-student-class", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ma_hs, ma_lop: newMaLop })
+    });
+
+    if (res.ok) {
+      alert(`✅ Đã cập nhật lớp cho ${ma_hs} thành công`);
+      await loadData();
+      filterByClass();
+    } else {
+      alert("❌ Không thể cập nhật vào cơ sở dữ liệu.");
+      selectEl.value = oldMaLop; // reset lại nếu lỗi cập nhật
+    }
+  }
 
     async function loadData() {
       const [studentsRes, classesRes] = await Promise.all([
