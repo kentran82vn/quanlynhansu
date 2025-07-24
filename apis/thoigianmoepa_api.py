@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from utils.db import get_conn
 from datetime import datetime
-import pymysql
 
+# ✅ Blueprint tên 'thoigianmoepa' để khớp với url_for trong HTML
 thoigianmoepa_bp = Blueprint('thoigianmoepa', __name__)
 
 def is_allowed():
@@ -11,6 +11,7 @@ def is_allowed():
     role = session.get('role', '')
     return user in {'admin', 'kimnhung', 'ngocquy'} or role == 'admin'
 
+# ✅ Route chính - khớp với menu sidebar
 @thoigianmoepa_bp.route('/thoigianmoepa')
 def index():
     """Trang chính quản lý thời gian mở EPA"""
@@ -24,7 +25,7 @@ def index():
     try:
         with conn.cursor() as cursor:
             # Lấy danh sách tài khoản từ bảng tk
-            cursor.execute("SELECT ten_tk FROM tk WHERE ten_tk IS NOT NULL ORDER BY ten_tk")
+            cursor.execute("SELECT ten_tk FROM tk WHERE ten_tk IS NOT NULL AND ten_tk != '' ORDER BY ten_tk")
             tk_rows = cursor.fetchall()
             tk_list = [row['ten_tk'] for row in tk_rows]
             
@@ -38,7 +39,7 @@ def index():
                 records[record['ten_tk']] = record
                 
     except Exception as e:
-        print(f"❌ Lỗi database: {e}")
+        print(f"❌ Lỗi database trong index(): {e}")
         tk_list = []
         records = {}
     finally:
@@ -46,6 +47,7 @@ def index():
     
     return render_template('thoigianmoepa.html', tk_list=tk_list, records=records)
 
+# ✅ Route sync_records - khớp với url_for('thoigianmoepa.sync_records') trong HTML
 @thoigianmoepa_bp.route('/sync_records', methods=['POST'])
 def sync_records():
     """Đồng bộ tài khoản từ bảng tk"""
@@ -59,7 +61,7 @@ def sync_records():
     try:
         with conn.cursor() as cursor:
             # Lấy danh sách tài khoản từ bảng tk
-            cursor.execute("SELECT ten_tk, nhom FROM tk WHERE ten_tk IS NOT NULL")
+            cursor.execute("SELECT ten_tk, nhom FROM tk WHERE ten_tk IS NOT NULL AND ten_tk != ''")
             tk_rows = cursor.fetchall()
             
             # Lấy tài khoản đã có trong thoigianmoepa
@@ -68,14 +70,14 @@ def sync_records():
             existing_tk = {row['ten_tk'] for row in existing_rows}
             
             # Lấy tài khoản có trong bảng giaovien
-            cursor.execute("SELECT ten_tk FROM giaovien WHERE ten_tk IS NOT NULL")
+            cursor.execute("SELECT ten_tk FROM giaovien WHERE ten_tk IS NOT NULL AND ten_tk != ''")
             giaovien_rows = cursor.fetchall()
             giaovien_tk = {row['ten_tk'] for row in giaovien_rows}
             
             count = 0
             for tk_row in tk_rows:
                 ten_tk = tk_row['ten_tk']
-                nhom = tk_row['nhom']
+                nhom = tk_row.get('nhom', 'user')
                 
                 # Chỉ thêm nếu: chưa có trong thoigianmoepa VÀ có trong giaovien
                 if ten_tk not in existing_tk and ten_tk in giaovien_tk:
@@ -100,8 +102,10 @@ def sync_records():
     finally:
         conn.close()
     
+    # ✅ Redirect về index() của cùng blueprint
     return redirect(url_for('thoigianmoepa.index'))
 
+# ✅ Route save_record - khớp với url_for('thoigianmoepa.save_record') trong HTML  
 @thoigianmoepa_bp.route('/save_record', methods=['POST'])
 def save_record():
     """Lưu cài đặt thời gian EPA cho một tài khoản"""
@@ -141,10 +145,10 @@ def save_record():
     conn = get_conn()
     try:
         with conn.cursor() as cursor:
-            # Kiểm tra tài khoản có tồn tại trong bảng giaovien không
-            cursor.execute("SELECT 1 FROM giaovien WHERE ten_tk = %s", (ten_tk,))
+            # Kiểm tra tài khoản có tồn tại trong bảng tk không (thay vì giaovien)
+            cursor.execute("SELECT 1 FROM tk WHERE ten_tk = %s", (ten_tk,))
             if not cursor.fetchone():
-                flash(f"❌ Tài khoản {ten_tk} không tồn tại trong bảng giáo viên", "danger")
+                flash(f"❌ Tài khoản {ten_tk} không tồn tại", "danger")
                 return redirect(url_for('thoigianmoepa.index'))
             
             if record_id:
@@ -181,6 +185,7 @@ def save_record():
     finally:
         conn.close()
     
+    # ✅ Redirect về index() của cùng blueprint
     return redirect(url_for('thoigianmoepa.index'))
 
 # ============================
@@ -258,25 +263,5 @@ def get_assessment_period():
     except Exception as e:
         print(f"❌ Lỗi API assessment-period: {e}")
         return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
-
-@thoigianmoepa_bp.route('/api/list')
-def api_list_records():
-    """API lấy danh sách cài đặt thời gian EPA"""
-    if not session.get('user'):
-        return jsonify({'error': 'Not logged in'}), 401
-    
-    if not is_allowed():
-        return jsonify({'error': 'Unauthorized'}), 403
-
-    conn = get_conn()
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM thoigianmoepa ORDER BY ten_tk")
-            records = cursor.fetchall()
-            return jsonify(records)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
     finally:
         conn.close()
