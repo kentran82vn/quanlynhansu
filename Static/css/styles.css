@@ -349,6 +349,7 @@ body {
     text-overflow: ellipsis; /* Hiển thị ... khi nội dung quá dài */
     overflow: hidden; /* Ẩn nội dung tràn */
     max-width: 200px; /* Giới hạn chiều rộng tối đa */
+    justify-items: anchor-center;
 }
 
 /* Style cho tiêu đề bảng */
