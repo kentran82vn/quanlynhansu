@@ -66,9 +66,6 @@
 }
 
 /* === dành cho các button trên nhansu_index === */
-.row {
-        flex-wrap: nowrap !important;
-    }
 .admin-panel {
   background: #fff;
   border: 2px solid #cfe2ff; /* xanh lam nhạt */
