@@ -1076,4 +1076,9 @@ hr {
   border-color: #007bff;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
-
+.questions-table td, .questions-table th {
+    white-space: pre-line !important;
+    word-break: break-word !important;
+    text-overflow: initial !important;
+    overflow: visible !important;
+}

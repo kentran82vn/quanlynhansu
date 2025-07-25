@@ -159,8 +159,7 @@ def save_record():
                 cursor.execute("""
                     UPDATE thoigianmoepa 
                     SET start_day = %s, close_day = %s, remark = %s,
-                        make_epa_gv = %s, make_epa_tgv = %s, make_epa_all = %s,
-                        updated_at = CURRENT_TIMESTAMP
+                        make_epa_gv = %s, make_epa_tgv = %s, make_epa_all = %s
                     WHERE id = %s AND ten_tk = %s
                 """, (start_day, close_day, remark, make_epa_gv, make_epa_tgv, make_epa_all, record_id, ten_tk))
             else:
@@ -174,9 +173,9 @@ def save_record():
                         remark = VALUES(remark),
                         make_epa_gv = VALUES(make_epa_gv),
                         make_epa_tgv = VALUES(make_epa_tgv),
-                        make_epa_all = VALUES(make_epa_all),
-                        updated_at = CURRENT_TIMESTAMP
+                        make_epa_all = VALUES(make_epa_all)
                 """, (ten_tk, start_day, close_day, remark, make_epa_gv, make_epa_tgv, make_epa_all))
+
             
             conn.commit()
             flash(f"✅ Đã lưu cài đặt cho tài khoản {ten_tk}", "success")

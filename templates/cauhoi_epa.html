@@ -11,12 +11,11 @@
 <h2>📝 Danh Sách Câu Hỏi Đánh Giá</h2>
 <button class="btn btn-success mb-3" onclick="openAddModal()">➕ Thêm Câu Hỏi</button>
 <div class="table-responsive">
-<table class="table table-bordered">
+<table class="table table-bordered questions-table">
 <thead class="table-warning">
 <tr>
 <th>ID</th>
 <th>Câu Hỏi</th>
-<th>Dịch Sang Tiếng Anh</th>
 <th>Hành Động</th>
 </tr>
 </thead>
@@ -33,10 +32,6 @@
 </div>
 <div class="modal-body">
 <input id="questionId" type="hidden"/>
-<div class="mb-3">
-<label class="form-label" for="question">Câu hỏi</label>
-<textarea class="form-control" id="question" required=""></textarea>
-</div>
 <div class="mb-3">
 <label class="form-label" for="translate">Dịch sang tiếng Anh</label>
 <textarea class="form-control" id="translate"></textarea>
@@ -64,7 +59,7 @@
           <tr>
             <td>${q.id}</td>
             <td>${q.question}</td>
-            <td>${q.translate || ''}</td>
+            <!-- <td>${q.translate || ''}</td> --> <!-- XÓA dòng này -->
             <td>
               <button class="btn btn-sm btn-warning" onclick='editQuestion(${JSON.stringify(q)})'>✏️ Sửa</button>
               <button class="btn btn-sm btn-danger" onclick='deleteQuestion(${q.id})'>🗑️ Xóa</button>
@@ -91,7 +86,6 @@
       const payload = {
         id: document.getElementById('questionId').value,
         question: document.getElementById('question').value,
-        translate: document.getElementById('translate').value
       };
       await fetch('/api/cauhoi_epa', {
         method: 'POST',

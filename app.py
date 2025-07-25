@@ -1030,6 +1030,74 @@ def update_student_class():
             """, (ma_hs, new_ma_lop))
         conn.commit()
     return jsonify({"message": "Cập nhật thành công"})
+@app.route("/api/assign-teacher", methods=["POST"])
+def assign_teacher():
+    data    = request.get_json(force=True)
+    ma_gv   = data.get("ma_gv")
+    ma_lop  = data.get("ma_lop")
+    vai_tro = data.get("vai_tro")
+
+    # 1. Validate input
+    if not all([ma_gv, ma_lop, vai_tro]):
+        return jsonify({"error": "Thiếu dữ liệu"}), 400
+
+    # 2. Mở kết nối và cursor tuple
+    conn = get_conn()
+    cur  = conn.cursor()
+    try:
+        # 3. Giảng viên có tồn tại?
+        cur.execute(
+            "SELECT 1 FROM giaovien WHERE ma_gv = %s LIMIT 1",
+            (ma_gv,)
+        )
+        if cur.fetchone() is None:
+            return jsonify({"error": "Giáo viên không tồn tại"}), 404
+
+        # 4. Lớp có tồn tại?
+        cur.execute(
+            "SELECT 1 FROM ds_lop WHERE ma_lop = %s LIMIT 1",
+            (ma_lop,)
+        )
+        if cur.fetchone() is None:
+            return jsonify({"error": "Lớp không tồn tại"}), 404
+
+        # 5. Đã phân công chưa?
+        cur.execute(
+            "SELECT 1 FROM lop_gv WHERE ma_lop = %s AND ma_gv = %s LIMIT 1",
+            (ma_lop, ma_gv)
+        )
+        if cur.fetchone() is not None:
+            return jsonify({"error": "Đã phân công rồi"}), 409
+
+        # 6. Thêm phân công mới
+        cur.execute(
+            "INSERT INTO lop_gv (ma_lop, ma_gv, vai_tro) VALUES (%s, %s, %s)",
+            (ma_lop, ma_gv, vai_tro)
+        )
+        conn.commit()
+
+        # 7. (Tuỳ chọn) Ghi log
+        user = session.get("user_ten_tk")
+        if user:
+            action = f"Assigned teacher {ma_gv} to class {ma_lop} as {vai_tro}"
+            cur.execute(
+                "INSERT INTO logs (user_ten_tk, target_staff_id, target_table, action) "
+                "VALUES (%s, %s, 'lop_gv', %s)",
+                (user, ma_gv, action)
+            )
+            conn.commit()
+
+        # 8. Thành công
+        return jsonify({"message": "Gán giáo viên thành công"}), 201
+
+    except Exception as e:
+        # Trả lỗi chi tiết để debug nếu cần
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        # luôn đóng tài nguyên
+        cur.close()
+        conn.close()
 
 # API: Phân lớp học sinh
 @app.route("/api/assign-class", methods=["POST"])

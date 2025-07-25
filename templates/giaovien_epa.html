@@ -99,7 +99,9 @@
                 const isSupervisorOrAdmin = userRole === 'supervisor' || userRole === 'admin';
                 formDiv.innerHTML = data.questions.slice(0, 10).map((q, index) => `
                     <div class="question">
-                        <p><strong>${index + 1}. ${q.translate}</strong></p>
+                        <p><strong>${index + 1}. ${q.question}</strong></p>
+                        <!-- nếu bạn vẫn muốn hiển thị English, có thể thêm dòng sau: -->
+                        <!-- <p class="text-muted"><em>(${q.translate || ''})</em></p> -->
                         <div class="score-inputs">
                             <div>
                                 <label>Điểm tự chấm:</label>
@@ -167,7 +169,7 @@
                     assessmentDiv.innerHTML = (data.assessments || data).map(a => `
                         <div class="assessment-entry">
                             <p class="highlight">Năm: ${a.year}, Tháng: ${a.month}</p>
-                            <p><strong>Câu hỏi:</strong> ${a.translate}</p>
+                            <p><strong>Câu hỏi:</strong> ${a.question}</p>
                             <p><strong>Điểm tự chấm:</strong> ${a.user_score || 'N/A'}</p>
                             <p><strong>Điểm từ Supervisor:</strong> ${a.sup_score || 'Chưa chấm'}</p>
                             <p><strong>Ý kiến tự đánh giá:</strong> ${a.user_comment || 'Không có ý kiến'}</p>

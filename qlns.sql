@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
--- Host: shuttle.proxy.rlwy.net    Database: railway
+-- Host: localhost    Database: quanlytruonghoc_app
 -- ------------------------------------------------------
--- Server version	9.3.0
+-- Server version	8.0.43
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,17 +24,17 @@ DROP TABLE IF EXISTS `bangdanhgia`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bangdanhgia` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ten_tk` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `ho_va_ten` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `chuc_vu` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ten_tk` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ho_va_ten` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `chuc_vu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ngay_sinh` date DEFAULT NULL,
   `year` int NOT NULL,
   `month` int NOT NULL,
-  `question` text COLLATE utf8mb4_general_ci NOT NULL,
-  `translate` text COLLATE utf8mb4_general_ci,
-  `user_comment` text COLLATE utf8mb4_general_ci,
+  `question` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `translate` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `user_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `user_score` int DEFAULT NULL,
-  `sup_comment` text COLLATE utf8mb4_general_ci,
+  `sup_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `sup_score` int DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -61,8 +61,8 @@ DROP TABLE IF EXISTS `cauhoi_epa`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cauhoi_epa` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `question` text COLLATE utf8mb4_general_ci NOT NULL,
-  `translate` text COLLATE utf8mb4_general_ci,
+  `question` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `translate` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -85,8 +85,8 @@ DROP TABLE IF EXISTS `ds_lop`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ds_lop` (
-  `ma_lop` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `ten_lop` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_lop` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ten_lop` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`ma_lop`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -109,22 +109,22 @@ DROP TABLE IF EXISTS `giaovien`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `giaovien` (
-  `ma_gv` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `ho_va_ten` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ten_tk` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `chuc_vu` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_gv` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ho_va_ten` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ten_tk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `chuc_vu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ngay_sinh` date DEFAULT NULL,
-  `que_quan` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cccd` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `que_quan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cccd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ngay_cap` date DEFAULT NULL,
-  `mst` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cmnd` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `so_bh` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sdt` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `tk_nh` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nhom_mau` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `dia_chi` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `mst` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cmnd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `so_bh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sdt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tk_nh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nhom_mau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `dia_chi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`ma_gv`),
   UNIQUE KEY `ten_tk` (`ten_tk`),
   CONSTRAINT `giaovien_ibfk_1` FOREIGN KEY (`ten_tk`) REFERENCES `tk` (`ten_tk`) ON DELETE SET NULL
@@ -137,6 +137,7 @@ CREATE TABLE `giaovien` (
 
 LOCK TABLES `giaovien` WRITE;
 /*!40000 ALTER TABLE `giaovien` DISABLE KEYS */;
+INSERT INTO `giaovien` VALUES ('GV00001','Nguyễn Văn K','k.tk','giáo viên','2001-11-08','none','123456789012','2011-12-08','00983401','281297130','18271371','033331231','1273912712','','A','none');
 /*!40000 ALTER TABLE `giaovien` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,20 +149,20 @@ DROP TABLE IF EXISTS `hocsinh`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hocsinh` (
-  `ma_hs` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `ma_gv` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ma_lop` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_va_ten` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_hs` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ma_gv` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_lop` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_va_ten` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ngay_sinh` date DEFAULT NULL,
-  `dan_toc` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ma_dinh_danh` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_ten_bo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nghe_nghiep_bo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_ten_me` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nghe_nghiep_me` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_khau` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cccd_bo_me` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sdt` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `dan_toc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_dinh_danh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_ten_bo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nghe_nghiep_bo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_ten_me` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nghe_nghiep_me` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cccd_bo_me` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sdt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `gioi_tinh` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ma_hs`),
   KEY `ma_lop` (`ma_lop`),
@@ -190,20 +191,20 @@ DROP TABLE IF EXISTS `hocsinh_backup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hocsinh_backup` (
-  `ma_hs` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `ma_gv` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ma_lop` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_va_ten` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_hs` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ma_gv` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_lop` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_va_ten` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ngay_sinh` date DEFAULT NULL,
-  `dan_toc` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ma_dinh_danh` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_ten_bo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nghe_nghiep_bo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_ten_me` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `nghe_nghiep_me` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ho_khau` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cccd_bo_me` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sdt` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `dan_toc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_dinh_danh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_ten_bo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nghe_nghiep_bo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_ten_me` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nghe_nghiep_me` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ho_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cccd_bo_me` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sdt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `gioi_tinh` enum('Nam','N?') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ma_hs`),
   KEY `ma_lop` (`ma_lop`),
@@ -229,15 +230,15 @@ DROP TABLE IF EXISTS `logs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `logs` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `user_ten_tk` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `target_staff_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `target_table` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `action` text COLLATE utf8mb4_general_ci NOT NULL,
+  `user_ten_tk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `target_staff_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `target_table` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `action` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_ten_tk` (`user_ten_tk`),
   CONSTRAINT `logs_ibfk_1` FOREIGN KEY (`user_ten_tk`) REFERENCES `tk` (`ten_tk`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,7 +247,7 @@ CREATE TABLE `logs` (
 
 LOCK TABLES `logs` WRITE;
 /*!40000 ALTER TABLE `logs` DISABLE KEYS */;
-INSERT INTO `logs` VALUES (1,'admin','HS001','hocsinh','Added student None','2025-06-28 07:03:38'),(2,'admin','TEST001','hocsinh','Deleted record TEST001','2025-06-28 07:28:37'),(3,'admin','TEST007','hocsinh','Deleted record TEST007','2025-06-28 07:28:40'),(4,'admin','HS001','hocsinh','Deleted record HS001','2025-06-28 07:29:00'),(5,NULL,NULL,'tk','Updated role for \'kimnhung\' to \'admin\'','2025-06-28 08:53:54'),(6,NULL,NULL,'tk','Updated role for \'hoangtran\' to \'supervisor\'','2025-06-28 08:54:06'),(7,'admin','ngocnguyen','tk','Changed password','2025-06-28 08:54:50'),(8,'admin','hoangtran','tk','Changed password','2025-06-28 08:55:07'),(9,NULL,NULL,'tk','Added new user \'nguyenthao\' with role \'user\'','2025-06-29 13:09:15'),(10,'admin','anhtho','tk','Changed password','2025-06-29 13:11:06'),(12,NULL,NULL,'tk','Deleted user \'huongphuong\' by admin','2025-06-29 13:24:02'),(13,NULL,NULL,'tk','Updated role for \'ngocquy\' to \'admin\'','2025-06-30 02:39:45'),(14,'admin','ngocquy','tk','Changed password','2025-06-30 02:39:58'),(15,'admin','hoangtran','tk','Changed password','2025-07-14 00:59:45'),(16,'admin','admin','tk','Changed password','2025-07-14 01:03:34'),(17,'admin','kimnhung','tk','Reset password','2025-07-14 01:07:20'),(18,'kimnhung','kdien','tk','Reset password','2025-07-14 01:13:36'),(20,'admin','kimoanh','tk','Reset password','2025-07-14 01:34:20'),(21,NULL,NULL,'tk','Updated role for \'hoangtran\' to \'user\'','2025-07-14 16:27:50'),(22,NULL,NULL,'tk','Deleted user \'nguyenthao\' by kimnhung','2025-07-14 16:38:11'),(23,NULL,NULL,'tk','Deleted user \'hoangtran\' by kimnhung','2025-07-14 16:38:19'),(24,'kimnhung','admin','tk','Reset password','2025-07-14 16:38:49'),(25,NULL,NULL,'tk','Deleted user \'ngocnguyen\' by admin','2025-07-14 16:46:59'),(26,NULL,NULL,'tk','Deleted user \'thuuyen\' by kimnhung','2025-07-16 10:00:57'),(27,NULL,NULL,'tk','Added new user \'nguyenthao1991\' with role \'user\'','2025-07-21 12:58:10'),(28,NULL,NULL,'tk','Added new user \'ccac\' with role \'user\'','2025-07-24 11:36:53'),(29,NULL,NULL,'tk','Deleted user \'ccac\' and related data by kimnhung','2025-07-24 11:52:13'),(30,'kimnhung','GV00001','giaovien','Added GV staff Nguyen A','2025-07-24 12:02:33'),(31,'kimnhung','HS00001','hocsinh','Added student Tien Tran','2025-07-24 12:04:38'),(32,NULL,NULL,'tk','Added new user \'nhahah\' with role \'user\'','2025-07-24 12:05:15'),(33,NULL,NULL,'tk','Deleted user \'nhahah\' and related data by kimnhung','2025-07-24 12:05:34'),(34,NULL,NULL,'tk','Deleted user \'anhtho\' and related data by kimnhung','2025-07-24 12:57:27'),(35,NULL,NULL,'tk','Deleted user \'kimoanh\' and related data by kimnhung','2025-07-24 12:57:32'),(36,NULL,NULL,'tk','Deleted user \'hannguyen\' and related data by kimnhung','2025-07-24 12:57:58'),(37,NULL,NULL,'tk','Deleted user \'ngocphuong\' and related data by kimnhung','2025-07-24 12:58:04'),(38,NULL,NULL,'tk','Deleted user \'thanhhuyen\' and related data by kimnhung','2025-07-24 12:58:09'),(39,NULL,NULL,'tk','Deleted user \'ksira\' and related data by kimnhung','2025-07-24 12:58:15'),(40,NULL,NULL,'tk','Deleted user \'kdien\' and related data by admin','2025-07-24 17:36:46'),(41,NULL,NULL,'tk','Deleted user \'hangnguyen\' and related data by admin','2025-07-24 17:50:37'),(42,NULL,NULL,'tk','Deleted user \'ngocba\' and related data by admin','2025-07-24 17:50:42'),(43,NULL,NULL,'tk','Deleted user \'thamtran\' and related data by admin','2025-07-24 17:50:48'),(44,NULL,NULL,'tk','Deleted user \'thanhtuyen\' and related data by admin','2025-07-24 17:51:20'),(45,NULL,NULL,'tk','Deleted user \'tronghung\' and related data by admin','2025-07-24 17:51:24'),(46,NULL,NULL,'tk','Deleted user \'nguyenthao1991\' and related data by admin','2025-07-24 17:51:34'),(47,NULL,NULL,'tk','Added new user \'nguyenthao\' with role \'user\'','2025-07-24 17:54:08'),(48,'kimnhung','nan','hocsinh','Deleted record nan','2025-07-24 18:28:28'),(49,'kimnhung','nan','hocsinh','Deleted record nan','2025-07-24 18:28:41'),(50,NULL,NULL,'tk','Deleted user \'nguyenthao\' and related data by kimnhung','2025-07-24 18:30:51'),(51,'kimnhung','ngocquy','tk','Reset password','2025-07-24 18:34:44'),(52,NULL,NULL,'tk','Added new user \'thao\' with role \'user\'','2025-07-25 03:26:53');
+INSERT INTO `logs` VALUES (1,'admin','HS001','hocsinh','Added student None','2025-06-28 07:03:38'),(2,'admin','TEST001','hocsinh','Deleted record TEST001','2025-06-28 07:28:37'),(3,'admin','TEST007','hocsinh','Deleted record TEST007','2025-06-28 07:28:40'),(4,'admin','HS001','hocsinh','Deleted record HS001','2025-06-28 07:29:00'),(5,NULL,NULL,'tk','Updated role for \'kimnhung\' to \'admin\'','2025-06-28 08:53:54'),(6,NULL,NULL,'tk','Updated role for \'hoangtran\' to \'supervisor\'','2025-06-28 08:54:06'),(7,'admin','ngocnguyen','tk','Changed password','2025-06-28 08:54:50'),(8,'admin','hoangtran','tk','Changed password','2025-06-28 08:55:07'),(9,NULL,NULL,'tk','Added new user \'nguyenthao\' with role \'user\'','2025-06-29 13:09:15'),(10,'admin','anhtho','tk','Changed password','2025-06-29 13:11:06'),(12,NULL,NULL,'tk','Deleted user \'huongphuong\' by admin','2025-06-29 13:24:02'),(13,NULL,NULL,'tk','Updated role for \'ngocquy\' to \'admin\'','2025-06-30 02:39:45'),(14,'admin','ngocquy','tk','Changed password','2025-06-30 02:39:58'),(15,'admin','hoangtran','tk','Changed password','2025-07-14 00:59:45'),(16,'admin','admin','tk','Changed password','2025-07-14 01:03:34'),(17,'admin','kimnhung','tk','Reset password','2025-07-14 01:07:20'),(18,'kimnhung','kdien','tk','Reset password','2025-07-14 01:13:36'),(20,'admin','kimoanh','tk','Reset password','2025-07-14 01:34:20'),(21,NULL,NULL,'tk','Updated role for \'hoangtran\' to \'user\'','2025-07-14 16:27:50'),(22,NULL,NULL,'tk','Deleted user \'nguyenthao\' by kimnhung','2025-07-14 16:38:11'),(23,NULL,NULL,'tk','Deleted user \'hoangtran\' by kimnhung','2025-07-14 16:38:19'),(24,'kimnhung','admin','tk','Reset password','2025-07-14 16:38:49'),(25,NULL,NULL,'tk','Deleted user \'ngocnguyen\' by admin','2025-07-14 16:46:59'),(26,NULL,NULL,'tk','Deleted user \'thuuyen\' by kimnhung','2025-07-16 10:00:57'),(27,NULL,NULL,'tk','Added new user \'nguyenthao1991\' with role \'user\'','2025-07-21 12:58:10'),(28,NULL,NULL,'tk','Added new user \'ccac\' with role \'user\'','2025-07-24 11:36:53'),(29,NULL,NULL,'tk','Deleted user \'ccac\' and related data by kimnhung','2025-07-24 11:52:13'),(30,'kimnhung','GV00001','giaovien','Added GV staff Nguyen A','2025-07-24 12:02:33'),(31,'kimnhung','HS00001','hocsinh','Added student Tien Tran','2025-07-24 12:04:38'),(32,NULL,NULL,'tk','Added new user \'nhahah\' with role \'user\'','2025-07-24 12:05:15'),(33,NULL,NULL,'tk','Deleted user \'nhahah\' and related data by kimnhung','2025-07-24 12:05:34'),(34,NULL,NULL,'tk','Deleted user \'anhtho\' and related data by kimnhung','2025-07-24 12:57:27'),(35,NULL,NULL,'tk','Deleted user \'kimoanh\' and related data by kimnhung','2025-07-24 12:57:32'),(36,NULL,NULL,'tk','Deleted user \'hannguyen\' and related data by kimnhung','2025-07-24 12:57:58'),(37,NULL,NULL,'tk','Deleted user \'ngocphuong\' and related data by kimnhung','2025-07-24 12:58:04'),(38,NULL,NULL,'tk','Deleted user \'thanhhuyen\' and related data by kimnhung','2025-07-24 12:58:09'),(39,NULL,NULL,'tk','Deleted user \'ksira\' and related data by kimnhung','2025-07-24 12:58:15'),(40,NULL,NULL,'tk','Deleted user \'kdien\' and related data by admin','2025-07-24 17:36:46'),(41,NULL,NULL,'tk','Deleted user \'hangnguyen\' and related data by admin','2025-07-24 17:50:37'),(42,NULL,NULL,'tk','Deleted user \'ngocba\' and related data by admin','2025-07-24 17:50:42'),(43,NULL,NULL,'tk','Deleted user \'thamtran\' and related data by admin','2025-07-24 17:50:48'),(44,NULL,NULL,'tk','Deleted user \'thanhtuyen\' and related data by admin','2025-07-24 17:51:20'),(45,NULL,NULL,'tk','Deleted user \'tronghung\' and related data by admin','2025-07-24 17:51:24'),(46,NULL,NULL,'tk','Deleted user \'nguyenthao1991\' and related data by admin','2025-07-24 17:51:34'),(47,NULL,NULL,'tk','Added new user \'nguyenthao\' with role \'user\'','2025-07-24 17:54:08'),(48,'kimnhung','nan','hocsinh','Deleted record nan','2025-07-24 18:28:28'),(49,'kimnhung','nan','hocsinh','Deleted record nan','2025-07-24 18:28:41'),(50,NULL,NULL,'tk','Deleted user \'nguyenthao\' and related data by kimnhung','2025-07-24 18:30:51'),(51,'kimnhung','ngocquy','tk','Reset password','2025-07-24 18:34:44'),(52,NULL,NULL,'tk','Added new user \'thao\' with role \'user\'','2025-07-25 03:26:53'),(53,'kimnhung','k.tk','tk','Created login account for teacher','2025-07-25 18:08:34'),(54,'kimnhung','GV00001','giaovien','Added GV staff Nguyễn Văn K','2025-07-25 18:08:34');
 /*!40000 ALTER TABLE `logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -258,9 +259,9 @@ DROP TABLE IF EXISTS `lop_gv`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lop_gv` (
-  `ma_lop` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `ma_gv` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `vai_tro` enum('GVCN','B??? m??n','B???o m???u') COLLATE utf8mb4_general_ci NOT NULL,
+  `ma_lop` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ma_gv` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `vai_tro` enum('GVCN','B??? m??n','B???o m???u') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`ma_lop`,`ma_gv`),
   KEY `idx_lop_gv_ma_gv` (`ma_gv`),
   CONSTRAINT `lop_gv_ibfk_1` FOREIGN KEY (`ma_lop`) REFERENCES `ds_lop` (`ma_lop`),
@@ -285,8 +286,8 @@ DROP TABLE IF EXISTS `phan_lop`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `phan_lop` (
-  `ma_hs` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `ma_lop` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ma_hs` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ma_lop` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`ma_hs`),
   KEY `idx_phan_lop_ma_lop` (`ma_lop`),
   CONSTRAINT `phan_lop_ibfk_1` FOREIGN KEY (`ma_hs`) REFERENCES `hocsinh` (`ma_hs`),
@@ -313,7 +314,7 @@ DROP TABLE IF EXISTS `stats`;
 CREATE TABLE `stats` (
   `id` int NOT NULL AUTO_INCREMENT,
   `stat_date` date NOT NULL,
-  `team` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `team` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `count` int NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -368,11 +369,11 @@ DROP TABLE IF EXISTS `tk`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tk` (
-  `ten_tk` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `nhom` enum('admin','user','supervisor') COLLATE utf8mb4_general_ci NOT NULL,
-  `mat_khau` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ten_tk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nhom` enum('admin','user','supervisor') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mat_khau` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ngay_tao` date DEFAULT NULL,
-  `nguoi_tao` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nguoi_tao` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `ngay_hh` date DEFAULT NULL,
   PRIMARY KEY (`ten_tk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -384,7 +385,7 @@ CREATE TABLE `tk` (
 
 LOCK TABLES `tk` WRITE;
 /*!40000 ALTER TABLE `tk` DISABLE KEYS */;
-INSERT INTO `tk` VALUES ('admin','admin','scrypt:32768:8:1$Nc6vkzB7Dr64Ga4r$39fb51ccbe4e28275835e7b4c8a7410d0c32210651d7d15b7895591d0e544696cefa1bdd2db3e3284bdb108290410f24607e8bfec8ae65223a595e19b5d5b489','2025-06-28','system',NULL),('kimnhung','admin','scrypt:32768:8:1$85lyZTwYscM9BRUZ$0aa62d223d201aef1529c8b914f504cb2a71af54339f55c30af95bd8f1bf6f4c5d3df6e67961a26322cb70df58dd5724f1a78af98d0ad67f74ac0cefab175015','2025-06-28',NULL,NULL),('ngocquy','admin','scrypt:32768:8:1$y6Coq8rk4XjhlqT8$29cf664ee77830987005c1f98fce3a3c0701d6f8e6f9c3274025855c7ddbf7dd638ce08bc7d68a9b8edf3e2ea198c247104613482b37c6311bfa6df7837e0124','2025-06-28',NULL,NULL),('thao','user','scrypt:32768:8:1$blUKkZO8nul3oPSi$aeff2e395dbe5a4bdb53eed2b3286b8d8e38147431870936cb09cae017bd62f34b87b9cbd246a4711ee3260d9f991bc030edee8a9c62344756d6c4e1ba799ecb','2025-07-25','kimnhung','2025-10-23');
+INSERT INTO `tk` VALUES ('admin','admin','scrypt:32768:8:1$Nc6vkzB7Dr64Ga4r$39fb51ccbe4e28275835e7b4c8a7410d0c32210651d7d15b7895591d0e544696cefa1bdd2db3e3284bdb108290410f24607e8bfec8ae65223a595e19b5d5b489','2025-06-28','system',NULL),('k.tk','user',NULL,NULL,NULL,NULL),('kimnhung','admin','scrypt:32768:8:1$85lyZTwYscM9BRUZ$0aa62d223d201aef1529c8b914f504cb2a71af54339f55c30af95bd8f1bf6f4c5d3df6e67961a26322cb70df58dd5724f1a78af98d0ad67f74ac0cefab175015','2025-06-28',NULL,NULL),('ngocquy','admin','scrypt:32768:8:1$y6Coq8rk4XjhlqT8$29cf664ee77830987005c1f98fce3a3c0701d6f8e6f9c3274025855c7ddbf7dd638ce08bc7d68a9b8edf3e2ea198c247104613482b37c6311bfa6df7837e0124','2025-06-28',NULL,NULL),('thao','user','scrypt:32768:8:1$blUKkZO8nul3oPSi$aeff2e395dbe5a4bdb53eed2b3286b8d8e38147431870936cb09cae017bd62f34b87b9cbd246a4711ee3260d9f991bc030edee8a9c62344756d6c4e1ba799ecb','2025-07-25','kimnhung','2025-10-23');
 /*!40000 ALTER TABLE `tk` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,13 +398,13 @@ DROP TABLE IF EXISTS `tongdiem_epa`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tongdiem_epa` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ten_tk` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `ten_tk` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `year` int NOT NULL,
   `month` int NOT NULL,
   `user_total_score` int DEFAULT '0',
   `sup_total_score` int DEFAULT '0',
   `pri_total_score` int DEFAULT NULL,
-  `pri_comment` text COLLATE utf8mb4_general_ci,
+  `pri_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_user_month` (`ten_tk`,`year`,`month`),
@@ -419,6 +420,10 @@ LOCK TABLES `tongdiem_epa` WRITE;
 /*!40000 ALTER TABLE `tongdiem_epa` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tongdiem_epa` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'quanlytruonghoc_app'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -429,4 +434,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-25 17:44:44
+-- Dump completed on 2025-07-25 18:18:12
