@@ -1374,3 +1374,22 @@ function removeDeptData() {
   }
 
 </script>
+<script>
+  // Sau khi DOM và dữ liệu đã được load
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    // Xác định bảng đang hiển thị
+    const visibleTable = document.getElementById('table_hs').style.display === 'block'
+      ? document.querySelector('#table_hs tbody')
+      : document.getElementById('table_gv').style.display === 'block'
+        ? document.querySelector('#table_gv tbody')
+        : null;
+    if (!visibleTable) return;
+    
+    // Với mỗi dòng, kiểm tra xem text của cả dòng có chứa q hay không
+    visibleTable.querySelectorAll('tr').forEach(tr => {
+      const text = tr.innerText.toLowerCase();
+      tr.style.display = text.includes(q) ? '' : 'none';
+    });
+  });
+</script>
