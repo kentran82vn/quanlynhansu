@@ -702,9 +702,7 @@ iframe {
     padding-right: 2px !important;
 }
 /* Hiển thị/ẩn các block cụ thể */
-#last-assessment, #total-score-table-body {
-    display: block;
-}
+
 
 .hidden {
     display: none;
