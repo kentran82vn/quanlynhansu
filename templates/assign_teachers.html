@@ -72,19 +72,26 @@ window.onload = async () => {
     ma_lop.innerHTML += `<option value="${l.ma_lop}">${l.ten_lop}</option>`;
   });
 };
-document.getElementById('assign-teacher-form').onsubmit = async function(e) {
-  e.preventDefault();
-  const res = await fetch('/api/assign-teacher', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      ma_lop: ma_lop.value,
-      ma_gv: ma_gv.value,
-      vai_tro: vai_tro.value
-    })
-  });
-  if (res.ok) alert("🎉 Gán giáo viên thành công!");
-};
+document.getElementById('assign-teacher-form').addEventListener('submit', async function(e) {
+   e.preventDefault();
+   const res = await fetch('/api/assign-teacher', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({
+       ma_lop: ma_lop.value,
+       ma_gv: ma_gv.value,
+       vai_tro: vai_tro.value
+     })
+   });
+   if (res.ok) {
+     alert("🎉 Gán giáo viên thành công!");
+     // gọi lại để load lại bảng mà không cần F5
+     loadAssignments();
+   } else {
+     const err = await res.text();
+     alert("❌ Có lỗi: " + err);
+   }
+ });
 </script>
 <script>
   let sortState = { field: null, asc: true };
