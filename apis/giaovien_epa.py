@@ -331,14 +331,8 @@ def submit_assessment():
         ho_va_ten = user_details['ho_va_ten']
         chuc_vu = user_details['chuc_vu']
         ngay_sinh = user_details['ngay_sinh']
-        cursor.execute(
-            """
-            DELETE FROM bangdanhgia
-            WHERE ten_tk = %s AND year = %s AND month = %s
-            """,
-            (ten_tk, year, month)
-        )
-        logging.debug(f'Đã xóa kết quả đánh giá cũ cho ten_tk={ten_tk}, year={year}, month={month}')
+        # Thay vì DELETE + INSERT, sử dụng UPSERT để bảo toàn dữ liệu chưa thay đổi
+        logging.debug(f'Cập nhật kết quả đánh giá cho ten_tk={ten_tk}, year={year}, month={month}')
         for score_entry in scores:
             question_id = score_entry.get('questionId')
             user_score = score_entry.get('score')
@@ -362,20 +356,54 @@ def submit_assessment():
             if not question:
                 logging.warning(f'ID câu hỏi không hợp lệ: {question_id}')
                 continue
+            
+            # Kiểm tra xem đã có record chưa, nếu có thì UPDATE, chưa có thì INSERT
             cursor.execute(
                 """
-                INSERT INTO bangdanhgia (
-                    ten_tk, ho_va_ten, chuc_vu, ngay_sinh, year, month,
-                    question, translate, user_score, sup_score, user_comment, sup_comment, created_at
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                SELECT id FROM bangdanhgia 
+                WHERE ten_tk = %s AND year = %s AND month = %s AND question = %s
                 """,
-                (
-                    ten_tk, ho_va_ten, chuc_vu, ngay_sinh,
-                    year, month,
-                    question['question'], question['translate'],
-                    user_score, sup_score, user_comment, sup_comment
-                )
+                (ten_tk, year, month, question['question'])
             )
+            existing_record = cursor.fetchone()
+            
+            if existing_record:
+                # Cập nhật record đã có, chỉ cập nhật các field không null/empty
+                update_fields = ["user_score = %s", "user_comment = %s", "created_at = NOW()"]
+                update_values = [user_score, user_comment]
+                
+                if sup_score is not None:
+                    update_fields.append("sup_score = %s")
+                    update_values.append(sup_score)
+                
+                if sup_comment:
+                    update_fields.append("sup_comment = %s") 
+                    update_values.append(sup_comment)
+                
+                update_values.append(existing_record['id'])
+                
+                cursor.execute(
+                    f"UPDATE bangdanhgia SET {', '.join(update_fields)} WHERE id = %s",
+                    update_values
+                )
+                logging.debug(f'Cập nhật câu hỏi ID {question_id} cho ten_tk={ten_tk}')
+            else:
+                # Tạo record mới
+                cursor.execute(
+                    """
+                    INSERT INTO bangdanhgia (
+                        ten_tk, ho_va_ten, chuc_vu, ngay_sinh, year, month,
+                        question, translate, user_score, sup_score, user_comment, sup_comment, created_at
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                    """,
+                    (
+                        ten_tk, ho_va_ten, chuc_vu, ngay_sinh,
+                        year, month,
+                        question['question'], question['translate'],
+                        user_score, sup_score, user_comment, sup_comment
+                    )
+                )
+                logging.debug(f'Tạo mới câu hỏi ID {question_id} cho ten_tk={ten_tk}')
         conn.commit()
         logging.debug(f'Đã lưu kết quả đánh giá cho ten_tk={ten_tk}')
         update_tongdiem_epa(ten_tk, year, month)
