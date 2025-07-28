@@ -93,7 +93,10 @@ def check_database():
     return jsonify(response)
 
 def open_browser():
-    webbrowser.open("http://localhost:5000")
+    try:
+        webbrowser.open("http://localhost:5000")
+    except Exception as e:
+        print(f"❌ Could not open browser: {e}")
 
 if __name__ == "__main__":
     threading.Timer(1.0, open_browser).start()

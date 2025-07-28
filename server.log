@@ -952,3 +952,89 @@
 2025-07-25 21:41:53,943 [INFO] 127.0.0.1 - - [25/Jul/2025 21:41:53] "GET /users HTTP/1.1" 200 -
 2025-07-25 21:41:54,196 [INFO] 127.0.0.1 - - [25/Jul/2025 21:41:54] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
 2025-07-25 21:41:54,274 [INFO] 127.0.0.1 - - [25/Jul/2025 21:41:54] "GET /api/users HTTP/1.1" 200 -
+2025-07-28 21:53:44,773 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-28 21:53:44,774 [INFO] [33mPress CTRL+C to quit[0m
+2025-07-28 21:53:46,028 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:46] "[32mGET / HTTP/1.1[0m" 302 -
+2025-07-28 21:53:46,510 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:46] "GET /login HTTP/1.1" 200 -
+2025-07-28 21:53:46,821 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-28 21:53:51,543 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:51] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-07-28 21:53:51,553 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:51] "GET /dashboard HTTP/1.1" 200 -
+2025-07-28 21:53:51,709 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:51] "GET /employees HTTP/1.1" 200 -
+2025-07-28 21:53:52,106 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:52] "GET /employees HTTP/1.1" 200 -
+2025-07-28 21:53:52,133 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:52] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-28 21:53:52,325 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:52] "GET /static/css/styles.css?v=20250719 HTTP/1.1" 200 -
+2025-07-28 21:53:52,448 [INFO] 127.0.0.1 - - [28/Jul/2025 21:53:52] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-28 21:57:22,093 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:22] "GET /dashboard?page=/employees HTTP/1.1" 200 -
+2025-07-28 21:57:22,146 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:22] "GET /employees HTTP/1.1" 200 -
+2025-07-28 21:57:22,339 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:22] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:22,683 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:22] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-28 21:57:30,193 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:30] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:30,522 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:30] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-07-28 21:57:33,982 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:33] "GET /thoigianmoepa HTTP/1.1" 200 -
+2025-07-28 21:57:34,314 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:34] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:35,094 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:35] "GET /admin/questions HTTP/1.1" 200 -
+2025-07-28 21:57:35,427 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:35] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:35,703 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:35] "GET /api/cauhoi_epa HTTP/1.1" 200 -
+2025-07-28 21:57:36,074 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:36] "GET /thoigianmoepa HTTP/1.1" 200 -
+2025-07-28 21:57:36,405 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:36] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:36,657 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:36] "GET /epa_summary HTTP/1.1" 200 -
+2025-07-28 21:57:36,930 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:36] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:36,985 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:36] "GET /api/list_ten_tk HTTP/1.1" 200 -
+2025-07-28 21:57:37,513 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:37] "GET /thoigianmoepa HTTP/1.1" 200 -
+2025-07-28 21:57:37,840 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:37] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:38,104 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:38] "GET /data_epa HTTP/1.1" 200 -
+2025-07-28 21:57:38,155 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:38] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:38,445 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:38] "GET /api/epa-full HTTP/1.1" 200 -
+2025-07-28 21:57:38,682 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:38] "GET /epa_summary HTTP/1.1" 200 -
+2025-07-28 21:57:38,782 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:38] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 21:57:39,028 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:39] "GET /thoigianmoepa HTTP/1.1" 200 -
+2025-07-28 21:57:39,173 [INFO] 127.0.0.1 - - [28/Jul/2025 21:57:39] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:03:19,490 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:19] "GET /admin/questions HTTP/1.1" 200 -
+2025-07-28 22:03:19,757 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:19] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:03:19,825 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:19] "GET /api/cauhoi_epa HTTP/1.1" 200 -
+2025-07-28 22:03:20,872 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:20] "GET /thoigianmoepa HTTP/1.1" 200 -
+2025-07-28 22:03:21,201 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:21] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:03:28,341 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:28] "GET /data_epa HTTP/1.1" 200 -
+2025-07-28 22:03:28,681 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:28] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-28 22:03:28,932 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:28] "GET /api/epa-full HTTP/1.1" 200 -
+2025-07-28 22:03:29,189 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:29] "GET /epa_summary HTTP/1.1" 200 -
+2025-07-28 22:03:29,524 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:29] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:03:29,794 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:29] "GET /api/list_ten_tk HTTP/1.1" 200 -
+2025-07-28 22:03:30,964 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:30] "GET /admin/questions HTTP/1.1" 200 -
+2025-07-28 22:03:31,299 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:31] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:03:31,551 [INFO] 127.0.0.1 - - [28/Jul/2025 22:03:31] "GET /api/cauhoi_epa HTTP/1.1" 200 -
+2025-07-28 22:16:56,879 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-28 22:16:56,879 [INFO] [33mPress CTRL+C to quit[0m
+2025-07-28 22:16:58,327 [INFO] 127.0.0.1 - - [28/Jul/2025 22:16:58] "[32mGET / HTTP/1.1[0m" 302 -
+2025-07-28 22:16:58,341 [INFO] 127.0.0.1 - - [28/Jul/2025 22:16:58] "GET /dashboard HTTP/1.1" 200 -
+2025-07-28 22:16:58,624 [INFO] 127.0.0.1 - - [28/Jul/2025 22:16:58] "GET /employees HTTP/1.1" 200 -
+2025-07-28 22:16:59,008 [INFO] 127.0.0.1 - - [28/Jul/2025 22:16:59] "GET /employees HTTP/1.1" 200 -
+2025-07-28 22:16:59,329 [INFO] 127.0.0.1 - - [28/Jul/2025 22:16:59] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-28 22:16:59,347 [INFO] 127.0.0.1 - - [28/Jul/2025 22:16:59] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-28 22:17:01,683 [INFO] 127.0.0.1 - - [28/Jul/2025 22:17:01] "GET /admin/questions HTTP/1.1" 200 -
+2025-07-28 22:17:01,931 [INFO] 127.0.0.1 - - [28/Jul/2025 22:17:01] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:17:02,014 [INFO] 127.0.0.1 - - [28/Jul/2025 22:17:02] "GET /api/cauhoi_epa HTTP/1.1" 200 -
+2025-07-28 22:21:32,176 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:32] "GET /dashboard?page=/admin/questions HTTP/1.1" 200 -
+2025-07-28 22:21:32,233 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:32] "GET /admin/questions HTTP/1.1" 200 -
+2025-07-28 22:21:32,435 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:32] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:21:32,758 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:32] "GET /api/cauhoi_epa HTTP/1.1" 200 -
+2025-07-28 22:21:39,231 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-28 22:21:39,232 [INFO] [33mPress CTRL+C to quit[0m
+2025-07-28 22:21:40,676 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:40] "[32mGET / HTTP/1.1[0m" 302 -
+2025-07-28 22:21:40,690 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:40] "GET /dashboard HTTP/1.1" 200 -
+2025-07-28 22:21:40,967 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:40] "GET /employees HTTP/1.1" 200 -
+2025-07-28 22:21:41,315 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:41] "GET /employees HTTP/1.1" 200 -
+2025-07-28 22:21:41,641 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:41] "[36mGET /static/css/styles.css?v=20250719 HTTP/1.1[0m" 304 -
+2025-07-28 22:21:41,662 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:41] "GET /api/table-schema HTTP/1.1" 200 -
+2025-07-28 22:21:44,964 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:44] "GET /dashboard?page=/admin/questions HTTP/1.1" 200 -
+2025-07-28 22:21:45,017 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:45] "GET /admin/questions HTTP/1.1" 200 -
+2025-07-28 22:21:45,230 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:45] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:21:45,571 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:45] "GET /api/cauhoi_epa HTTP/1.1" 200 -
+2025-07-28 22:21:51,867 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:51] "GET /thoigianmoepa HTTP/1.1" 200 -
+2025-07-28 22:21:52,188 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:52] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:21:52,789 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:52] "GET /admin/questions HTTP/1.1" 200 -
+2025-07-28 22:21:53,125 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:53] "[36mGET /static/css/styles.css?v=20250716 HTTP/1.1[0m" 304 -
+2025-07-28 22:21:53,391 [INFO] 127.0.0.1 - - [28/Jul/2025 22:21:53] "GET /api/cauhoi_epa HTTP/1.1" 200 -

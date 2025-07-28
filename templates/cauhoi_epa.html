@@ -9,6 +9,7 @@
 </head>
 <body class="p-4"><div class="container-fluid mt-4"><div class="card"><div class="card-body">
 <h2>📝 Danh Sách Câu Hỏi Đánh Giá</h2>
+<div class="d-none" id="userInfo" data-user="{{ user }}" data-role="{{ role }}"></div>
 <button class="btn btn-success mb-3" onclick="openAddModal()">➕ Thêm Câu Hỏi</button>
 <div class="table-responsive">
 <table class="table table-bordered questions-table">
@@ -16,6 +17,7 @@
 <tr>
 <th>ID</th>
 <th>Câu Hỏi</th>
+<th>Điểm</th>
 <th>Hành Động</th>
 </tr>
 </thead>
@@ -33,8 +35,21 @@
 <div class="modal-body">
 <input id="questionId" type="hidden"/>
 <div class="mb-3">
+<label class="form-label" for="question">Câu Hỏi</label>
+<textarea class="form-control" id="question" required></textarea>
+</div>
+<div class="mb-3">
 <label class="form-label" for="translate">Dịch sang tiếng Anh</label>
 <textarea class="form-control" id="translate"></textarea>
+</div>
+<div class="mb-3" id="scoreField">
+<label class="form-label" for="score">Điểm</label>
+<select class="form-select" id="score" required>
+<option value="">-- Chọn điểm --</option>
+<option value="20">20 điểm</option>
+<option value="10">10 điểm</option>
+<option value="5">5 điểm</option>
+</select>
 </div>
 </div>
 <div class="modal-footer">
@@ -49,6 +64,12 @@
     const modal = new bootstrap.Modal(document.getElementById('questionModal'));
     const form = document.getElementById('questionForm');
     const questionTable = document.getElementById('questionsTable');
+    
+    // Lấy thông tin user và role
+    const userInfo = document.getElementById('userInfo');
+    const currentUser = userInfo ? userInfo.getAttribute('data-user') : '';
+    const currentRole = userInfo ? userInfo.getAttribute('data-role') : '';
+    const canEditScore = (currentRole === 'admin' || currentUser === 'kimnhung');
 
     async function loadQuestions() {
       const res = await fetch('/api/cauhoi_epa');
@@ -59,9 +80,11 @@
           <tr>
             <td>${q.id}</td>
             <td>${q.question}</td>
-            <!-- <td>${q.translate || ''}</td> --> <!-- XÓA dòng này -->
             <td>
-              <button class="btn btn-sm btn-warning" onclick='editQuestion(${JSON.stringify(q)})'>✏️ Sửa</button>
+              <span class="badge bg-primary">${q.score || 20} điểm</span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-warning me-2" onclick='editQuestion(${JSON.stringify(q)})'>✏️ Sửa</button>
               <button class="btn btn-sm btn-danger" onclick='deleteQuestion(${q.id})'>🗑️ Xóa</button>
             </td>
           </tr>`;
@@ -71,6 +94,17 @@
     function openAddModal() {
       form.reset();
       document.getElementById('questionId').value = '';
+      
+      // Ẩn/hiện trường điểm dựa trên quyền
+      const scoreField = document.getElementById('scoreField');
+      if (canEditScore) {
+        scoreField.style.display = 'block';
+        document.getElementById('score').required = true;
+      } else {
+        scoreField.style.display = 'none';
+        document.getElementById('score').required = false;
+      }
+      
       modal.show();
     }
 
@@ -78,6 +112,18 @@
       document.getElementById('questionId').value = q.id;
       document.getElementById('question').value = q.question;
       document.getElementById('translate').value = q.translate || '';
+      document.getElementById('score').value = q.score || 20;
+      
+      // Ẩn/hiện trường điểm dựa trên quyền
+      const scoreField = document.getElementById('scoreField');
+      if (canEditScore) {
+        scoreField.style.display = 'block';
+        document.getElementById('score').required = true;
+      } else {
+        scoreField.style.display = 'none';
+        document.getElementById('score').required = false;
+      }
+      
       modal.show();
     }
 
@@ -86,7 +132,13 @@
       const payload = {
         id: document.getElementById('questionId').value,
         question: document.getElementById('question').value,
+        translate: document.getElementById('translate').value
       };
+      
+      // Chỉ gửi điểm nếu user có quyền chỉnh sửa
+      if (canEditScore) {
+        payload.score = parseInt(document.getElementById('score').value);
+      }
       await fetch('/api/cauhoi_epa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

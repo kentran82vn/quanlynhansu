@@ -215,18 +215,14 @@
         window.history.pushState({page: page}, '', newURL);
     }
 
-    // ✅ Tạo URL an toàn cho iframe
+    // ✅ Tạo URL an toàn cho iframe - sử dụng relative URL để tránh mixed content
     function createSafeURL(page) {
         // Remove trailing slash nếu có
         const cleanPage = page.endsWith('/') ? page.slice(0, -1) : page;
         
-        // Sử dụng same protocol như trang hiện tại
-        const protocol = window.location.protocol; // 'https:' hoặc 'http:'
-        const host = window.location.host;
-        const fullURL = `${protocol}//${host}${cleanPage}`;
-        
-        console.log('🔗 Creating URL:', fullURL); // Debug log
-        return fullURL;
+        // Sử dụng relative URL thay vì absolute URL để tránh mixed content issues
+        console.log('🔗 Creating relative URL:', cleanPage); // Debug log
+        return cleanPage;
     }
 
     // ✅ Load trang và cập nhật active state  
@@ -292,9 +288,9 @@
     document.getElementById('mainFrame').addEventListener('error', function(e) {
         console.error('❌ Iframe load error:', e);
         // Fallback to employees page
-        if (this.src !== createSafeURL('/employees')) {
+        if (this.src !== '/employees') {
             console.log('🔄 Fallback to employees page');
-            this.src = createSafeURL('/employees');
+            this.src = '/employees';
         }
     });
 

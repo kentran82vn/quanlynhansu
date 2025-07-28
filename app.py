@@ -744,7 +744,16 @@ def remove_dept_data():
 # Phần xử lý câu hỏi EPA
 @app.route("/admin/questions")
 def admin_questions():
-    return render_template("cauhoi_epa.html")
+    if "user" not in session:
+        return redirect("/")
+    
+    # Chỉ cho phép admin hoặc kimnhung truy cập
+    user = session.get("user")
+    role = session.get("role")
+    if not (role == "admin" or user == "kimnhung"):
+        return render_template("403.html"), 403
+        
+    return render_template("cauhoi_epa.html", user=user, role=role)
 
 @app.route('/api/cauhoi_epa', methods=['GET'])
 def get_questions():
@@ -757,24 +766,53 @@ def get_questions():
 
 @app.route('/api/cauhoi_epa', methods=['POST'])
 def add_or_update_question():
+    if "user" not in session:
+        return jsonify({"error": "Chưa đăng nhập"}), 401
+    
+    # Chỉ cho phép admin hoặc kimnhung chỉnh sửa điểm
+    user = session.get("user")
+    role = session.get("role")
+    can_edit_score = (role == "admin" or user == "kimnhung")
+    
     data = request.get_json()
     id = data.get('id')
     question = data.get('question', '').strip()
     translate = data.get('translate', '').strip()
+    score = data.get('score', 20)  # Mặc định 20 điểm
+    
     if not question:
         return jsonify({"error": "Câu hỏi không được để trống!"}), 400
+    
+    # Validate score chỉ khi user có quyền chỉnh sửa
+    if can_edit_score and score not in [5, 10, 20]:
+        return jsonify({"error": "Điểm phải là 5, 10 hoặc 20!"}), 400
+        
     conn = get_conn()
     with conn.cursor() as cur:
         if id:
-            cur.execute(
-                "UPDATE cauhoi_epa SET question = %s, translate = %s WHERE id = %s",
-                (question, translate, id)
-            )
+            # Chỉ cập nhật điểm nếu user có quyền
+            if can_edit_score:
+                cur.execute(
+                    "UPDATE cauhoi_epa SET question = %s, translate = %s, score = %s WHERE id = %s",
+                    (question, translate, score, id)
+                )
+            else:
+                cur.execute(
+                    "UPDATE cauhoi_epa SET question = %s, translate = %s WHERE id = %s",
+                    (question, translate, id)
+                )
         else:
-            cur.execute(
-                "INSERT INTO cauhoi_epa (question, translate) VALUES (%s, %s)",
-                (question, translate)
-            )
+            # Khi tạo mới, chỉ set điểm nếu user có quyền
+            if can_edit_score:
+                cur.execute(
+                    "INSERT INTO cauhoi_epa (question, translate, score) VALUES (%s, %s, %s)",
+                    (question, translate, score)
+                )
+            else:
+                cur.execute(
+                    "INSERT INTO cauhoi_epa (question, translate) VALUES (%s, %s)",
+                    (question, translate)
+                )
     conn.commit()
     conn.close()
     return jsonify({"success": True})
@@ -1200,9 +1238,15 @@ def delete_assignment():
 def view_export_data():
     return render_template("export_data.html")
 
-# THời gian mở EPA
+# THời gian mở EPA  
 def open_browser():
-    webbrowser.open("http://localhost:5000")
+    # Sử dụng protocol-relative URL hoặc để browser tự detect
+    import socket
+    try:
+        # Kiểm tra xem có đang chạy trên HTTPS không
+        webbrowser.open("http://localhost:5000")
+    except Exception as e:
+        print(f"❌ Could not open browser: {e}")
 
 #Hàm đổi mật khẩu user đang logging
 @app.route('/change-password', methods=['POST'])
