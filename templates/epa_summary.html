@@ -1,81 +1,298 @@
 <!DOCTYPE html>
-
 <html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<title>📊 Tổng Hợp Kết Quả Đánh Giá EPA</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250716" rel="stylesheet"/>
-<!--
-<style>
-  .section-title { margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
-  .form-label, .form-select, .form-control, .btn { font-size: 0.9rem; }
-  .card { margin-bottom: 20px; }
-</style>
--->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📊 Tổng Hợp Kết Quả Đánh Giá EPA - Trường Mầm Non Hoa Hướng Dương</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static_files', filename='css/modern.css') }}" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', var(--font-family-sans);
+      background: var(--bg-secondary);
+    }
+    
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-lg);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+    }
+    
+    .page-title {
+      font-size: var(--text-3xl);
+      font-weight: var(--font-bold);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+    
+    .page-subtitle {
+      font-size: var(--text-base);
+      opacity: 0.9;
+      margin-top: var(--spacing-sm);
+    }
+    
+    .chart-card {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .chart-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 2px solid var(--gray-200);
+    }
+    
+    .chart-controls {
+      background: var(--bg-tertiary);
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin-top: var(--spacing-lg);
+    }
+    
+    .summary-chart-container {
+      position: relative;
+      height: 250px;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .summary-month-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-md);
+      padding: var(--spacing-sm);
+      background: var(--bg-accent);
+      border-radius: var(--border-radius);
+    }
+    
+    .form-controls-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .control-label {
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .chart-btn {
+      width: 100%;
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-weight: var(--font-medium);
+      border-radius: var(--border-radius);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .chart-btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .chart-btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+    
+    .chart-btn-secondary {
+      background: var(--info-color);
+      color: white;
+    }
+    
+    .chart-btn-secondary:hover {
+      background: #0e7490;
+      transform: translateY(-1px);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: var(--text-2xl);
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .chart-container {
+        height: 300px;
+      }
+      
+      .summary-chart-container {
+        height: 200px;
+      }
+      
+      .form-controls-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body class="p-4"><div class="container-fluid mt-4"><div class="card"><div class="card-body">
-<h2 class="mb-4">📊 Tổng Hợp Kết Quả Đánh Giá EPA</h2>
-<div class="row">
-<div class="col-md-6">
-<div class="card p-3">
-<div class="card-header section-title">🔷 Điểm Đánh Giá Cá Nhân Theo Năm</div>
-<form class="row g-3 mb-3" onsubmit="event.preventDefault(); loadChart();">
-<div class="col-md-8">
-<label class="form-label mt-3 col-md-6" for="ten_tk">Tên tài khoản</label>
-<select class="form-select" id="ten_tk" required="">
-<option value="">-- Chọn tài khoản --</option>
-</select>
-</div>
-<div class="col-md-4">
-<label class="form-label mt-3 col-md-6" for="year">Năm</label>
-<input class="form-control" id="year" required="" type="number" value="2025"/>
-</div>
-<div class="col-md-12">
-<button class="btn btn-primary w-100" onclick="loadChart()" type="button">Hiển Thị Biểu Đồ</button>
-</div>
-</form>
-<div style="height:400px">
-<canvas id="epaChart" style="max-height:100%;"></canvas>
-</div>
-</div>
-</div>
-<div class="col-md-6">
-<div class="card p-3">
-<div class="card-header section-title">🔷 Điểm Đánh Giá Tổng Hợp Các Tháng Trong Năm</div>
-<form class="row g-3 mb-3" onsubmit="event.preventDefault(); loadSummary();">
-<div class="col-md-6">
-<label class="form-label mt-3 col-md-6" for="summaryYear">Năm</label>
-<input class="form-control" id="summaryYear" required="" type="number" value="2025"/>
-</div>
-<div class="col-md-6">
-<label class="form-label mt-3 col-md-6" for="summaryMonth">Tháng</label>
-<select class="form-select" id="summaryMonth">
-<option value="All">Tất cả</option>
-<option value="1">1</option>
-<option value="2">2</option>
-<option value="3">3</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
-<option value="7">7</option>
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
-</select>
-</div>
-<div class="col-md-12">
-<button class="btn btn-outline-info w-100" onclick="loadSummary()" type="button">Hiển Thị Tổng Hợp</button>
-</div>
-</form>
-<div id="summaryCharts"></div>
-</div>
-</div>
-</div>
+
+<body>
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="fas fa-chart-line"></i>
+        Tổng Hợp Kết Quả Đánh Giá EPA
+      </h1>
+      <p class="page-subtitle">Phân tích và thống kê kết quả đánh giá nhân viên theo thời gian</p>
+    </div>
+    <!-- Charts Grid -->
+    <div class="row">
+      <!-- Individual Assessment Chart -->
+      <div class="col-md-6">
+        <div class="chart-card">
+          <div class="chart-header">
+            <i class="fas fa-user-chart"></i>
+            Điểm Đánh Giá Cá Nhân Theo Năm
+          </div>
+          
+          <div class="chart-controls">
+            <form class="form-controls-row" onsubmit="event.preventDefault(); loadChart();">
+              <div class="control-group">
+                <label class="control-label" for="ten_tk">
+                  <i class="fas fa-user"></i>
+                  Tên tài khoản
+                </label>
+                <select class="form-control" id="ten_tk" required>
+                  <option value="">-- Chọn tài khoản --</option>
+                </select>
+              </div>
+              
+              <div class="control-group">
+                <label class="control-label" for="year">
+                  <i class="fas fa-calendar-alt"></i>
+                  Năm
+                </label>
+                <input class="form-control" id="year" type="number" value="2025" required>
+              </div>
+              
+              <div class="control-group">
+                <label class="control-label">&nbsp;</label>
+                <button class="chart-btn chart-btn-primary" onclick="loadChart()" type="button">
+                  <i class="fas fa-chart-bar"></i>
+                  Hiển Thị Biểu Đồ
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div class="chart-container">
+            <canvas id="epaChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Summary Assessment Chart -->
+      <div class="col-md-6">
+        <div class="chart-card">
+          <div class="chart-header">
+            <i class="fas fa-chart-line"></i>
+            Điểm Đánh Giá Tổng Hợp Các Tháng
+          </div>
+          
+          <div class="chart-controls">
+            <form class="form-controls-row" onsubmit="event.preventDefault(); loadSummary();">
+              <div class="control-group">
+                <label class="control-label" for="summaryYear">
+                  <i class="fas fa-calendar-alt"></i>
+                  Năm
+                </label>
+                <input class="form-control" id="summaryYear" type="number" value="2025" required>
+              </div>
+              
+              <div class="control-group">
+                <label class="control-label" for="summaryMonth">
+                  <i class="fas fa-calendar-day"></i>
+                  Tháng
+                </label>
+                <select class="form-control" id="summaryMonth">
+                  <option value="All">Tất cả</option>
+                  <option value="1">Tháng 1</option>
+                  <option value="2">Tháng 2</option>
+                  <option value="3">Tháng 3</option>
+                  <option value="4">Tháng 4</option>
+                  <option value="5">Tháng 5</option>
+                  <option value="6">Tháng 6</option>
+                  <option value="7">Tháng 7</option>
+                  <option value="8">Tháng 8</option>
+                  <option value="9">Tháng 9</option>
+                  <option value="10">Tháng 10</option>
+                  <option value="11">Tháng 11</option>
+                  <option value="12">Tháng 12</option>
+                </select>
+              </div>
+              
+              <div class="control-group">
+                <label class="control-label">&nbsp;</label>
+                <button class="chart-btn chart-btn-secondary" onclick="loadSummary()" type="button">
+                  <i class="fas fa-chart-area"></i>
+                  Hiển Thị Tổng Hợp
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div id="summaryCharts"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 <script>
 let chart;
 
@@ -162,10 +379,13 @@ async function loadSummary() {
 
     const canvasId = `chart_${index}`;
     const chartBox = document.createElement("div");
-    chartBox.classList.add("mb-4");
+    chartBox.classList.add("summary-chart-container");
     chartBox.innerHTML = `
-      <h6>📅 Tháng ${month}</h6>
-      <canvas id="${canvasId}" height="200"></canvas>
+      <div class="summary-month-title">
+        <i class="fas fa-calendar-alt"></i>
+        Tháng ${month}
+      </div>
+      <canvas id="${canvasId}"></canvas>
     `;
     container.appendChild(chartBox);
 

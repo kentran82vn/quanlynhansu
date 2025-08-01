@@ -1,0 +1,336 @@
+/*
+===============================================
+📱 MOBILE ENHANCEMENTS
+===============================================
+Tối ưu trải nghiệm mobile cho hệ thống EPA
+===============================================
+*/
+
+/* Touch-friendly form controls */
+@media (max-width: 768px) {
+  
+  /* === FORM CONTROLS === */
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    min-height: 44px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 2px solid var(--gray-300) !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .form-control:focus,
+  .form-select:focus,
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    transform: none !important; /* Disable zoom transform */
+  }
+  
+  /* === BUTTONS === */
+  .btn {
+    min-height: 44px !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .btn:active {
+    transform: scale(0.96) !important;
+  }
+  
+  .btn-sm {
+    min-height: 40px !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+  }
+  
+  /* === EPA SPECIFIC === */
+  .score-input {
+    width: 100% !important;
+    max-width: 120px !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+  }
+  
+  .comment-textarea {
+    min-height: 100px !important;
+    resize: vertical !important;
+  }
+  
+  .question-item {
+    padding: var(--spacing-lg) !important;
+    margin-bottom: var(--spacing-md) !important;
+    border-radius: var(--border-radius-lg) !important;
+    background: var(--bg-primary) !important;
+    box-shadow: var(--shadow-sm) !important;
+    border: 1px solid var(--gray-200) !important;
+  }
+  
+  .question-text {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    margin-bottom: var(--spacing-md) !important;
+  }
+  
+  /* === RESPONSIVE TABLES === */
+  .data-table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 8px !important;
+    box-shadow: var(--shadow-sm) !important;
+  }
+  
+  .data-table {
+    min-width: 600px !important; /* Minimum width for tables */
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 12px 8px !important;
+    font-size: 14px !important;
+    white-space: nowrap !important;
+  }
+  
+  .data-table th {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+    background: var(--primary-color) !important;
+  }
+  
+  /* === CARDS FOR MOBILE === */
+  .mobile-card {
+    background: var(--bg-primary) !important;
+    border-radius: 12px !important;
+    padding: var(--spacing-lg) !important;
+    margin-bottom: var(--spacing-md) !important;
+    box-shadow: var(--shadow) !important;
+    border: 1px solid var(--gray-200) !important;
+  }
+  
+  .mobile-card-header {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: var(--primary-color) !important;
+    margin-bottom: var(--spacing-sm) !important;
+    padding-bottom: var(--spacing-sm) !important;
+    border-bottom: 2px solid var(--gray-200) !important;
+  }
+  
+  .mobile-card-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid var(--gray-100) !important;
+  }
+  
+  .mobile-card-row:last-child {
+    border-bottom: none !important;
+  }
+  
+  .mobile-card-label {
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+  }
+  
+  .mobile-card-value {
+    font-size: 14px !important;
+    color: var(--text-primary) !important;
+    text-align: right !important;
+    max-width: 60% !important;
+    word-break: break-word !important;
+  }
+  
+  /* === NAVIGATION === */
+  .topbar-actions {
+    gap: 8px !important;
+  }
+  
+  .btn-topbar {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+  }
+  
+  .btn-topbar span {
+    display: none !important;
+  }
+  
+  .btn-topbar i {
+    font-size: 18px !important;
+  }
+  
+  /* === SIDEBAR === */
+  .sidebar {
+    width: 280px !important;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1) !important;
+  }
+  
+  .nav-link {
+    padding: 16px var(--spacing-lg) !important;
+    font-size: 16px !important;
+    border-radius: 0 !important;
+  }
+  
+  .nav-link i {
+    font-size: 20px !important;
+    width: 24px !important;
+  }
+  
+  /* === STATS CARDS === */
+  .stat-card {
+    padding: var(--spacing-xl) !important;
+    text-align: center !important;
+  }
+  
+  .stat-value {
+    font-size: 2.5rem !important;
+  }
+  
+  .stat-label {
+    font-size: 16px !important;
+  }
+  
+  /* === MODALS === */
+  .modal-dialog {
+    margin: var(--spacing-md) !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+  
+  .modal-body {
+    padding: var(--spacing-lg) !important;
+  }
+  
+  /* === LOADING STATES === */
+  .loading-spinner {
+    width: 40px !important;
+    height: 40px !important;
+    border: 4px solid var(--gray-200) !important;
+    border-top: 4px solid var(--primary-color) !important;
+    border-radius: 50% !important;
+    animation: spin 1s linear infinite !important;
+    margin: 20px auto !important;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* === ACCESSIBILITY === */
+  .btn:focus,
+  .form-control:focus,
+  .nav-link:focus {
+    outline: 3px solid var(--primary-color) !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* === SCROLL INDICATORS === */
+  .scroll-indicator {
+    position: relative !important;
+  }
+  
+  .scroll-indicator::after {
+    content: "← Cuộn để xem thêm →" !important;
+    position: absolute !important;
+    bottom: -30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-size: 12px !important;
+    color: var(--text-muted) !important;
+    background: var(--bg-secondary) !important;
+    padding: 4px 12px !important;
+    border-radius: 16px !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* === VERY SMALL SCREENS === */
+@media (max-width: 480px) {
+  .login-container {
+    margin: var(--spacing-sm) !important;
+  }
+  
+  .page-header {
+    padding: var(--spacing-lg) var(--spacing-md) !important;
+  }
+  
+  .page-title {
+    font-size: var(--text-xl) !important;
+  }
+  
+  .content-card {
+    margin-bottom: var(--spacing-md) !important;
+    padding: var(--spacing-lg) var(--spacing-md) !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-md) !important;
+  }
+  
+  .controls-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-sm) !important;
+  }
+}
+
+/* === LANDSCAPE ORIENTATION === */
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .page-header {
+    padding: var(--spacing-md) var(--spacing-lg) !important;
+  }
+  
+  .content-card {
+    padding: var(--spacing-lg) !important;
+  }
+}
+
+/* === DARK MODE SUPPORT === */
+@media (prefers-color-scheme: dark) {
+  .mobile-card {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f9fafb !important;
+  }
+  
+  .mobile-card-label {
+    color: #d1d5db !important;
+  }
+  
+  .mobile-card-value {
+    color: #f3f4f6 !important;
+  }
+}
+
+/* === REDUCE MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

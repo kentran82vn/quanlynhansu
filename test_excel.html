@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Excel Export</title>
+</head>
+<body>
+    <h1>Test Excel Export</h1>
+    <p><a href="/export-excel/HS" download="danh_sach_hoc_sinh.xlsx">📊 Download Học Sinh Excel</a></p>
+    <p><a href="/export-excel/GV" download="danh_sach_giao_vien.xlsx">📊 Download Giáo Viên Excel</a></p>
+    
+    <script>
+        function testDownload(dept) {
+            const link = document.createElement('a');
+            link.href = `/export-excel/${dept}`;
+            link.download = dept === 'HS' ? 'danh_sach_hoc_sinh.xlsx' : 'danh_sach_giao_vien.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+    
+    <button onclick="testDownload('HS')">Test Download HS</button>
+    <button onclick="testDownload('GV')">Test Download GV</button>
+</body>
+</html>

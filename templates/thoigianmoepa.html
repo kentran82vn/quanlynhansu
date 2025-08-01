@@ -1,117 +1,407 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<title>Quản lý Thời gian Mở EPA</title>
-<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250716" rel="stylesheet"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🕐 Quản lý Thời gian Mở EPA - Trường Mầm Non Hoa Hướng Dương</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static_files', filename='css/modern.css') }}" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', var(--font-family-sans);
+      background: var(--bg-secondary);
+      padding: var(--spacing-lg);
+    }
+    
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-lg);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .page-title {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    
+    .content-card {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-200);
+    }
+    
+    .btn-sync {
+      background: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      color: white;
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border-radius: var(--border-radius-md);
+      font-weight: var(--font-semibold);
+      font-size: var(--text-sm);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .btn-sync:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .alert-warning {
+      background: var(--warning-light);
+      border: 1px solid var(--warning-color);
+      color: var(--warning-dark);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      margin-bottom: var(--spacing-lg);
+      font-weight: var(--font-medium);
+    }
+    
+    .modern-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: var(--border-radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .modern-table th {
+      background: var(--gray-50);
+      color: var(--text-primary);
+      font-weight: var(--font-semibold);
+      padding: var(--spacing-md);
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+      font-size: var(--text-sm);
+    }
+    
+    .modern-table td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    
+    .modern-table tr:hover {
+      background: var(--gray-25);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: var(--spacing-sm);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--border-radius);
+      font-size: var(--text-sm);
+      transition: all var(--transition-fast);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .form-select {
+      width: 100%;
+      padding: var(--spacing-sm);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--border-radius);
+      font-size: var(--text-sm);
+      background: white;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .btn-save {
+      background: var(--success-color);
+      border: 1px solid var(--success-color);
+      color: white;
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--border-radius);
+      font-weight: var(--font-semibold);
+      font-size: var(--text-sm);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+    }
+    
+    .btn-save:hover {
+      background: var(--success-dark);
+      border-color: var(--success-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: var(--spacing-md);
+      }
+      
+      .page-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+      }
+      
+      .page-title {
+        font-size: var(--text-xl);
+      }
+      
+      .modern-table {
+        font-size: var(--text-xs);
+      }
+      
+      .modern-table th,
+      .modern-table td {
+        padding: var(--spacing-xs);
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="container-fluid mt-4">
-  <div class="card">
-    <div class="card-body">
-      <div class="container-fluid">
-
-        <div class="header">
-          <h1>Quản lý Thời gian Mở EPA</h1>
-          <div class="button-group">
-            <form action="{{ url_for('thoigianmoepa.sync_records') }}" method="POST" style="display:inline;">
-              <button class="btn btn-outline-info" type="submit">Đồng bộ</button>
-            </form>
-          </div>
-        </div>
-
-        {% if not tk_list %}
-        <div class="alert alert-warning mt-3">
-          Không có dữ liệu. Vui lòng bấm nút <strong>Đồng bộ</strong> để lấy danh sách tài khoản từ bảng TK.
-        </div>
-        {% else %}
-
-        <div class="table-wrapper">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Tên Tài Khoản</th>
-                <th>Ngày Bắt Đầu</th>
-                <th>Ngày Kết Thúc</th>
-                <th>Ghi chú</th>
-                <th>GV</th>
-                <th>TGV</th>
-                <th>All</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for tk in tk_list %}
-              <tr>
-              <form action="{{ url_for('thoigianmoepa.save_record') }}" method="POST">
-                <input name="ten_tk" type="hidden" value="{{ tk }}"/>
-                {% if records.get(tk) %}
-                  <input name="id" type="hidden" value="{{ records[tk].id }}"/>
-                {% endif %}
-                <td>{{ tk }}</td>
-                <td>
-                  <input class="form-control" max="25" min="1" name="start_day" required type="number"
-                    value="{{ records.get(tk).start_day if records.get(tk) else '20' }}"/>
-                </td>
-                <td>
-                  <input class="form-control" min="2" name="close_day" required type="number"
-                    value="{{ records.get(tk).close_day if records.get(tk) else '25' }}"/>
-                </td>
-                <td>
-                  <input class="form-control" name="remark" type="text"
-                    value="{{ records.get(tk).remark if records.get(tk) else '' }}"/>
-                </td>
-                <td>
-                  <select name="make_epa_gv" class="form-select">
-                    <option value="yes"
-                      {% if (records.get(tk) and records.get(tk).make_epa_gv == "yes") or not records.get(tk) %}selected{% endif %}>yes</option>
-                    <option value="no"
-                      {% if records.get(tk) and records.get(tk).make_epa_gv == "no" %}selected{% endif %}>no</option>
-                  </select>
-                </td>
-                <td>
-                  <select name="make_epa_tgv" class="form-select">
-                    <option value="yes"
-                      {% if records.get(tk) and records.get(tk).make_epa_tgv == "yes" %}selected{% endif %}>yes</option>
-                    <option value="no"
-                      {% if (records.get(tk) and records.get(tk).make_epa_tgv == "no") or not records.get(tk) %}selected{% endif %}>no</option>
-                  </select>
-                </td>
-                <td>
-                  <select name="make_epa_all" class="form-select">
-                    <option value="yes"
-                      {% if records.get(tk) and records.get(tk).make_epa_all == "yes" %}selected{% endif %}>yes</option>
-                    <option value="no"
-                      {% if (records.get(tk) and records.get(tk).make_epa_all == "no") or not records.get(tk) %}selected{% endif %}>no</option>
-                  </select>
-                </td>
-                <td>
-                  <button class="btn btn-primary" type="submit">Lưu</button>
-                </td>
-              </form>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
-
-        {% endif %}
-
-      </div>
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-clock"></i>
+      Quản lý Thời gian Mở EPA
     </div>
+    <form action="{{ url_for('thoigianmoepa.sync_records') }}" method="POST">
+      <button class="btn-sync" type="submit">
+        <i class="fas fa-sync-alt"></i>
+        Đồng bộ
+      </button>
+    </form>
   </div>
-</div>
+
+  <div class="content-card">
+    
+    <!-- Thông tin tháng hiện tại -->
+    <div class="alert-info" style="margin-bottom: 20px; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196f3; color: #0d47a1;">
+      <i class="fas fa-info-circle"></i>
+      <strong>Thông tin tháng hiện tại:</strong> 
+      Tháng {{ current_month }}/{{ current_year }} có <strong>{{ days_in_current_month }} ngày</strong>. 
+      Ngày EPA được giới hạn từ 1-{{ days_in_current_month }}.
+    </div>
+
+    {% if not tk_list %}
+    <div class="alert-warning">
+      Không có dữ liệu. Vui lòng bấm nút <strong>Đồng bộ</strong> để lấy danh sách tài khoản từ bảng TK.
+    </div>
+    {% else %}
+
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th rowspan="2">Tên Tài Khoản</th>
+          <th colspan="2">Giai Đoạn 1<br><small style="font-weight: normal; opacity: 0.7;">Tự Đánh Giá</small></th>
+          <th colspan="2">Giai Đoạn 2<br><small style="font-weight: normal; opacity: 0.7;">TGV Chấm Điểm</small></th>
+          <th colspan="2">Giai Đoạn 3<br><small style="font-weight: normal; opacity: 0.7;">HT/PHT Chấm Điểm</small></th>
+          <th rowspan="2">GV</th>
+          <th rowspan="2">TGV</th>
+          <th rowspan="2">All</th>
+          <th rowspan="2">Hành động</th>
+        </tr>
+        <tr>
+          <th style="font-size: 11px; font-weight: normal;">Từ</th>
+          <th style="font-size: 11px; font-weight: normal;">Đến</th>
+          <th style="font-size: 11px; font-weight: normal;">Từ</th>
+          <th style="font-size: 11px; font-weight: normal;">Đến</th>
+          <th style="font-size: 11px; font-weight: normal;">Từ</th>
+          <th style="font-size: 11px; font-weight: normal;">Đến</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for tk in tk_list %}
+        <tr>
+        <form action="{{ url_for('thoigianmoepa.save_record') }}" method="POST">
+          <input name="ten_tk" type="hidden" value="{{ tk }}"/>
+          {% if records.get(tk) %}
+            <input name="id" type="hidden" value="{{ records[tk].id }}"/>
+          {% endif %}
+          
+          <td><strong>{{ tk }}</strong></td>
+          
+          <!-- Giai đoạn 1: Tự đánh giá -->
+          <td>
+            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase1_start" required type="number" style="width: 60px;"
+              value="{{ records.get(tk).phase1_start if records.get(tk) and records.get(tk).phase1_start else '20' }}"/>
+          </td>
+          <td>
+            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase1_end" required type="number" style="width: 60px;"
+              value="{{ records.get(tk).phase1_end if records.get(tk) and records.get(tk).phase1_end else '25' }}"/>
+          </td>
+          
+          <!-- Giai đoạn 2: TGV chấm điểm -->
+          <td>
+            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase2_start" required type="number" style="width: 60px;"
+              value="{{ records.get(tk).phase2_start if records.get(tk) and records.get(tk).phase2_start else '26' }}"/>
+          </td>
+          <td>
+            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase2_end" required type="number" style="width: 60px;"
+              value="{{ records.get(tk).phase2_end if records.get(tk) and records.get(tk).phase2_end else '27' }}"/>
+          </td>
+          
+          <!-- Giai đoạn 3: HT/PHT chấm điểm -->
+          <td>
+            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase3_start" required type="number" style="width: 60px;"
+              value="{{ records.get(tk).phase3_start if records.get(tk) and records.get(tk).phase3_start else '28' }}"/>
+          </td>
+          <td>
+            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase3_end" required type="number" style="width: 60px;"
+              value="{{ records.get(tk).phase3_end if records.get(tk) and records.get(tk).phase3_end else (30 if days_in_current_month >= 30 else days_in_current_month) }}"/>
+          </td>
+          
+          <!-- Quyền -->
+          <td>
+            <select name="make_epa_gv" class="form-select" style="width: 70px;">
+              <option value="yes"
+                {% if (records.get(tk) and records.get(tk).make_epa_gv == "yes") or not records.get(tk) %}selected{% endif %}>yes</option>
+              <option value="no"
+                {% if records.get(tk) and records.get(tk).make_epa_gv == "no" %}selected{% endif %}>no</option>
+            </select>
+          </td>
+          <td>
+            <select name="make_epa_tgv" class="form-select" style="width: 70px;">
+              <option value="yes"
+                {% if records.get(tk) and records.get(tk).make_epa_tgv == "yes" %}selected{% endif %}>yes</option>
+              <option value="no"
+                {% if (records.get(tk) and records.get(tk).make_epa_tgv == "no") or not records.get(tk) %}selected{% endif %}>no</option>
+            </select>
+          </td>
+          <td>
+            <select name="make_epa_all" class="form-select" style="width: 70px;">
+              <option value="yes"
+                {% if records.get(tk) and records.get(tk).make_epa_all == "yes" %}selected{% endif %}>yes</option>
+              <option value="no"
+                {% if (records.get(tk) and records.get(tk).make_epa_all == "no") or not records.get(tk) %}selected{% endif %}>no</option>
+            </select>
+          </td>
+          
+          <td>
+            <button class="btn-save" type="submit">
+              <i class="fas fa-save"></i> Lưu
+            </button>
+          </td>
+        </form>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% endif %}
+  </div>
 
 <script>
+// Validation logic cho 3 giai đoạn tuần tự
 const rows = document.querySelectorAll('tbody tr');
 rows.forEach(row => {
-  const startInput = row.querySelector('input[name="start_day"]');
-  const closeInput = row.querySelector('input[name="close_day"]');
-  if (startInput && closeInput) {
-    startInput.addEventListener('input', () => {
-      closeInput.min = parseInt(startInput.value) + 1;
+  const inputs = {
+    phase1_start: row.querySelector('input[name="phase1_start"]'),
+    phase1_end: row.querySelector('input[name="phase1_end"]'),
+    phase2_start: row.querySelector('input[name="phase2_start"]'),
+    phase2_end: row.querySelector('input[name="phase2_end"]'),
+    phase3_start: row.querySelector('input[name="phase3_start"]'),
+    phase3_end: row.querySelector('input[name="phase3_end"]')
+  };
+  
+  // Validation functions
+  function validatePhaseOrder() {
+    const values = {};
+    Object.keys(inputs).forEach(key => {
+      values[key] = parseInt(inputs[key].value) || 0;
     });
+    
+    // Phase 1 internal validation
+    if (values.phase1_start >= values.phase1_end) {
+      inputs.phase1_end.setCustomValidity('Ngày kết thúc phải lớn hơn ngày bắt đầu');
+    } else {
+      inputs.phase1_end.setCustomValidity('');
+    }
+    
+    // Phase 2 internal validation
+    if (values.phase2_start >= values.phase2_end) {
+      inputs.phase2_end.setCustomValidity('Ngày kết thúc phải lớn hơn ngày bắt đầu');
+    } else {
+      inputs.phase2_end.setCustomValidity('');
+    }
+    
+    // Phase 3 internal validation
+    if (values.phase3_start >= values.phase3_end) {
+      inputs.phase3_end.setCustomValidity('Ngày kết thúc phải lớn hơn ngày bắt đầu');
+    } else {
+      inputs.phase3_end.setCustomValidity('');
+    }
+    
+    // Sequential validation
+    if (values.phase1_end >= values.phase2_start) {
+      inputs.phase2_start.setCustomValidity('Giai đoạn 2 phải bắt đầu sau khi giai đoạn 1 kết thúc');
+    } else {
+      inputs.phase2_start.setCustomValidity('');
+    }
+    
+    if (values.phase2_end >= values.phase3_start) {
+      inputs.phase3_start.setCustomValidity('Giai đoạn 3 phải bắt đầu sau khi giai đoạn 2 kết thúc');
+    } else {
+      inputs.phase3_start.setCustomValidity('');
+    }
   }
+  
+  // Auto-update logic
+  function updateMinValues() {
+    const phase1_end = parseInt(inputs.phase1_end.value) || 25;
+    const phase2_end = parseInt(inputs.phase2_end.value) || 27;
+    
+    inputs.phase2_start.min = phase1_end + 1;
+    inputs.phase3_start.min = phase2_end + 1;
+  }
+  
+  // Add event listeners
+  Object.values(inputs).forEach(input => {
+    if (input) {
+      input.addEventListener('input', () => {
+        updateMinValues();
+        validatePhaseOrder();
+      });
+      input.addEventListener('blur', validatePhaseOrder);
+    }
+  });
+  
+  // Initial validation
+  updateMinValues();
+  validatePhaseOrder();
 });
 </script>
 

@@ -3,9 +3,9 @@ import pymysql
 from config import DB_CONFIG
 
 def get_conn():
-    #print("Đang kết nối database...")
+    #print("Dang ket noi database...")
 
-    # Kết nối không chỉ định DB để tạo nếu chưa có
+    # Ket noi khong chi dinh DB de tao neu chua co
     conn = pymysql.connect(
         host=DB_CONFIG["host"],
         user=DB_CONFIG["user"],
@@ -14,10 +14,10 @@ def get_conn():
 
     with conn.cursor() as cursor:
         cursor.execute("CREATE DATABASE IF NOT EXISTS quanlytruonghoc_app")
-        #print("Đã kiểm tra hoặc tạo DB 'quanlytruonghoc_app'")
+        #print("Da kiem tra hoac tao DB 'quanlytruonghoc_app'")
 
     conn.close()
 
-    # Kết nối lại với DB vừa tạo
+    # Ket noi lai voi DB vua tao
     return pymysql.connect(**DB_CONFIG)
 

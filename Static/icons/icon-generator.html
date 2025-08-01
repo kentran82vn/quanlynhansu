@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .icon-preview { display: inline-block; margin: 10px; text-align: center; }
+        .icon { background: #2563eb; color: white; display: flex; align-items: center; justify-content: center; border-radius: 20%; font-weight: bold; }
+        canvas { border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>🎨 PWA Icon Generator cho EPA System</h1>
+    <p>Sinh icons tự động với kích thước khác nhau</p>
+    
+    <div id="icons-container"></div>
+    
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const container = document.getElementById('icons-container');
+        
+        sizes.forEach(size => {
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1d4ed8');
+            
+            // Draw background
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw rounded corners
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            const cornerRadius = size * 0.2;
+            ctx.roundRect(0, 0, size, size, cornerRadius);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            
+            // Draw icon text
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.3}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🌻', size/2, size/2);
+            
+            // Draw EPA text if size is large enough
+            if (size >= 144) {
+                ctx.font = `bold ${size * 0.12}px Arial`;
+                ctx.fillText('EPA', size/2, size * 0.8);
+            }
+            
+            // Create preview
+            const preview = document.createElement('div');
+            preview.className = 'icon-preview';
+            preview.innerHTML = `
+                <div>${size}x${size}</div>
+                ${canvas.outerHTML}
+                <br>
+                <a href="${canvas.toDataURL()}" download="icon-${size}x${size}.png">📥 Download</a>
+            `;
+            
+            container.appendChild(preview);
+        });
+        
+        // CanvasRenderingContext2D.roundRect polyfill
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+    </script>
+</body>
+</html>

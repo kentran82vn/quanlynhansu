@@ -6,6 +6,79 @@
 <title>Xem Kết Quả EPA</title>
 <link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250716" rel="stylesheet"/>
 
+<style>
+.assessment-entry {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.question-content {
+  background-color: white;
+  padding: 15px;
+  border-left: 4px solid #0066cc;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.comment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.score-item {
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.self-score {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.sup-score {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+}
+
+.comment-item {
+  padding: 15px;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.self-comment {
+  background-color: #e8f5e8;
+  border: 1px solid #c3e6cb;
+}
+
+.sup-comment {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+}
+
+@media (max-width: 768px) {
+  .score-grid, .comment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body><div class="container-fluid mt-4"><div class="card"><div class="card-body">
@@ -113,16 +186,49 @@
         const totalScoreTableBody = document.getElementById('total-score-table-body');
 
         if (data.assessments && data.assessments.length > 0) {
-          assessmentDiv.innerHTML = data.assessments.map(a => `
-            <div class="assessment-entry">
-              <p class="highlight">Năm: ${a.year}, Tháng: ${a.month}</p>
-              <p><strong>Câu hỏi:</strong> ${a.translate}</p>
-              <p><strong>Điểm tự chấm:</strong> ${a.user_score || 'N/A'}</p>
-              <p><strong>Điểm tổ trưởng:</strong> ${a.sup_score || 'Chưa chấm'}</p>
-              <p><strong>Ý kiến cá nhân:</strong> ${a.user_comment || 'Không có ý kiến'}</p>
-              <p><strong>Ý kiến tổ trưởng:</strong> ${a.sup_comment || 'Không có ý kiến'}</p>
-            </div>
-          `).join('<hr>');
+          assessmentDiv.innerHTML = `
+            <h3>Chi Tiết Đánh Giá</h3>
+            <p class="highlight">Năm: ${data.assessments[0].year}, Tháng: ${data.assessments[0].month}</p>
+            ${data.assessments.map((a, index) => `
+              <div class="assessment-entry">
+                <div style="font-weight: bold; color: #0066cc; margin-bottom: 10px; font-size: 16px;">
+                  📋 Câu ${index + 1}
+                </div>
+                <div class="question-content">
+                  <strong>Nội dung câu hỏi:</strong><br>
+                  ${a.question || a.translate || 'Không có nội dung câu hỏi'}
+                </div>
+                <div class="score-grid">
+                  <div class="score-item self-score">
+                    <strong>Điểm tự chấm</strong><br>
+                    <span style="font-size: 24px; font-weight: bold; color: #28a745;">${a.user_score || 'N/A'}</span>
+                  </div>
+                  <div class="score-item sup-score">
+                    <strong>Điểm tổ trưởng</strong><br>
+                    <span style="font-size: 24px; font-weight: bold; color: #856404;">${a.sup_score || 'Chưa chấm'}</span>
+                  </div>
+                </div>
+                <div class="comment-grid">
+                  <div class="comment-item self-comment">
+                    <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px; color: #155724;">
+                      💭 Ý kiến cá nhân:
+                    </div>
+                    <div style="font-size: 15px; line-height: 1.6;">
+                      ${a.user_comment || 'Không có ý kiến'}
+                    </div>
+                  </div>
+                  <div class="comment-item sup-comment">
+                    <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px; color: #856404;">
+                      👥 Ý kiến tổ trưởng:
+                    </div>
+                    <div style="font-size: 15px; line-height: 1.6;">
+                      ${a.sup_comment || 'Không có ý kiến'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          `;
         } else {
           assessmentDiv.innerHTML = '<p style="color:red;">Không có dữ liệu đánh giá!</p>';
         }
@@ -161,25 +267,5 @@
       html2pdf().set(opt).from(element).save();
     }
   </script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ten_tk = urlParams.get("ten_tk");
-    const year = urlParams.get("year");
-    const month = urlParams.get("month");
-
-    if (ten_tk && year && month) {
-      fetch(`/api/last-assessment?ten_tk=${ten_tk}&year=${year}&month=${month}`)
-        .then(res => res.json())
-        .then(data => {
-          // Xử lý hiển thị dữ liệu đánh giá ở đây
-          console.log(data);
-          document.getElementById("ten_tk_display").textContent = ten_tk;
-          document.getElementById("month_display").textContent = `${month}/${year}`;
-          // vẽ bảng chi tiết từ dữ liệu `data`
-        });
-    }
-  });
-</script>
 </div></div></div></body>
 </html>

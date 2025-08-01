@@ -1,95 +1,405 @@
 <!DOCTYPE html>
-
 <html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<title>📝 Bảng Đánh Giá EPA</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250719" rel="stylesheet"/>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📝 Bảng Đánh Giá EPA - Trường Mầm Non Hoa Hướng Dương</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static_files', filename='css/modern.css') }}" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', var(--font-family-sans);
+      background: var(--bg-secondary);
+    }
+    
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .page-title {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-semibold);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    
+    .page-subtitle {
+      font-size: var(--text-sm);
+      opacity: 0.9;
+      margin-top: var(--spacing-xs);
+    }
+    
+    .filter-panel {
+      background: var(--bg-primary);
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .filter-section {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .filter-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    
+    .filter-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      align-items: end;
+    }
+    
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .control-label {
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .range-toggle {
+      background: var(--bg-accent);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    
+    .toggle-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary-color);
+    }
+    
+    .toggle-label {
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--primary-color);
+    }
+    
+    .range-controls {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--gray-200);
+    }
+    
+    .range-controls.show {
+      display: grid;
+    }
+    
+    .action-bar {
+      background: var(--bg-primary);
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .action-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .table-container {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    
+    .epa-table {
+      margin: 0;
+    }
+    
+    .epa-table th {
+      background: var(--primary-color);
+      color: white;
+      font-weight: var(--font-semibold);
+      font-size: var(--text-sm);
+      padding: var(--spacing-md);
+      text-align: center;
+      white-space: nowrap;
+    }
+    
+    .epa-table td {
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-align: center;
+      font-size: var(--text-sm);
+      border-bottom: 1px solid var(--gray-200);
+      vertical-align: middle;
+    }
+    
+    .epa-table tbody tr:hover {
+      background: var(--gray-50);
+    }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--border-radius-sm);
+      font-size: var(--text-xs);
+      font-weight: var(--font-medium);
+    }
+    
+    /* Xếp loại mới theo thang điểm EPA */
+    .status-excellent { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }  /* 95-100: Xuất sắc - Xanh lá */
+    .status-good { background: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }        /* 90-94: Tốt - Vàng */
+    .status-completed { background: #dbeafe; color: #1e40af; border: 1px solid #60a5fa; }  /* 80-89: Hoàn thành - Xanh dương */
+    .status-incomplete { background: #fee2e2; color: #991b1b; border: 1px solid #f87171; } /* ≤79: Chưa hoàn thành - Đỏ */
+    
+    /* Backward compatibility */
+    .status-a { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+    .status-b { background: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }
+    .status-c { background: #dbeafe; color: #1e40af; border: 1px solid #60a5fa; }
+    .status-d { background: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
+    
+    .action-buttons {
+      display: flex;
+      gap: var(--spacing-xs);
+      justify-content: center;
+    }
+    
+    .btn-action {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: var(--text-xs);
+      border-radius: var(--border-radius);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .btn-view {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-view:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+    
+    .inline-edit {
+      border: none;
+      background: transparent;
+      width: 100%;
+      padding: var(--spacing-xs);
+      text-align: center;
+      font-size: var(--text-sm);
+      border-radius: var(--border-radius);
+      transition: all var(--transition-fast);
+    }
+    
+    .inline-edit:focus {
+      background: white;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+      outline: none;
+    }
+    
+    /* PDF Export Hidden Section */
+    #pdf-export {
+      display: none;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11px;
+      padding: 20px;
+      color: #000;
+      background-color: #fff;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .filter-controls {
+        grid-template-columns: 1fr;
+      }
+      
+      .range-controls {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .action-bar {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: stretch;
+      }
+      
+      .epa-table {
+        font-size: var(--text-xs);
+      }
+      
+      .epa-table th,
+      .epa-table td {
+        padding: var(--spacing-xs);
+      }
+    }
+  </style>
 </head>
-<body class="p-4"><div class="container-fluid mt-4"><div class="card"><div class="card-body">
-  <h2 class="mb-4">📝 Bảng Đánh Giá EPA</h2>
-<div class="row mb-3">
-  <div class="col-auto">
-    <label class="col-form-label" for="yearFilter">Chọn năm:</label>
-  </div>
-  <div class="col-auto">
-    <select class="form-select form-select-sm" id="yearFilter" onchange="fetchDataEPA()">
-      <option value="All">All</option>
-    </select>
-  </div>
-  <div class="col-auto">
-    <label class="col-form-label" for="monthFilter">Chọn tháng:</label>
-  </div>
-  <div class="col-auto">
-    <select class="form-select form-select-sm" id="monthFilter" onchange="fetchDataEPA()">
-      <option value="All">All</option>
-    </select>
-  </div>
-</div>
-<div class="row mb-3 align-items-center gx-2">
-  <div class="col-auto">
-    <input id="rangeMode" onchange="toggleRangeMode()" type="checkbox"/> 
-    <label for="rangeMode">Thống kê đánh giá EPA theo giai đoạn</label>
-  </div>
 
-  <div class="col-auto" id="rangeSelectors" style="display: none;">
-    <div class="row gx-2 align-items-center">
-      <div class="col-auto">
-        <label for="startYear">Năm bắt đầu</label>
-        <select class="form-select form-select-sm" id="startYear"></select>
+<body>
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="fas fa-clipboard-list"></i>
+        Bảng Đánh Giá EPA
+      </h1>
+      <p class="page-subtitle">Quản lý và theo dõi kết quả đánh giá nhân viên</p>
+    </div>
+    
+    <!-- Filter Panel -->
+    <div class="filter-panel">
+      <div class="filter-section">
+        <div class="filter-title">
+          <i class="fas fa-filter"></i>
+          Bộ Lọc Cơ Bản
+        </div>
+        <div class="filter-controls">
+          <div class="control-group">
+            <label class="control-label" for="yearFilter">
+              <i class="fas fa-calendar-alt"></i>
+              Chọn năm
+            </label>
+            <select class="form-control" id="yearFilter" onchange="fetchDataEPA()">
+              <option value="All">Tất cả</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="monthFilter">
+              <i class="fas fa-calendar-day"></i>
+              Chọn tháng
+            </label>
+            <select class="form-control" id="monthFilter" onchange="fetchDataEPA()">
+              <option value="All">Tất cả</option>
+            </select>
+          </div>
+        </div>
       </div>
-
-      <div class="col-auto">
-        <label for="startMonth">Tháng bắt đầu</label>
-        <select class="form-select form-select-sm" id="startMonth"></select>
+      
+      <div class="range-toggle">
+        <div class="toggle-container">
+          <input class="toggle-checkbox" id="rangeMode" type="checkbox" onchange="toggleRangeMode()">
+          <label class="toggle-label" for="rangeMode">
+            <i class="fas fa-calendar-week"></i>
+            Thống kê đánh giá EPA theo giai đoạn
+          </label>
+        </div>
+        
+        <div class="range-controls" id="rangeSelectors">
+          <div class="control-group">
+            <label class="control-label" for="startYear">Năm bắt đầu</label>
+            <select class="form-control form-control-sm" id="startYear"></select>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="startMonth">Tháng bắt đầu</label>
+            <select class="form-control form-control-sm" id="startMonth"></select>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="endYear">Năm kết thúc</label>
+            <select class="form-control form-control-sm" id="endYear"></select>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="endMonth">Tháng kết thúc</label>
+            <select class="form-control form-control-sm" id="endMonth"></select>
+          </div>
+          <div class="control-group">
+            <label class="control-label">&nbsp;</label>
+            <button class="btn btn-primary" onclick="fetchDataEPA()">
+              <i class="fas fa-search"></i>
+              Lọc
+            </button>
+          </div>
+        </div>
       </div>
-
-      <div class="col-auto">
-        <label for="endYear">Năm kết thúc</label>
-        <select class="form-select form-select-sm" id="endYear"></select>
-      </div>
-
-      <div class="col-auto">
-        <label for="endMonth">Tháng kết thúc</label>
-        <select class="form-select form-select-sm" id="endMonth"></select>
-      </div>
-
-      <div class="col-auto mt-2">
-        <button class="btn btn-primary btn-sm" onclick="fetchDataEPA()">Lọc</button>
+    </div>
+    
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <button class="btn btn-danger" onclick="exportEPAtoPDF()">
+        <i class="fas fa-file-pdf"></i>
+        Xuất PDF
+      </button>
+    </div>
+    
+    <!-- Table Container -->
+    <div class="table-container">
+      <div class="table-responsive" id="epa-table-container">
+        <table class="table epa-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Tên TK</th>
+              <th>Họ và Tên</th>
+              <th>Chức Vụ</th>
+              <th>Năm</th>
+              <th>Tháng</th>
+              <th>GV Chấm</th>
+              <th>T Chấm</th>
+              <th>HT/PHT Chấm</th>
+              <th>Xếp Loại</th>
+              <th>HT/PHT Đánh Giá</th>
+              <th>Xử Lý</th>
+            </tr>
+          </thead>
+          <tbody id="epa-table-body"></tbody>
+        </table>
       </div>
     </div>
   </div>
-</div>
-
-<div class="mt-3">
-<button class="btn btn-danger" onclick="exportEPAtoPDF()">📄 Xuất PDF</button>
-</div>
-<div class="table-responsive" id="epa-table-container">
-<table class="table table-bordered table-hover text-center">
-<thead class="table-primary">
-<tr>
-<th>Stt</th>
-<th>Tên TK</th>
-<th>Họ và Tên</th>
-<th>Chức Vụ</th>
-<th>Năm</th>
-<th>Tháng</th>
-<th>GV Chấm</th>
-<th>T Chấm</th>
-<th>HT/PHT Chấm</th>
-<th>Xếp Loại</th>
-<th>HT/PHT Đánh Giá</th>
-<th>Xử Lý</th>
-</tr>
-</thead>
-<tbody id="epa-table-body"></tbody>
-</table>
-</div>
 
 <div id="pdf-export" style="display:none; font-family: 'Times New Roman', Times, serif; font-size: 13px; padding: 20px;">
   <h5 style="text-align:left; padding-left:40px; font-size: 10px;">UBND Xã ĐINH VĂN - LÂM HÀ</h5>
@@ -182,44 +492,82 @@ async function fetchDataEPA() {
   }
 
   filteredData.forEach((row, index) => {
+    // Determine status badge class
+    const statusClass = getStatusClass(row.xeploai);
+    
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${row.ten_tk}</td>
+      <td><span class="badge badge-secondary">${index + 1}</span></td>
+      <td><strong>${row.ten_tk}</strong></td>
       <td>${row.ho_va_ten}</td>
-      <td>${row.chuc_vu || ''}</td>
-      <td>${row.year}</td>
-      <td>${row.month}</td>
-      <td>${row.user_total_score}</td>
-      <td>${row.sup_total_score}</td>
-      <td>${session_user === "kimnhung" ? `<input type="number" class="form-control form-control-sm" value="${row.pri_total_score ?? ''}" id="score-${row.id}">` : row.pri_total_score ?? ''}</td>
-      <td>${row.xeploai ?? ''}</td>
-      <td>${session_user === "kimnhung" ? `<input type="text" class="form-control form-control-sm" value="${row.pri_comment ?? ''}" id="comment-${row.id}">` : row.pri_comment ?? ''}</td>
-      <td>${session_user === "kimnhung" ? `<button class="btn btn-sm btn-success me-1" onclick="saveEPA(${row.id})">Lưu</button>` : ''}
-      <button class="btn btn-sm btn-primary" onclick="viewAssessment('${row.ten_tk}', ${row.year}, ${row.month})">Chi tiết</button></td>`;
+      <td>${row.chuc_vu || '<em>Chưa có</em>'}</td>
+      <td><span class="badge badge-primary">${row.year}</span></td>
+      <td><span class="badge badge-info">${row.month}</span></td>
+      <td><span class="badge badge-success">${row.user_total_score}</span></td>
+      <td><span class="badge badge-warning">${row.sup_total_score}</span></td>
+      <td>${(session_user === "kimnhung" || session_user === "ngocquy") ? `<input type="number" class="inline-edit" value="${row.pri_total_score ?? ''}" id="score-${row.id}" placeholder="Điểm">` : (row.pri_total_score ? `<span class="badge badge-primary">${row.pri_total_score}</span>` : '<em>Chưa có</em>')}</td>
+      <td>${row.xeploai ? `<span class="status-badge ${statusClass}"><i class="fas fa-award"></i> ${row.xeploai}</span>` : '<em>Chưa có</em>'}</td>
+      <td>${(session_user === "kimnhung" || session_user === "ngocquy") ? `<input type="text" class="inline-edit" value="${row.pri_comment ?? ''}" id="comment-${row.id}" placeholder="Nhận xét">` : (row.pri_comment || '<em>Chưa có</em>')}</td>
+      <td>
+        <div class="action-buttons">
+          ${(session_user === "kimnhung" || session_user === "ngocquy") ? `<button class="btn btn-success btn-sm" onclick="saveEPA(${row.id})"><i class="fas fa-save"></i> Lưu</button>` : ''}
+          <button class="btn-action btn-view" onclick="viewAssessment('${row.ten_tk}', ${row.year}, ${row.month})">
+            <i class="fas fa-eye"></i>
+            Chi tiết
+          </button>
+        </div>
+      </td>`;
     tbody.appendChild(tr);
   });
 }
 
+function getStatusClass(xeploai) {
+  if (!xeploai) return '';
+  const status = xeploai.toLowerCase();
+  
+  // Xếp loại mới theo thang điểm 95-100, 90-94, 80-89, ≤79
+  if (status.includes('hoàn thành xuất sắc nhiệm vụ')) return 'status-excellent';
+  if (status.includes('hoàn thành tốt nhiệm vụ')) return 'status-good';
+  if (status.includes('hoàn thành nhiệm vụ')) return 'status-completed';
+  if (status.includes('chưa hoàn thành')) return 'status-incomplete';
+  
+  // Fallback cho logic cũ (để tương thích)
+  if (status.includes('xuất sắc') || status.includes('a')) return 'status-excellent';
+  if (status.includes('tốt') || status.includes('b')) return 'status-good';
+  if (status.includes('hoàn thành') || status.includes('c')) return 'status-completed';
+  
+  return 'status-incomplete';
+}
+
 function toggleRangeMode() {
   const isChecked = document.getElementById("rangeMode").checked;
-  document.getElementById("rangeSelectors").style.display = isChecked ? "flex" : "none";
+  const rangeControls = document.getElementById("rangeSelectors");
+  
+  if (isChecked) {
+    rangeControls.classList.add("show");
+  } else {
+    rangeControls.classList.remove("show");
+  }
 
   const yearSelect = document.getElementById("yearFilter");
   const monthSelect = document.getElementById("monthFilter");
   if (isChecked) {
-    yearSelect.classList.add("blur");
-    monthSelect.classList.add("blur");
+    yearSelect.style.opacity = "0.5";
+    yearSelect.style.pointerEvents = "none";
+    monthSelect.style.opacity = "0.5";
+    monthSelect.style.pointerEvents = "none";
   } else {
-    yearSelect.classList.remove("blur");
-    monthSelect.classList.remove("blur");
+    yearSelect.style.opacity = "1";
+    yearSelect.style.pointerEvents = "auto";
+    monthSelect.style.opacity = "1";
+    monthSelect.style.pointerEvents = "auto";
   }
 }
 
 function saveEPA(id) {
   const score = document.getElementById(`score-${id}`).value;
   const comment = document.getElementById(`comment-${id}`).value;
-  fetch('/api/update-epa-kimnhung', {
+  fetch('/api/update-epa-principal', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id, pri_total_score: score, pri_comment: comment })

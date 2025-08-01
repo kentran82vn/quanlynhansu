@@ -1,0 +1,436 @@
+/*
+===============================================
+📱 MOBILE TABLE OPTIMIZATIONS
+===============================================
+Card-based layout for better mobile experience
+===============================================
+*/
+
+/* Mobile Table Enhancements */
+@media (max-width: 768px) {
+  
+  /* Hide original table on mobile */
+  .mobile-table-hidden {
+    display: none !important;
+  }
+  
+  /* Mobile Card Container */
+  .mobile-cards-container {
+    display: block !important;
+  }
+  
+  .mobile-score-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  
+  .mobile-score-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  
+  /* Card Header */
+  .mobile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--gray-200);
+  }
+  
+  .mobile-card-period {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  .mobile-card-badge {
+    background: var(--primary-light);
+    color: var(--primary-color);
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  /* Card Body */
+  .mobile-card-body {
+    display: grid;
+    gap: var(--spacing-sm);
+  }
+  
+  .mobile-score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  
+  .mobile-score-row:last-child {
+    border-bottom: none;
+  }
+  
+  .mobile-score-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+  
+  .mobile-score-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-primary);
+    min-width: 60px;
+    text-align: right;
+  }
+  
+  /* Score Value Colors */
+  .score-excellent { color: var(--success-color); }
+  .score-good { color: var(--info-color); }
+  .score-average { color: var(--warning-color); }
+  .score-poor { color: var(--error-color); }
+  .score-empty { color: var(--text-muted); font-style: italic; }
+  
+  /* Comment Section */
+  .mobile-comment-section {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--gray-200);
+  }
+  
+  .mobile-comment-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+  
+  .mobile-comment-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--gray-50);
+    padding: var(--spacing-sm);
+    border-radius: 8px;
+    line-height: 1.4;
+    font-style: italic;
+  }
+  
+  .mobile-comment-empty {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  
+  /* Icons for labels */
+  .mobile-score-label i {
+    width: 16px;
+    text-align: center;
+    opacity: 0.7;
+  }
+  
+  /* Empty State */
+  .mobile-empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-tertiary);
+  }
+  
+  .mobile-empty-state i {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+  }
+  
+  .mobile-empty-state h4 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+  }
+  
+  .mobile-empty-state p {
+    font-size: 14px;
+    margin: 0;
+  }
+  
+  /* Assessment Form Mobile */
+  .mobile-assessment-form {
+    display: block !important;
+  }
+  
+  .mobile-question-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .mobile-question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .mobile-question-number {
+    background: var(--primary-color);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .mobile-question-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    flex: 1;
+  }
+  
+  .mobile-score-input-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--gray-50);
+    border-radius: 8px;
+  }
+  
+  .mobile-score-input-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 80px;
+  }
+  
+  .mobile-score-input {
+    flex: 1;
+    max-width: 100px;
+    height: 44px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    background: var(--bg-primary);
+  }
+  
+  .mobile-score-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .mobile-comment-container {
+    margin-top: var(--spacing-md);
+  }
+  
+  .mobile-comment-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .mobile-comment-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: var(--spacing-md);
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 1.4;
+    resize: vertical;
+  }
+  
+  .mobile-comment-textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  /* Submit Button Mobile */
+  .mobile-submit-container {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+  }
+  
+  .mobile-submit-btn {
+    width: 100%;
+    height: 52px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    transition: all 0.2s ease;
+  }
+  
+  .mobile-submit-btn:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .mobile-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  .mobile-submit-btn:disabled {
+    background: var(--gray-400);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  /* Period Message Mobile */
+  .mobile-period-message {
+    padding: var(--spacing-lg);
+    border-radius: 12px;
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+  }
+  
+  .mobile-period-message.success {
+    background: var(--success-light);
+    border: 1px solid var(--success-color);
+    color: var(--success-dark);
+  }
+  
+  .mobile-period-message.warning {
+    background: var(--warning-light);
+    border: 1px solid var(--warning-color);
+    color: var(--warning-dark);
+  }
+  
+  .mobile-period-message.error {
+    background: var(--error-light);
+    border: 1px solid var(--error-color);
+    color: var(--error-dark);
+  }
+  
+  .mobile-period-message i {
+    font-size: 24px;
+    margin-bottom: var(--spacing-sm);
+    display: block;
+  }
+  
+  .mobile-period-message h4 {
+    margin-bottom: var(--spacing-xs);
+    font-size: 18px;
+  }
+  
+  .mobile-period-message p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  /* Loading States */
+  .mobile-loading {
+    text-align: center;
+    padding: var(--spacing-2xl);
+  }
+  
+  .mobile-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--gray-200);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto var(--spacing-md);
+  }
+  
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .mobile-score-card {
+    animation: fadeInUp 0.3s ease-out;
+  }
+  
+  .mobile-question-card {
+    animation: fadeInUp 0.3s ease-out;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .mobile-score-card,
+    .mobile-question-card {
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .mobile-card-period {
+      font-size: 16px;
+    }
+    
+    .mobile-score-value {
+      font-size: 14px;
+    }
+    
+    .mobile-question-text {
+      font-size: 15px;
+    }
+    
+    .mobile-score-input {
+      max-width: 80px;
+      height: 40px;
+      font-size: 16px;
+    }
+  }
+}
+
+/* Desktop: Hide mobile elements */
+@media (min-width: 769px) {
+  .mobile-cards-container,
+  .mobile-assessment-form,
+  .mobile-period-message,
+  .mobile-submit-container {
+    display: none !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .mobile-score-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  .mobile-submit-btn,
+  .mobile-period-message {
+    display: none !important;
+  }
+}

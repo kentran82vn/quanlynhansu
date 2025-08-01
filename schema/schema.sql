@@ -73,19 +73,26 @@ CREATE TABLE lop_gv (
     FOREIGN KEY (ma_gv) REFERENCES giaovien(ma_gv)
 );
 
--- Bảng câu hỏi EPA
+-- Bảng câu hỏi EPA (Updated với score field)
 CREATE TABLE cauhoi_epa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     question TEXT NOT NULL,
-    translate TEXT
+    translate TEXT,
+    score INT DEFAULT 20
 );
 
--- Bảng thời gian mở EPA
+-- Bảng thời gian mở EPA (Updated với 3 giai đoạn)
 CREATE TABLE thoigianmoepa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     ten_tk VARCHAR(255),
     start_day INT NOT NULL,
     close_day INT NOT NULL,
+    phase1_start INT DEFAULT 20,
+    phase1_end INT DEFAULT 25,
+    phase2_start INT DEFAULT 26,
+    phase2_end INT DEFAULT 27,
+    phase3_start INT DEFAULT 28,
+    phase3_end INT DEFAULT 30,
     remark TEXT,
     make_epa_gv ENUM('yes', 'no') DEFAULT 'no',
     make_epa_tgv ENUM('yes', 'no') DEFAULT 'no',
@@ -112,7 +119,7 @@ CREATE TABLE bangdanhgia (
     FOREIGN KEY (ten_tk) REFERENCES tk(ten_tk)
 );
 
--- Bảng tổng điểm EPA
+-- Bảng tổng điểm EPA (Updated với tracking fields)
 CREATE TABLE tongdiem_epa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     ten_tk VARCHAR(100) NOT NULL,
@@ -122,6 +129,8 @@ CREATE TABLE tongdiem_epa (
     sup_total_score INT DEFAULT 0,
     pri_total_score INT,
     pri_comment TEXT,
+    pri_updated_by VARCHAR(100),
+    pri_updated_at DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ten_tk) REFERENCES tk(ten_tk) ON DELETE CASCADE,
     UNIQUE KEY unique_user_month (ten_tk, year, month)
@@ -148,10 +157,12 @@ CREATE TABLE stats (
 );
 -- DESCRIBE hocsinh;
 
--- INDEXS
+-- INDEXES (Updated with new EPA indexes)
 CREATE INDEX idx_phan_lop_ma_lop ON phan_lop(ma_lop);
 CREATE INDEX idx_lop_gv_ma_gv ON lop_gv(ma_gv);
 CREATE INDEX idx_bangdanhgia_ten_tk ON bangdanhgia(ten_tk);
 CREATE INDEX idx_bangdanhgia_ten_tk_year_month ON bangdanhgia(ten_tk, year, month);
 CREATE INDEX idx_tongdiem_epa_year_month ON tongdiem_epa(year, month);
+CREATE INDEX idx_tongdiem_epa_pri_updated ON tongdiem_epa(pri_updated_by, pri_updated_at);
+CREATE INDEX idx_thoigianmoepa_phases ON thoigianmoepa(phase1_start, phase1_end, phase2_start, phase2_end, phase3_start, phase3_end);
 CREATE INDEX idx_logs_target_staff_id ON logs(target_staff_id);

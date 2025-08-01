@@ -14,8 +14,9 @@
         <h1>📤 Xuất Dữ Liệu</h1>
             <div class="nav">
                 <a href="#" onclick="exportToPDF()">📄 Xuất file PDF</a>
+                <a href="#" onclick="exportToExcel()">📊 Xuất File Excel</a>
                 <a href="#" onclick="exportData()">📤 Xuất File CSV</a>
-                <a href="#" onclick="printData()">In Dữ Liệu</a>
+                <a href="#" onclick="printData()">🖨️ In Dữ Liệu</a>
             </div>
     </div>
 
@@ -396,6 +397,35 @@
             } else {
                 alert('Vui lòng chọn loại dữ liệu trước khi xuất.');
             }
+        }
+
+        function exportToExcel() {
+            const dept = document.getElementById("deptSelect").value;
+            if (!dept) {
+                alert("Vui lòng chọn loại dữ liệu trước khi xuất Excel.");
+                return;
+            }
+            
+            // Hiển thị loading
+            const originalText = event.target.textContent;
+            event.target.textContent = "⏳ Đang xuất Excel...";
+            event.target.style.pointerEvents = "none";
+            
+            // Tạo link download
+            const downloadLink = document.createElement('a');
+            downloadLink.href = `/export-excel/${dept}`;
+            downloadLink.download = dept === 'HS' ? 'danh_sach_hoc_sinh.xlsx' : 'danh_sach_giao_vien.xlsx';
+            
+            // Trigger download
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // Khôi phục button sau 2 giây
+            setTimeout(() => {
+                event.target.textContent = originalText;
+                event.target.style.pointerEvents = "auto";
+            }, 2000);
         }
 
         function closePreview() {

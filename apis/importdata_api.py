@@ -1,27 +1,136 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 import pandas as pd
 from utils.db import get_conn
-import traceback
 
 import_bp = Blueprint("import_bp", __name__)
 
 def clean(val):
-    return val if pd.notnull(val) else None
+    """Clean and validate data values"""
+    if pd.isna(val) or val is None:
+        return None
+    # Convert to string and strip whitespace
+    str_val = str(val).strip()
+    # Return None for empty strings
+    return str_val if str_val != '' and str_val.lower() != 'nan' else None
+
+def clean_numeric_string(val):
+    """Clean numeric values that should be stored as strings (to preserve leading zeros)"""
+    if pd.isna(val) or val is None:
+        return None
+    
+    # Convert to string, remove decimal points for integers
+    str_val = str(val).strip()
+    
+    # Remove .0 from the end if it's a float representation of an integer
+    if str_val.endswith('.0'):
+        str_val = str_val[:-2]
+    
+    # Return None for empty strings
+    return str_val if str_val != '' and str_val.lower() != 'nan' else None
+
+def format_vietnamese_id(val, id_type):
+    """Format Vietnamese ID numbers with proper leading zeros"""
+    if pd.isna(val) or val is None:
+        return None
+    
+    # Clean the value first
+    str_val = clean_numeric_string(val)
+    if not str_val or not str_val.isdigit():
+        return str_val
+    
+    current_len = len(str_val)
+    
+    if id_type == "cccd":
+        # CCCD: should be 12 digits
+        if current_len < 12:
+            return str_val.zfill(12)
+    elif id_type == "cmnd":
+        # CMND: can be 9 or 12 digits, pad to 12 if less than 9
+        if current_len < 9:
+            return str_val.zfill(9)
+        elif 9 <= current_len < 12:
+            return str_val  # Keep as is
+        elif current_len < 12:
+            return str_val.zfill(12)  
+    elif id_type == "phone":
+        # Phone: should be 10 digits for mobile
+        if current_len == 9:  # Missing leading 0
+            return "0" + str_val
+        elif current_len < 10:
+            return str_val.zfill(10)
+    elif id_type == "ma_dinh_danh":
+        # Mã định danh: should be 12 digits  
+        if current_len < 12:
+            return str_val.zfill(12)
+    
+    return str_val
+
+def parse_date_to_mysql(val):
+    """Convert date from various formats to YYYY-MM-DD format for MySQL"""
+    if pd.isna(val) or val is None:
+        return None
+    
+    str_val = str(val).strip()
+    if str_val == '' or str_val.lower() == 'nan':
+        return None
+    
+    try:
+        # If already in datetime format (e.g., '2019-11-06 00:00:00')
+        if ' 00:00:00' in str_val:
+            date_obj = pd.to_datetime(str_val, errors='coerce')
+            if pd.notna(date_obj):
+                return date_obj.strftime('%Y-%m-%d')
+        
+        # Try to parse DD/MM/YYYY format
+        date_obj = pd.to_datetime(str_val, format='%d/%m/%Y', errors='coerce')
+        if pd.notna(date_obj):
+            return date_obj.strftime('%Y-%m-%d')
+        
+        # Try YYYY-MM-DD format
+        date_obj = pd.to_datetime(str_val, format='%Y-%m-%d', errors='coerce')
+        if pd.notna(date_obj):
+            return date_obj.strftime('%Y-%m-%d')
+        
+        # Try other common formats with day first
+        date_obj = pd.to_datetime(str_val, dayfirst=True, errors='coerce')
+        if pd.notna(date_obj):
+            return date_obj.strftime('%Y-%m-%d')
+            
+    except:
+        pass
+    
+    return None
 
 @import_bp.route("/import_gv", methods=["POST"])
 def import_employees_gv():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-
-    file = request.files['file']
-    if file.filename == "":
-        return jsonify({"error": "Empty filename"}), 400
-
+    """Import giáo viên từ file Excel"""
     try:
-        df = pd.read_excel(file)
-        df.columns = df.columns.str.strip()
+        if 'file' not in request.files:
+            response = make_response(jsonify({"error": "Không có file được upload"}), 400)
+            response.headers['Content-Type'] = 'application/json'
+            return response
 
-        # ⚠️ Đổi tên cột đúng theo cấu trúc bảng `giaovien`
+        file = request.files['file']
+        if file.filename == "":
+            response = make_response(jsonify({"error": "Tên file trống"}), 400)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+
+        # Validate file extension
+        allowed_extensions = ['.xlsx', '.xls']
+        file_ext = '.' + file.filename.split('.')[-1].lower()
+        if file_ext not in allowed_extensions:
+            response = make_response(jsonify({"error": "Chỉ chấp nhận file Excel (.xlsx, .xls)"}), 400)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+        # Read Excel file - all data as string to preserve leading zeros, specify engine
+        df = pd.read_excel(file, engine='openpyxl', dtype=str, date_format=None, parse_dates=False)
+        df.columns = df.columns.str.strip()
+        
+        # Version indicator - will appear in logs when new code is loaded
+        print("INFO: Using FIXED import GV code v2.0")
+
+        # Doi ten cot dung theo cau truc bang giaovien
         df.rename(columns={
             "MÃ GV": "ma_gv",
             "HỌ VÀ TÊN": "ho_va_ten",
@@ -33,7 +142,7 @@ def import_employees_gv():
             "Ngày cấp": "ngay_cap",
             "MST": "mst",
             "CMND": "cmnd",
-            "SỐ SỔ BH": "so_bh",
+            "SỔ BH": "so_bh",
             "SỐ ĐT": "sdt",
             "SỐ TK": "tk_nh",
             "Email": "email",
@@ -60,22 +169,22 @@ def import_employees_gv():
                 existing_ten_tk.add(ten_tk_val)
 
             values = {
-                "ma_gv": clean(str(row.get("ma_gv"))),
-                "ho_va_ten": clean(str(row.get("ho_va_ten"))),
+                "ma_gv": clean(row.get("ma_gv")),
+                "ho_va_ten": clean(row.get("ho_va_ten")),
                 "ten_tk": ten_tk_val,
-                "chuc_vu": clean(str(row.get("chuc_vu"))),
-                "ngay_sinh": pd.to_datetime(row.get("ngay_sinh"), dayfirst=True).date() if pd.notnull(row.get("ngay_sinh")) else None,
-                "que_quan": clean(str(row.get("que_quan"))),
-                "cccd": clean(str(row.get("cccd"))),
-                "ngay_cap": pd.to_datetime(row.get("ngay_cap"), dayfirst=True).date() if pd.notnull(row.get("ngay_cap")) else None,
-                "mst": clean(str(row.get("mst"))),
-                "cmnd": clean(str(row.get("cmnd"))),
-                "so_bh": clean(str(row.get("so_bh"))),
-                "sdt": clean(str(row.get("sdt"))),
-                "tk_nh": clean(str(row.get("tk_nh"))),
-                "email": clean(str(row.get("email"))),
-                "nhom_mau": clean(str(row.get("nhom_mau"))),
-                "dia_chi": clean(str(row.get("dia_chi")))
+                "chuc_vu": clean(row.get("chuc_vu")),
+                "ngay_sinh": parse_date_to_mysql(row.get("ngay_sinh")),
+                "que_quan": clean(row.get("que_quan")),
+                "cccd": format_vietnamese_id(row.get("cccd"), "cccd"),
+                "ngay_cap": parse_date_to_mysql(row.get("ngay_cap")),
+                "mst": clean_numeric_string(row.get("mst")),
+                "cmnd": format_vietnamese_id(row.get("cmnd"), "cmnd"),
+                "so_bh": clean_numeric_string(row.get("so_bh")),
+                "sdt": format_vietnamese_id(row.get("sdt"), "phone"),
+                "tk_nh": clean(row.get("tk_nh")),
+                "email": clean(row.get("email")),
+                "nhom_mau": clean(row.get("nhom_mau")),
+                "dia_chi": clean(row.get("dia_chi"))
             }
 
             cursor.execute("""
@@ -108,30 +217,66 @@ def import_employees_gv():
         cursor.close()
         conn.close()
 
-        return jsonify({"status": "success"}), 200
+        response = make_response(jsonify({"status": "success", "message": "Import giáo viên thành công"}), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
     except Exception as e:
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
+        # Enhanced error logging with context
+        from flask import current_app, session
+        current_app.logger.error(f"Error in import_employees_gv: {str(e)}")
+        current_app.logger.error(f"User: {session.get('user', 'unknown')}")
+        current_app.logger.error(f"File: {file.filename if 'file' in locals() else 'unknown'}")
+        
+        # Safe error categorization for user
+        error_msg = str(e)
+        if "pandas" in error_msg.lower():
+            error_msg = "Lỗi đọc file Excel. Vui lòng kiểm tra định dạng file."
+        elif "mysql" in error_msg.lower() or "database" in error_msg.lower():
+            error_msg = "Lỗi kết nối cơ sở dữ liệu."
+        elif "permission" in error_msg.lower():
+            error_msg = "Không có quyền truy cập file."
+        else:
+            error_msg = "Đã xảy ra lỗi khi import dữ liệu."
+            
+        response = make_response(jsonify({"error": error_msg}), 500)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 @import_bp.route("/import_hs", methods=["POST"])
 def import_students_hs():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-
-    file = request.files['file']
-    if file.filename == "":
-        return jsonify({"error": "Empty filename"}), 400
-
+    """Import học sinh từ file Excel"""
     try:
-        df = pd.read_excel(file)
-        df.columns = df.columns.str.strip()
+        if 'file' not in request.files:
+            response = make_response(jsonify({"error": "Không có file được upload"}), 400)
+            response.headers['Content-Type'] = 'application/json'
+            return response
 
-        # Đổi tên cột cho khớp SQL
+        file = request.files['file']
+        if file.filename == "":
+            response = make_response(jsonify({"error": "Tên file trống"}), 400)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+
+        # Validate file extension
+        allowed_extensions = ['.xlsx', '.xls']
+        file_ext = '.' + file.filename.split('.')[-1].lower()
+        if file_ext not in allowed_extensions:
+            response = make_response(jsonify({"error": "Chỉ chấp nhận file Excel (.xlsx, .xls)"}), 400)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+        # Read Excel file - prevent auto date parsing, specify engine
+        df = pd.read_excel(file, engine='openpyxl', dtype=str, date_format=None, parse_dates=False)
+        df.columns = df.columns.str.strip()
+        
+        # Version indicator - will appear in logs when new code is loaded
+        print("INFO: Using FIXED import code v2.0")
+
+        # Đổi tên cột cho khớp SQL - FIXED: mapping sau khi strip()
         df.rename(columns={
             "MÃ HS": "ma_hs",
             "HỌ VÀ TÊN": "ho_va_ten",
-            "NGÀY SINH": "ngay_sinh",
+            "NGÀY SINH": "ngay_sinh",      # FIXED: sau strip() không còn space
             "GIỚI TÍNH": "gioi_tinh",
             "DT": "dan_toc",
             "MÃ ĐỊNH DANH": "ma_dinh_danh",
@@ -140,7 +285,7 @@ def import_students_hs():
             "HỌ VÀ TÊN MẸ": "ho_ten_me",
             "NGHỀ NGHIỆP MẸ": "nghe_nghiep_me",
             "HỘ KHẨU": "ho_khau",
-            "SỐ CCCD CỦA BỐ/MẸ": "cccd_bo_me",
+            "SỐ CCCD CỦA BỐ/MẸ": "cccd_bo_me",  # FIXED: sau strip() không còn space ở đầu
             "ĐT": "sdt"
         }, inplace=True)
 
@@ -149,19 +294,19 @@ def import_students_hs():
 
         for _, row in df.iterrows():
             values = {
-                "ma_hs": clean(str(row.get("ma_hs"))),
-                "ho_va_ten": clean(str(row.get("ho_va_ten"))),
-                "ngay_sinh": pd.to_datetime(row.get("ngay_sinh"), dayfirst=True).date() if pd.notnull(row.get("ngay_sinh")) else None,
-                "gioi_tinh": clean(str(row.get("gioi_tinh"))),
-                "dan_toc": clean(str(row.get("dan_toc"))),
-                "ma_dinh_danh": clean(str(row.get("ma_dinh_danh"))),
-                "ho_ten_bo": clean(str(row.get("ho_ten_bo"))),
-                "nghe_nghiep_bo": clean(str(row.get("nghe_nghiep_bo"))),
-                "ho_ten_me": clean(str(row.get("ho_ten_me"))),
-                "nghe_nghiep_me": clean(str(row.get("nghe_nghiep_me"))),
-                "ho_khau": clean(str(row.get("ho_khau"))),
-                "cccd_bo_me": clean(str(row.get("cccd_bo_me"))),
-                "sdt": clean(str(row.get("sdt")))
+                "ma_hs": clean(row.get("ma_hs")),
+                "ho_va_ten": clean(row.get("ho_va_ten")),
+                "ngay_sinh": parse_date_to_mysql(row.get("ngay_sinh")),
+                "gioi_tinh": clean(row.get("gioi_tinh")),
+                "dan_toc": clean(row.get("dan_toc")),
+                "ma_dinh_danh": format_vietnamese_id(row.get("ma_dinh_danh"), "ma_dinh_danh"),
+                "ho_ten_bo": clean(row.get("ho_ten_bo")),
+                "nghe_nghiep_bo": clean(row.get("nghe_nghiep_bo")),
+                "ho_ten_me": clean(row.get("ho_ten_me")),
+                "nghe_nghiep_me": clean(row.get("nghe_nghiep_me")),
+                "ho_khau": clean(row.get("ho_khau")),
+                "cccd_bo_me": format_vietnamese_id(row.get("cccd_bo_me"), "cccd"),
+                "sdt": format_vietnamese_id(row.get("sdt"), "phone")
             }
 
             cursor.execute("""
@@ -193,18 +338,51 @@ def import_students_hs():
         cursor.close()
         conn.close()
 
-        return jsonify({"status": "success"}), 200
+        response = make_response(jsonify({"status": "success", "message": "Import học sinh thành công"}), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
     except Exception as e:
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
+        # Enhanced error logging with context
+        from flask import current_app, session
+        current_app.logger.error(f"Error in import_students_hs: {str(e)}")
+        current_app.logger.error(f"User: {session.get('user', 'unknown')}")
+        current_app.logger.error(f"File: {file.filename if 'file' in locals() else 'unknown'}")
+        
+        # Safe error categorization for user
+        error_msg = str(e)
+        if "pandas" in error_msg.lower():
+            error_msg = "Lỗi đọc file Excel. Vui lòng kiểm tra định dạng file."
+        elif "mysql" in error_msg.lower() or "database" in error_msg.lower():
+            error_msg = "Lỗi kết nối cơ sở dữ liệu."
+        elif "permission" in error_msg.lower():
+            error_msg = "Không có quyền truy cập file."
+        else:
+            error_msg = "Đã xảy ra lỗi khi import dữ liệu."
+            
+        response = make_response(jsonify({"error": error_msg}), 500)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 @import_bp.route("/fetch_hs", methods=["GET"])
 def fetch_hs():
     try:
         conn = get_conn()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM hocsinh ORDER BY id ASC")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM hocsinh ORDER BY ma_hs ASC")
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify({"rows": rows}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@import_bp.route("/fetch_gv", methods=["GET"])
+def fetch_gv():
+    try:
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM giaovien ORDER BY ma_gv ASC")
         rows = cursor.fetchall()
         cursor.close()
         conn.close()

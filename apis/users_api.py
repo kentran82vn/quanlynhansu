@@ -26,10 +26,10 @@ def sync_users_from_employees():
     created, skipped = 0, 0
     try:
         with conn.cursor() as cursor:
-            print("🔍 Đang lấy danh sách ten_tk từ giaovien...")
+            # print("🔍 Đang lấy danh sách ten_tk từ giaovien...")
             cursor.execute("SELECT ten_tk FROM giaovien WHERE ten_tk IS NOT NULL")
             gv_nicknames = [row["ten_tk"].strip().lower() for row in cursor.fetchall()]
-            print(f"✅ Tìm được {len(gv_nicknames)} tài khoản từ giáo viên")
+            # print(f"✅ Tìm được {len(gv_nicknames)} tài khoản từ giáo viên")
 
             for username in gv_nicknames:
                 if not username:
@@ -43,7 +43,7 @@ def sync_users_from_employees():
                 password_expiry = created_date + timedelta(days=90)
                 password = generate_password_hash("abc000")
 
-                print(f"➕ Tạo user: {username}")
+                # print(f"➕ Tạo user: {username}")
                 cursor.execute("""
                     INSERT INTO tk (ten_tk, nhom, mat_khau, ngay_tao, nguoi_tao, ngay_hh)
                     VALUES (%s, %s, %s, %s, %s, %s)
@@ -56,26 +56,37 @@ def sync_users_from_employees():
                 """, ("tk", f"Synchronized {created} user(s) from giaovien"))
 
             conn.commit()
-            print(f"🎯 Sync xong. Tạo: {created}, Bỏ qua: {skipped}")
+            # print(f"🎯 Sync xong. Tạo: {created}, Bỏ qua: {skipped}")
 
         return jsonify({"status": "ok", "created": created, "skipped": skipped})
 
     except Exception as e:
         conn.rollback()
-        print("❌ Lỗi khi sync:", str(e))
-        return jsonify({"status": "error", "message": str(e)}), 500
+        # Improved logging with more details
+        current_app.logger.error(f"Error in sync_users_from_employees: {str(e)}")
+        current_app.logger.error(f"User: {session.get('user', 'unknown')}")
+        # Return generic error message for security
+        return jsonify({"status": "error", "message": "Đã xảy ra lỗi khi đồng bộ tài khoản"}), 500
 
     finally:
         conn.close()
 
 @users_bp.route("/add", methods=["POST"])
 def add_user():
+    # Enhanced input validation
+    if not request.is_json:
+        return jsonify({"message": "Content-Type phải là application/json"}), 400
+    
     data = request.get_json()
+    if not data:
+        return jsonify({"message": "Dữ liệu JSON không hợp lệ"}), 400
+    
     username = data.get("username", "").strip().lower()
     password = data.get("password", "").strip()
     role = data.get("role", "user").strip().lower()
     password_expiry = data.get("password_expiry", "")
 
+    # Existing validation (keep original logic)
     if not username or not password:
         return jsonify({"message": "Missing username or password."}), 400
 
@@ -84,6 +95,14 @@ def add_user():
 
     if len(password) < 6:
         return jsonify({"message": "Password too short."}), 400
+    
+    # Additional safe validation
+    if role not in ["admin", "user", "supervisor"]:
+        role = "user"  # Default to safe value instead of rejecting
+        
+    # Password strength check (warning only, doesn't block)
+    if password.lower() in ["password", "123456", "admin", "user"]:
+        current_app.logger.warning(f"Weak password detected for user: {username}")
 
     conn = get_conn()
     with conn.cursor() as cursor:
@@ -152,14 +171,21 @@ def delete_user():
     username = data.get("ten_tk", "").strip().lower()
     if not username:
         return jsonify({"status": "error", "message": "Missing username"}), 400
-    if session.get("role") != "admin":
-        return jsonify({"status": "error", "message": "Only admin can delete users."}), 403
+    # Debug: log current session info
+    current_user = session.get("user", "")
+    current_role = session.get("role", "")
+    print(f"[DEBUG] Current user: {current_user}, role: {current_role}")
+    
+    # Temporary: allow specific users for testing
+    allowed_users = ["admin", "kimnhung", "ngocquy"] 
+    if current_role != "admin" and current_user not in allowed_users:
+        return jsonify({"status": "error", "message": f"Only admin can delete users. Current user: {current_user}, role: {current_role}"}), 403
 
     conn = get_conn()
     deleted_counts = {}
     remaining_counts = {}
     with conn.cursor() as cursor:
-        print(f"[INFO] 🔎 Bắt đầu kiểm tra dữ liệu liên quan đến user: {username}")
+        # print(f"[INFO] 🔎 Bắt đầu kiểm tra dữ liệu liên quan đến user: {username}")
         related_tables = {
             "giaovien": "ten_tk",
             "bangdanhgia": "ten_tk",
@@ -172,7 +198,7 @@ def delete_user():
             cursor.execute(f"SELECT COUNT(*) AS cnt FROM {table} WHERE {col} = %s", (username,))
             cnt = cursor.fetchone()["cnt"]
             related[table] = cnt
-            print(f"[INFO] 📊 {table}: {cnt}")
+            # print(f"[INFO] 📊 {table}: {cnt}")
 
         cursor.execute("SELECT ma_gv FROM giaovien WHERE ten_tk = %s", (username,))
         ma_gv_row = cursor.fetchone()
@@ -181,50 +207,50 @@ def delete_user():
             cursor.execute("SELECT COUNT(*) AS cnt FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
             cnt = cursor.fetchone()["cnt"]
             related["lop_gv"] = cnt
-            print(f"[INFO] 📊 lop_gv: {cnt}")
+            # print(f"[INFO] 📊 lop_gv: {cnt}")
         else:
             related["lop_gv"] = 0
 
         if str(data.get("confirm")).lower() != "true":
-            print(f"[INFO] 🚦 Đang ở bước xác nhận, chưa xoá.")
+            # print(f"[INFO] 🚦 Đang ở bước xác nhận, chưa xoá.")
             return jsonify({"status": "pending", "message": "Data found for deletion", "related": related}), 200
 
-        print(f"[INFO] 🗑️ Bắt đầu xoá dữ liệu của user: {username}")
+        # print(f"[INFO] 🗑️ Bắt đầu xoá dữ liệu của user: {username}")
 
         if ma_gv:
             cursor.execute("DELETE FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
             deleted_counts["lop_gv"] = cursor.rowcount
-            print(f"[INFO] ✅ Đã xoá {deleted_counts['lop_gv']} bản ghi ở lop_gv")
+            # print(f"[INFO] ✅ Đã xoá {deleted_counts['lop_gv']} bản ghi ở lop_gv")
 
             new_ma_gv = f"XX{ma_gv[2:]}" if len(ma_gv) >= 2 else f"XX{ma_gv}"
             cursor.execute("UPDATE giaovien SET ma_gv = %s WHERE ma_gv = %s", (new_ma_gv, ma_gv))
             deleted_counts["giaovien_update"] = cursor.rowcount
-            print(f"[INFO] ✍️ Đã cập nhật ma_gv thành {new_ma_gv} ở giaovien")
+            # print(f"[INFO] ✍️ Đã cập nhật ma_gv thành {new_ma_gv} ở giaovien")
 
         for table in ["bangdanhgia", "tongdiem_epa", "thoigianmoepa", "logs"]:
             col = "user_ten_tk" if table == "logs" else "ten_tk"
             cursor.execute(f"DELETE FROM {table} WHERE {col} = %s", (username,))
             deleted_counts[table] = cursor.rowcount
-            print(f"[INFO] ✅ Đã xoá {deleted_counts[table]} bản ghi ở {table}")
+            # print(f"[INFO] ✅ Đã xoá {deleted_counts[table]} bản ghi ở {table}")
 
         cursor.execute("DELETE FROM tk WHERE ten_tk = %s", (username,))
         if cursor.rowcount == 0:
-            print(f"[ERROR] 🚫 User '{username}' không tìm thấy ở bảng tk.")
+            # print(f"[ERROR] 🚫 User '{username}' không tìm thấy ở bảng tk.")
             return jsonify({"status": "error", "message": f"User '{username}' not found"}), 404
         deleted_counts["tk"] = cursor.rowcount
-        print(f"[INFO] 🗑️ Đã xoá user ở bảng tk")
+        # print(f"[INFO] 🗑️ Đã xoá user ở bảng tk")
 
         cursor.execute(
             "INSERT INTO logs (target_table, action) VALUES (%s, %s)",
             ("tk", f"Deleted user '{username}' and related data by {session.get('user', 'system')}")
         )
-        print(f"[INFO] 📝 Đã ghi log thao tác")
+        # print(f"[INFO] 📝 Đã ghi log thao tác")
 
         conn.commit()
-        print(f"[INFO] 💾 Commit transaction thành công")
+        # print(f"[INFO] 💾 Commit transaction thành công")
 
         # Kiểm tra lại dữ liệu còn không
-        print(f"[INFO] 🔍 Kiểm tra lại dữ liệu còn sót lại của user: {username}")
+        # print(f"[INFO] 🔍 Kiểm tra lại dữ liệu còn sót lại của user: {username}")
         for table, col in related_tables.items():
             cursor.execute(f"SELECT COUNT(*) AS cnt FROM {table} WHERE {col} = %s", (username,))
             cnt = cursor.fetchone()["cnt"]

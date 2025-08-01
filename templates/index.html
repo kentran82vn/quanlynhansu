@@ -4,203 +4,176 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>- 🏫 TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG 🎈-</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-<style>
-    body {
-      background-color: #f5f7fa;
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          primary: '#0d6efd',
+          secondary: '#6c757d'
+        }
+      }
     }
-    .sidebar {
-      background-color: #f8f9fa;
-      border-right: 1px solid #dee2e6;
-      min-height: 100vh;
-      padding: 1rem 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-    }
-    .sidebar .nav-link {
-      color: #495057;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 10px 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      border-left: 3px solid transparent;
-    }
-    .sidebar .nav-link i {
-      font-size: 16px;
-    }
-    .sidebar .nav-link:hover {
-      background-color: #e9ecef;
-      color: #0d6efd;
-      border-left: 3px solid #0d6efd;
-      text-decoration: none;
-    }
-    .sidebar .nav-link.active {
-      background-color: #0d6efd;
-      color: white;
-      border-left: 3px solid #0b5ed7;
-      font-weight: 600;
-    }
-    .sidebar .nav-link.active i {
-      color: white;
-    }
-    .sidebar .nav-link.text-danger {
-      color: #dc3545;
-    }
-    .sidebar .nav-link.text-danger:hover {
-      background-color: #f8d7da;
-      color: #c82333;
-    }
-    iframe {
-      width: 100%;
-      height: calc(100vh - 56px);
-      border: none;
-    }
-    .topbar {
-      height: 56px;
-      background: #fff;
-      border-bottom: 1px solid #dee2e6;
-      padding: 0 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .topbar .user-info {
-      font-weight: 500;
-      color: #495057;
-    }
-</style>
+  }
+</script>
 </head>
-<body><div class="container-fluid mt-4"><div class="card"><div class="card-body">
-<div class="container-fluid">
-<div class="row">
-  <nav class="col-md-2 d-none d-md-block sidebar">
-      <div class="position-sticky">
-        <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" data-page="/employees" href="#">
-                  <i class="fas fa-users"></i> Trang Chính
-                </a>
-              </li>
-              {% if session['role'] == 'user' or session['role'] == 'supervisor' %}
-              <li class="nav-item">
-                <a class="nav-link" data-page="/user-epa-score" href="#">
-                  <i class="fas fa-chart-line"></i> Đánh Giá EPA
-                </a>
-              </li>
-              {% endif %}
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
-              <li class="nav-item">
-                <a class="nav-link" data-page="/users" href="#">
-                  <i class="fas fa-user-shield"></i> Quản Lý Tài Khoản
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/classes" href="#">
-                  <i class="fas fa-school"></i> Danh Sách Lớp
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/assign-classes" href="#">
-                  <i class="fas fa-user-plus"></i> Phân Lớp Học Sinh
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/assign-teachers" href="#">
-                  <i class="fas fa-chalkboard-teacher"></i> Phân Công Giáo Viên
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/data_epa" href="#">
-                  <i class="fas fa-chart-line"></i> Đánh Giá Giáo Viên
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/epa_summary" href="#">
-                  <i class="fas fa-chart-line"></i> Xếp Hạng Đánh Giá
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/thoigianmoepa" href="#">
-                  <i class="fas fa-scroll"></i> Đặt Thời Gian Đánh Giá
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/admin/questions" href="#">
-                  <i class="fas fa-scroll"></i> Câu Hỏi Đánh Giá
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/logs" href="#">
-                  <i class="fas fa-scroll"></i> Nhật Ký Thay Đổi
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-page="/stats" href="#">
-                  <i class="fas fa-chart-bar"></i> Thông Tin Thống Kê
-                </a>
-              </li>
-              {% endif %}
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+<div class="min-h-screen flex">
+  <!-- Sidebar -->
+  <nav class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden md:block">
+    <div class="p-4">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">🏫 TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG 🎈</h2>
+      <!-- Dark Mode Toggle -->
+      <button id="darkModeToggle" class="mb-4 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+        <i class="fas fa-moon dark:hidden"></i>
+        <i class="fas fa-sun hidden dark:inline"></i>
+        <span class="ml-2 dark:hidden">Dark Mode</span>
+        <span class="ml-2 hidden dark:inline">Light Mode</span>
+      </button>
+    </div>
+    <div class="px-2">
+      <ul class="space-y-1">
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/employees" href="#">
+            <i class="fas fa-users w-5"></i>
+            <span>Trang Chính</span>
+          </a>
+        </li>
+        {% if session['role'] == 'user' or session['role'] == 'supervisor' %}
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/user-epa-score" href="#">
+            <i class="fas fa-chart-line w-5"></i>
+            <span>Đánh Giá EPA</span>
+          </a>
+        </li>
+        {% endif %}
+        {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/users" href="#">
+            <i class="fas fa-user-shield w-5"></i>
+            <span>Quản Lý Tài Khoản</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/classes" href="#">
+            <i class="fas fa-school w-5"></i>
+            <span>Danh Sách Lớp</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/assign-classes" href="#">
+            <i class="fas fa-user-plus w-5"></i>
+            <span>Phân Lớp Học Sinh</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/assign-teachers" href="#">
+            <i class="fas fa-chalkboard-teacher w-5"></i>
+            <span>Phân Công Giáo Viên</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/data_epa" href="#">
+            <i class="fas fa-chart-line w-5"></i>
+            <span>Đánh Giá Giáo Viên</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/epa_summary" href="#">
+            <i class="fas fa-chart-line w-5"></i>
+            <span>Xếp Hạng Đánh Giá</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/thoigianmoepa" href="#">
+            <i class="fas fa-scroll w-5"></i>
+            <span>Đặt Thời Gian Đánh Giá</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/admin/questions" href="#">
+            <i class="fas fa-scroll w-5"></i>
+            <span>Câu Hỏi Đánh Giá</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/logs" href="#">
+            <i class="fas fa-scroll w-5"></i>
+            <span>Nhật Ký Thay Đổi</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/stats" href="#">
+            <i class="fas fa-chart-bar w-5"></i>
+            <span>Thông Tin Thống Kê</span>
+          </a>
+        </li>
+        {% endif %}
 
-              <li class="nav-item mt-4">
-                <a class="nav-link text-danger" href="/logout">
-                  <i class="fas fa-sign-out-alt"></i> Đăng Xuất
-                </a>
-              </li>
+        <li class="mt-8">
+          <a class="flex items-center gap-3 px-3 py-2 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" href="/logout">
+            <i class="fas fa-sign-out-alt w-5"></i>
+            <span>Đăng Xuất</span>
+          </a>
+        </li>
       </ul>
     </div>
   </nav>
-<main class="col-md-10 ms-sm-auto px-0">
-<div class="topbar">
-<h5 class="mb-3">- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</h5>
-<div class="user-actions d-flex align-items-center justify-content-end gap-2">
-<a class="btn btn-outline-secondary btn-sm" href="/dashboard">
-🏠 Trang Chủ
-</a>
-<button class="btn btn-outline-secondary btn-sm" onclick="openChangePassModal()">
-🔐 Đổi Mật Khẩu
-</button>
-<div class="user-info">
-👤 <span id="currentUser">{{ user }} ({{ role }})</span>
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col">
+    <!-- Top Bar -->
+    <div class="h-14 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 flex items-center justify-between">
+      <h5 class="text-lg font-semibold text-gray-800 dark:text-white">- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</h5>
+      <div class="flex items-center gap-3">
+        <a class="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" href="/dashboard">
+          🏠 Trang Chủ
+        </a>
+        <button class="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onclick="openChangePassModal()">
+          🔐 Đổi Mật Khẩu
+        </button>
+        <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
+          👤 <span id="currentUser">{{ user }} ({{ role }})</span>
+        </div>
+      </div>
+    </div>
+    <!-- Content Frame -->
+    <iframe id="mainFrame" src="/employees" class="flex-1 w-full border-0"></iframe>
+  </main>
 </div>
 </div>
-</div>
-<iframe id="mainFrame" src="/employees"></iframe>
-</main>
-</div>
-</div>
-<!-- 🔧 Modal đổi mật khẩu user -->
-<div aria-hidden="true" aria-labelledby="changePassModalLabel" class="modal fade" id="changePassModal" tabindex="-1">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="changePassModalLabel">Đổi Mật Khẩu</h5>
-<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
-</div>
-<div class="modal-body">
-<form id="changePassForm">
-<div class="mb-3">
-<label>Mật khẩu hiện tại</label>
-<input class="form-control" id="oldPassword" required="" type="password"/>
-</div>
-<div class="mb-3">
-<label>Mật khẩu mới</label>
-<input class="form-control" id="newPassword" required="" type="password"/>
-</div>
-<div class="mb-3">
-<label>Xác nhận mật khẩu mới</label>
-<input class="form-control" id="confirmNewPassword" required="" type="password"/>
-</div>
-</form>
-</div>
-<div class="modal-footer">
-<button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-<button class="btn btn-primary" onclick="submitChangePassword()">Đổi Mật Khẩu</button>
-</div>
-</div>
-</div>
+<!-- Modal đổi mật khẩu -->
+<div id="changePassModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Đổi Mật Khẩu</h5>
+      <button onclick="closeChangePassModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="p-4">
+      <form id="changePassForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu hiện tại</label>
+          <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="oldPassword" required type="password"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu mới</label>
+          <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="newPassword" required type="password"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Xác nhận mật khẩu mới</label>
+          <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="confirmNewPassword" required type="password"/>
+        </div>
+      </form>
+    </div>
+    <div class="flex gap-3 p-4 border-t border-gray-200 dark:border-gray-700">
+      <button onclick="closeChangePassModal()" class="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Hủy</button>
+      <button onclick="submitChangePassword()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Đổi Mật Khẩu</button>
+    </div>
+  </div>
 </div>
 <script>
     // ✅ Lấy URL parameter để xác định trang hiện tại
@@ -233,9 +206,15 @@
         document.getElementById('mainFrame').src = safeURL;
         
         // Cập nhật active state cho sidebar
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => {
+            l.classList.remove('bg-blue-600', 'text-white', 'dark:bg-blue-700');
+            l.classList.add('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
+        });
         const activeLink = document.querySelector(`[data-page="${page}"]`);
-        if (activeLink) activeLink.classList.add('active');
+        if (activeLink) {
+            activeLink.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
+            activeLink.classList.add('bg-blue-600', 'text-white', 'dark:bg-blue-700');
+        }
         
         // Cập nhật URL
         updateURL(page);
@@ -260,13 +239,21 @@
         document.getElementById('mainFrame').src = safeURL;
         
         // Cập nhật active state
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => {
+            l.classList.remove('bg-blue-600', 'text-white', 'dark:bg-blue-700');
+            l.classList.add('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
+        });
         const activeLink = document.querySelector(`[data-page="${page}"]`);
-        if (activeLink) activeLink.classList.add('active');
+        if (activeLink) {
+            activeLink.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
+            activeLink.classList.add('bg-blue-600', 'text-white', 'dark:bg-blue-700');
+        }
     });
 
     // ✅ Khởi tạo khi trang load
     document.addEventListener('DOMContentLoaded', function() {
+        initDarkMode();
+        
         const currentPage = getPageFromURL();
         console.log('🚀 Initial page load:', currentPage); // Debug log
         
@@ -276,7 +263,10 @@
         
         // Set active state
         const activeLink = document.querySelector(`[data-page="${currentPage}"]`);
-        if (activeLink) activeLink.classList.add('active');
+        if (activeLink) {
+            activeLink.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
+            activeLink.classList.add('bg-blue-600', 'text-white', 'dark:bg-blue-700');
+        }
         
         // Ensure URL is correct
         if (!window.location.search) {
@@ -294,11 +284,35 @@
         }
     });
 
-    // ✅ Các function khác giữ nguyên
+    // Dark mode functionality
+    function initDarkMode() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        darkModeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark);
+            
+            // Send message to iframe to sync dark mode
+            const iframe = document.getElementById('mainFrame');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'darkModeToggle', isDark }, '*');
+            }
+        });
+    }
+    
     function openChangePassModal() {
         document.getElementById('changePassForm').reset();
-        const modal = new bootstrap.Modal(document.getElementById('changePassModal'));
-        modal.show();
+        document.getElementById('changePassModal').classList.remove('hidden');
+    }
+    
+    function closeChangePassModal() {
+        document.getElementById('changePassModal').classList.add('hidden');
     }
 
     async function submitChangePassword() {
@@ -337,6 +351,5 @@
         }
     }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</div></div></div></body>
+</body>
 </html>

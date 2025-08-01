@@ -23,32 +23,90 @@ def check_epa_period_for_user(ten_tk):
     day = now.day
     year = now.year
     month = now.month
+    
+    # Get days in current month for validation
+    days_in_current_month = monthrange(year, month)[1]
+    
     conn = get_conn()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
         cursor.execute(
             """
-            SELECT start_day, close_day
+            SELECT phase1_start, phase1_end, phase2_start, phase2_end, phase3_start, phase3_end,
+                   make_epa_gv, make_epa_tgv, start_day, close_day
             FROM thoigianmoepa
             WHERE ten_tk = %s
             """,
             (ten_tk,)
         )
         record = cursor.fetchone()
-        if record:
-            start_day = record['start_day'] or 0
-            close_day = record['close_day'] or 0
-            is_open = start_day <= day <= close_day
+        if not record:
+            return {
+                'is_open': False,
+                'start_day': 0,
+                'close_day': 0,
+                'year': year,
+                'month': month,
+                'current_phase': None,
+                'message': 'Khong tim thay cai dat thoi gian'
+            }
+        
+        # Determine user type and appropriate phase
+        is_tgv = record.get('make_epa_tgv') == 'yes'
+        
+        # Adjust phase end dates if they exceed days in current month
+        phase1_start = record['phase1_start'] or 20
+        phase1_end = min(record['phase1_end'] or 25, days_in_current_month)
+        phase2_start = record['phase2_start'] or 26  
+        phase2_end = min(record['phase2_end'] or 27, days_in_current_month)
+        phase3_start = record['phase3_start'] or 28
+        phase3_end = min(record['phase3_end'] or 30, days_in_current_month)
+        
+        # For teachers (GV): only Phase 1 matters
+        # For supervisors (TGV): Phase 1 (self) + Phase 2 (supervise others) 
+        phase1_open = phase1_start <= day <= phase1_end
+        phase2_open = phase2_start <= day <= phase2_end if phase2_start and phase2_end else False
+        phase3_open = phase3_start <= day <= phase3_end if phase3_start and phase3_end else False
+        
+        # Determine if user can assess themselves
+        if is_tgv:
+            # TGV can self-assess in Phase 1 or Phase 2
+            is_open = phase1_open or phase2_open
+            if phase1_open:
+                current_phase = 'Phase 1 (Tu danh gia)'
+                start_day = phase1_start
+                close_day = phase1_end
+            elif phase2_open:
+                current_phase = 'Phase 2 (Tu danh gia TGV)'
+                start_day = phase2_start
+                close_day = phase2_end
+            else:
+                current_phase = 'Phase 3 (Chi HT/PHT danh gia)'
+                start_day = phase3_start
+                close_day = phase3_end
         else:
-            start_day = 0
-            close_day = 0
-            is_open = False
+            # Regular teachers: only Phase 1
+            is_open = phase1_open
+            if phase1_open:
+                current_phase = 'Phase 1 (Tu danh gia)'
+            elif phase2_open:
+                current_phase = 'Phase 2 (TGV danh gia)'
+            elif phase3_open:
+                current_phase = 'Phase 3 (HT/PHT danh gia)'
+            else:
+                current_phase = 'Ngoai thoi gian danh gia'
+            
+            start_day = phase1_start
+            close_day = phase1_end
+        
         return {
             'is_open': is_open,
             'start_day': start_day,
             'close_day': close_day,
             'year': year,
-            'month': month
+            'month': month,
+            'current_phase': current_phase,
+            'message': f'Hien tai: {current_phase}'
         }
     finally:
         cursor.close()
@@ -60,7 +118,7 @@ def load_questions():
     conn = get_conn()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
-        cursor.execute("SELECT id, question, translate FROM cauhoi_epa")
+        cursor.execute("SELECT id, question, translate, score as max_score FROM cauhoi_epa")
         rows = cursor.fetchall()
         logging.debug(f'Câu hỏi đã tải: {rows}')
         return rows
@@ -78,7 +136,7 @@ def is_valid_user(ten_tk):
     try:
         cursor.execute("SELECT nhom FROM tk WHERE ten_tk = %s", (ten_tk,))
         user = cursor.fetchone()
-        if not user or user['nhom'] not in ['user', 'supervisor']:
+        if not user or user['nhom'] not in ['user', 'supervisor', 'admin']:
             logging.warning(f'Vai trò không hợp lệ: ten_tk={ten_tk}, role={user.get("nhom") if user else None}')
             return False
         logging.debug(f'Người dùng hợp lệ: ten_tk={ten_tk}, role={user["nhom"]}')
@@ -86,6 +144,61 @@ def is_valid_user(ten_tk):
     except Exception as e:
         logging.error(f'Lỗi khi kiểm tra vai trò: {e}')
         return False
+    finally:
+        cursor.close()
+        conn.close()
+
+# AUTO-COPY điểm cho TGV: Copy điểm giai đoạn 1 (tự đánh giá) thành điểm giai đoạn 2
+def auto_copy_tgv_scores(ten_tk, year, month):
+    """
+    Khi TGV hoàn thành giai đoạn 1 (tự đánh giá), tự động copy điểm đó làm điểm giai đoạn 2
+    Theo quy trình thực tế: TGV không cần đánh giá bản thân 2 lần
+    """
+    logging.info(f'🔄 Bắt đầu auto-copy điểm cho TGV {ten_tk}')
+    
+    conn = get_conn()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    try:
+        # Lấy tất cả điểm tự đánh giá (user_score) của TGV
+        cursor.execute(
+            """
+            SELECT id, question, translate, user_score, user_comment
+            FROM bangdanhgia 
+            WHERE ten_tk = %s AND year = %s AND month = %s 
+              AND user_score IS NOT NULL
+            """,
+            (ten_tk, year, month)
+        )
+        self_assessments = cursor.fetchall()
+        
+        if not self_assessments:
+            logging.warning(f'⚠️ TGV {ten_tk} chưa có điểm tự đánh giá để copy')
+            return
+        
+        copy_count = 0
+        for assessment in self_assessments:
+            # Copy user_score -> sup_score và user_comment -> sup_comment
+            # CHỈ copy nếu sup_score chưa có (tránh ghi đè)
+            cursor.execute(
+                """
+                UPDATE bangdanhgia 
+                SET sup_score = %s, sup_comment = %s
+                WHERE id = %s AND (sup_score IS NULL OR sup_score = 0)
+                """,
+                (assessment['user_score'], assessment['user_comment'], assessment['id'])
+            )
+            
+            if cursor.rowcount > 0:  # Có record được update
+                copy_count += 1
+                logging.debug(f'📋 Copy câu hỏi "{assessment["question"][:30]}...": {assessment["user_score"]} điểm')
+        
+        conn.commit()
+        logging.info(f'✅ Auto-copy hoàn thành cho TGV {ten_tk}: {copy_count}/{len(self_assessments)} câu hỏi')
+        
+    except Exception as e:
+        logging.error(f'❌ Lỗi auto-copy cho TGV {ten_tk}: {e}')
+        conn.rollback()
+        raise e
     finally:
         cursor.close()
         conn.close()
@@ -170,7 +283,9 @@ def assessment_period():
         'start_day': date_info['start_day'],
         'close_day': date_info['close_day'],
         'year': date_info['year'],
-        'month': date_info['month']
+        'month': date_info['month'],
+        'current_phase': date_info.get('current_phase'),
+        'message': date_info.get('message')
     }
     logging.debug(f'Kết quả kiểm tra thời gian: {response}')
     return jsonify(response)
@@ -200,7 +315,7 @@ def last_assessment():
     # Lấy year và month từ query parameters (truyền từ frontend)
     year = request.args.get('year')
     month = request.args.get('month')
-    print('Giá trị tháng đang sử dụng', month)
+    logging.debug(f'Month value being used: {month}')
     if not year or not month:
         now = datetime.now()
         year = now.year
@@ -348,14 +463,26 @@ def submit_assessment():
             if not question_id or user_score is None:
                 logging.warning(f'Mục điểm không hợp lệ: {score_entry}')
                 continue
+            
+            # Lấy thông tin câu hỏi bao gồm điểm tối đa
             cursor.execute(
-                "SELECT question, translate FROM cauhoi_epa WHERE id = %s",
+                "SELECT question, translate, score as max_score FROM cauhoi_epa WHERE id = %s",
                 (question_id,)
             )
             question = cursor.fetchone()
             if not question:
                 logging.warning(f'ID câu hỏi không hợp lệ: {question_id}')
                 continue
+            
+            # Validate điểm không được vượt quá điểm tối đa của câu hỏi
+            max_score = question.get('max_score', 30)  # Fallback to 30 if no score defined
+            if user_score > max_score:
+                logging.warning(f'Điểm vượt quá giới hạn: question_id={question_id}, user_score={user_score}, max_score={max_score}')
+                return jsonify({'message': f'Câu hỏi {question_id}: Điểm tối đa chỉ được {max_score}, không thể chấm {user_score} điểm'}), 400
+            
+            if user_score < 0:
+                logging.warning(f'Điểm âm không hợp lệ: question_id={question_id}, user_score={user_score}')
+                return jsonify({'message': f'Câu hỏi {question_id}: Điểm không thể âm'}), 400
             
             # Kiểm tra xem đã có record chưa, nếu có thì UPDATE, chưa có thì INSERT
             cursor.execute(
@@ -406,6 +533,15 @@ def submit_assessment():
                 logging.debug(f'Tạo mới câu hỏi ID {question_id} cho ten_tk={ten_tk}')
         conn.commit()
         logging.debug(f'Đã lưu kết quả đánh giá cho ten_tk={ten_tk}')
+        
+        # 🚀 AUTO-COPY cho TGV: Nếu là supervisor và đang trong giai đoạn 1, tự động copy làm điểm giai đoạn 2
+        if role == 'supervisor':
+            try:
+                auto_copy_tgv_scores(ten_tk, year, month)
+                logging.info(f'✅ Đã auto-copy điểm giai đoạn 1 -> 2 cho TGV {ten_tk}')
+            except Exception as auto_copy_error:
+                logging.error(f'❌ Lỗi auto-copy cho TGV {ten_tk}: {auto_copy_error}')
+        
         update_tongdiem_epa(ten_tk, year, month)
         cursor.execute(
             """

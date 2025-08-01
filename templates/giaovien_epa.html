@@ -5,41 +5,69 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Tự Đánh Giá EPA</title>
-<link href="{{ url_for('static_files', filename='css/styles.css') }}?v=20250716" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          primary: '#0d6efd',
+          secondary: '#6c757d'
+        }
+      }
+    }
+  }
+</script>
 
 </head>
-<body><div class="container-fluid mt-4"><div class="card"><div class="card-body">
-<div class="container-fluid">
-<!--<h1>Tự Đánh Giá EPA - {{month}} - {{ user }}</h1> -->
-<h1 id="epa-title">Tự Đánh Giá EPA</h1>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+<div class="max-w-6xl mx-auto p-6">
+<div class="mb-6">
+  <h1 id="epa-title" class="text-3xl font-bold text-gray-900 dark:text-white text-center">Tự Đánh Giá EPA</h1>
+</div>
 <!-- Period Check -->
-<div id="period-message"></div>
+<div id="period-message" class="mb-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"></div>
 <!-- Last Assessment -->
-<h2>Kết Quả Tự Đánh Giá Trước Đây</h2>
-<div id="last-assessment"></div>
+<div class="mb-8">
+  <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Kết Quả Tự Đánh Giá Trước Đây</h2>
+  <div id="last-assessment" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4"></div>
+</div>
 <!-- Total Score Table -->
-<h2>Tổng Điểm Đánh Giá</h2>
-<table id="total-score-table">
-<thead>
-<tr>
-<th>Năm</th>
-<th>Tháng</th>
-<th>Tổng điểm tự đánh giá</th>
-<th>Tổng điểm giám sát</th>
-<th>Điểm cấp trên</th>
-<th>Nhận xét cấp trên</th>
-</tr>
-</thead>
-<tbody id="total-score-table-body"></tbody>
-</table>
+<div class="mb-8">
+  <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Tổng Điểm Đánh Giá</h2>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <table id="total-score-table" class="w-full">
+      <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Năm</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Tháng</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Tổng điểm tự đánh giá</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Tổng điểm giám sát</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Điểm cấp trên</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Nhận xét cấp trên</th>
+        </tr>
+      </thead>
+      <tbody id="total-score-table-body" class="divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+    </table>
+  </div>
+</div>
 <!-- Assessment Form -->
-<h2>Gửi Đánh Giá EPA Mới</h2>
-<div class="total-score" id="total-score-display">
-            Tổng điểm tự đánh giá: 0 | Tổng điểm giám sát: 0
-        </div>
-<div id="assessment-form"></div>
-<button disabled="" id="submit-btn">Gửi</button>
-<div id="form-message"></div>
+<div class="mb-8">
+  <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Gửi Đánh Giá EPA Mới</h2>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <div id="total-score-display" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 rounded-lg font-semibold text-center">
+      Tổng điểm tự đánh giá: 0 | Tổng điểm giám sát: 0
+    </div>
+    <div id="assessment-form" class="space-y-6"></div>
+    <div class="mt-6">
+      <button disabled id="submit-btn" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors">
+        Gửi
+      </button>
+    </div>
+    <div id="form-message" class="mt-4"></div>
+  </div>
+</div>
 </div>
 <script>
         const API_BASE_URL = '/api';
@@ -98,28 +126,34 @@
                 const formDiv = document.getElementById('assessment-form');
                 const isSupervisorOrAdmin = userRole === 'supervisor' || userRole === 'admin';
                 formDiv.innerHTML = data.questions.slice(0, 10).map((q, index) => `
-                    <div class="question">
-                        <p><strong>${index + 1}. ${q.question}</strong></p>
-                        <!-- nếu bạn vẫn muốn hiển thị English, có thể thêm dòng sau: -->
-                        <!-- <p class="text-muted"><em>(${q.translate || ''})</em></p> -->
-                        <div class="score-inputs">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white mb-4">${index + 1}. ${q.question}</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label>Điểm tự chấm:</label>
-                                <input type="number" min="0" max="30" id="score-${q.id}" placeholder="Nhập điểm (0-30)">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Điểm tự chấm:</label>
+                                <input type="number" min="0" max="30" id="score-${q.id}" 
+                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white"
+                                       placeholder="Nhập điểm (0-30)">
                             </div>
                             <div>
-                                <label>Điểm từ Supervisor:</label>
-                                <input type="number" min="0" max="30" id="sup-score-${q.id}" placeholder="Nhập điểm (0-30)" ${isSupervisorOrAdmin ? '' : 'disabled'}>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Điểm từ Supervisor:</label>
+                                <input type="number" min="0" max="30" id="sup-score-${q.id}" 
+                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed"
+                                       placeholder="Nhập điểm (0-30)" ${isSupervisorOrAdmin ? '' : 'disabled'}>
                             </div>
                         </div>
-                        <div class="comment-inputs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label>Ý kiến tự đánh giá:</label>
-                                <textarea id="user-comment-${q.id}" placeholder="Nhập ý kiến của bạn cho câu hỏi này..."></textarea>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ý kiến tự đánh giá:</label>
+                                <textarea id="user-comment-${q.id}" rows="3"
+                                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white resize-none"
+                                          placeholder="Nhập ý kiến của bạn cho câu hỏi này..."></textarea>
                             </div>
                             <div>
-                                <label>Ý kiến từ Supervisor:</label>
-                                <textarea id="sup-comment-${q.id}" placeholder="Nhập ý kiến đánh giá (Supervisor)" ${isSupervisorOrAdmin ? '' : 'disabled'}></textarea>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ý kiến từ Supervisor:</label>
+                                <textarea id="sup-comment-${q.id}" rows="3"
+                                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed resize-none"
+                                          placeholder="Nhập ý kiến đánh giá (Supervisor)" ${isSupervisorOrAdmin ? '' : 'disabled'}></textarea>
                             </div>
                         </div>
                     </div>
@@ -133,7 +167,7 @@
                 updateTotalScore();
             } catch (error) {
                 debugLog('Lỗi tải câu hỏi:', error);
-                document.getElementById('assessment-form').innerHTML = '<p class="error">Không thể tải câu hỏi.</p>';
+                document.getElementById('assessment-form').innerHTML = '<p class="text-red-600 dark:text-red-400 text-center p-4">Không thể tải câu hỏi.</p>';
             }
         }
 
@@ -164,39 +198,41 @@
 
                 // Load individual assessments
                 if (data.assessments && data.assessments.length === 0) {
-                    assessmentDiv.innerHTML = '<p>Không tìm thấy kết quả đánh giá trước đây.</p>';
+                    assessmentDiv.innerHTML = '<p class="text-gray-600 dark:text-gray-400 text-center italic">Không tìm thấy kết quả đánh giá trước đây.</p>';
                 } else {
                     assessmentDiv.innerHTML = (data.assessments || data).map(a => `
-                        <div class="assessment-entry">
-                            <p class="highlight">Năm: ${a.year}, Tháng: ${a.month}</p>
-                            <p><strong>Câu hỏi:</strong> ${a.question}</p>
-                            <p><strong>Điểm tự chấm:</strong> ${a.user_score || 'N/A'}</p>
-                            <p><strong>Điểm từ Supervisor:</strong> ${a.sup_score || 'Chưa chấm'}</p>
-                            <p><strong>Ý kiến tự đánh giá:</strong> ${a.user_comment || 'Không có ý kiến'}</p>
-                            <p><strong>Ý kiến từ Supervisor:</strong> ${a.sup_comment || 'Không có ý kiến'}</p>
+                        <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg mb-4">
+                            <p class="text-blue-600 dark:text-blue-400 font-semibold mb-2">Năm: ${a.year}, Tháng: ${a.month}</p>
+                            <div class="space-y-2 text-sm">
+                                <p class="text-gray-700 dark:text-gray-300"><strong>Câu hỏi:</strong> ${a.question}</p>
+                                <p class="text-gray-700 dark:text-gray-300"><strong>Điểm tự chấm:</strong> <span class="text-green-600 dark:text-green-400">${a.user_score || 'N/A'}</span></p>
+                                <p class="text-gray-700 dark:text-gray-300"><strong>Điểm từ Supervisor:</strong> <span class="text-blue-600 dark:text-blue-400">${a.sup_score || 'Chưa chấm'}</span></p>
+                                <p class="text-gray-700 dark:text-gray-300"><strong>Ý kiến tự đánh giá:</strong> ${a.user_comment || 'Không có ý kiến'}</p>
+                                <p class="text-gray-700 dark:text-gray-300"><strong>Ý kiến từ Supervisor:</strong> ${a.sup_comment || 'Không có ý kiến'}</p>
+                            </div>
                         </div>
-                    `).join('<hr>');
+                    `).join('');
                 }
 
                 // Load total scores
                 if (data.total_score) {
                     totalScoreTableBody.innerHTML = `
-                        <tr>
-                            <td>${data.total_score.year}</td>
-                            <td>${data.total_score.month}</td>
-                            <td>${data.total_score.user_total_score || 0}</td>
-                            <td>${data.total_score.sup_total_score || 0}</td>
-                            <td>${data.total_score.pri_total_score || 'Chưa có'}</td>
-                            <td>${data.total_score.pri_comment || 'Chưa có'}</td>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-300">${data.total_score.year}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-300">${data.total_score.month}</td>
+                            <td class="px-4 py-3 text-sm text-green-600 dark:text-green-400 font-semibold">${data.total_score.user_total_score || 0}</td>
+                            <td class="px-4 py-3 text-sm text-blue-600 dark:text-blue-400 font-semibold">${data.total_score.sup_total_score || 0}</td>
+                            <td class="px-4 py-3 text-sm text-purple-600 dark:text-purple-400 font-semibold">${data.total_score.pri_total_score || 'Chưa có'}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-300">${data.total_score.pri_comment || 'Chưa có'}</td>
                         </tr>
                     `;
                 } else {
-                    totalScoreTableBody.innerHTML = '<tr><td colspan="6">Không tìm thấy tổng điểm.</td></tr>';
+                    totalScoreTableBody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400 italic">Không tìm thấy tổng điểm.</td></tr>';
                 }
             } catch (error) {
                 debugLog('Lỗi tải đánh giá trước:', error);
-                document.getElementById('last-assessment').innerHTML = '<p class="error">Hãy hoàn thành bảng đánh giá thángtháng.</p>';
-                document.getElementById('total-score-table-body').innerHTML = '<tr><td colspan="6">Lỗi khi tải tổng điểm.</td></tr>';
+                document.getElementById('last-assessment').innerHTML = '<p class="text-red-600 dark:text-red-400 text-center p-4">Hãy hoàn thành bảng đánh giá tháng.</p>';
+                document.getElementById('total-score-table-body').innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-red-500 dark:text-red-400">Lỗi khi tải tổng điểm.</td></tr>';
             }
         }
 
@@ -231,7 +267,7 @@
             });
             debugLog('Gửi dữ liệu:', { ten_tk: tenTk, year, month, scores, user_total_score: userTotalScore, sup_total_score: supTotalScore });
             if (scores.length === 0) {
-                document.getElementById('form-message').innerHTML = '<p class="error">Vui lòng nhập ít nhất một điểm số.</p>';
+                document.getElementById('form-message').innerHTML = '<p class="text-red-600 dark:text-red-400 text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">Vui lòng nhập ít nhất một điểm số.</p>';
                 return;
             }
 
@@ -251,7 +287,7 @@
                 const data = await response.json();
                 debugLog('Kết quả gửi:', data);
                 if (!response.ok) throw new Error(data.message || 'Lỗi khi gửi đánh giá');
-                document.getElementById('form-message').innerHTML = '<p class="success">Đánh giá đã được gửi thành công!</p>';
+                document.getElementById('form-message').innerHTML = '<p class="text-green-600 dark:text-green-400 text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">Đánh giá đã được gửi thành công!</p>';
                 questionInputs.forEach(inputGroup => {
                     const questionId = inputGroup.querySelector('input[type="number"]').id.split('-')[1];
                     inputGroup.querySelector(`#score-${questionId}`).value = '';
@@ -264,12 +300,30 @@
                 loadLastAssessment();
             } catch (error) {
                 debugLog('Lỗi gửi đánh giá:', error);
-                document.getElementById('form-message').innerHTML = '<p class="error">Không thể gửi đánh giá.</p>';
+                document.getElementById('form-message').innerHTML = '<p class="text-red-600 dark:text-red-400 text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">Không thể gửi đánh giá.</p>';
             }
         }
 
         async function init() {
             debugLog('Khởi tạo trang');
+            
+            // Listen for dark mode messages from parent
+            window.addEventListener('message', (event) => {
+                if (event.data.type === 'darkModeToggle') {
+                    if (event.data.isDark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                }
+            });
+            
+            // Initialize dark mode based on localStorage
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+            }
+            
             const isOpen = await checkAssessmentPeriod();
             if (isOpen) {
                 await loadQuestions();
@@ -282,5 +336,5 @@
         document.getElementById("epa-title").innerText = `Tự Đánh Giá EPA - ${monthDisplay} - ${tenTk}`;
         window.onload = init;
     </script>
-</div></div></div></body>
+</div></body>
 </html>

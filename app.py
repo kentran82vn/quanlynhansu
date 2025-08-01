@@ -29,10 +29,10 @@ app.register_blueprint(bangdanhgiaepa_bp)
 def index():
     """Route gốc - điểm vào chính của ứng dụng"""
     if "user" not in session:
-        # Nếu chưa đăng nhập, chuyển đến trang login
+        # Neu chua dang nhap, chuyen den trang login
         return redirect("/login")
     else:
-        # Nếu đã đăng nhập, chuyển đến dashboard
+        # Neu da dang nhap, chuyen den dashboard
         return redirect("/dashboard")
 def log_action(user_ten_tk, action, target_table=None, target_staff_id=None):
     conn = get_conn()
@@ -44,7 +44,7 @@ def log_action(user_ten_tk, action, target_table=None, target_staff_id=None):
             """, (user_ten_tk, action, target_table, target_staff_id))
         conn.commit()
     except Exception as e:
-        print("❌ Failed to log action:", e)
+        print("Failed to log action:", e)
     finally:
         conn.close()
 
@@ -54,6 +54,29 @@ def parse_date(d):
     except:
         return None
 
+def get_epa_classification(pri_score, sup_score):
+    """
+    Tính xếp loại EPA dựa trên điểm số với logic ưu tiên:
+    1. Ưu tiên điểm HT/PHT (pri_score) nếu có
+    2. Fallback về điểm TGV (sup_score) nếu chưa có điểm HT/PHT
+    3. Thang điểm: 95-100: Xuất Sắc, 90-94: Tốt, 80-89: Hoàn Thành, ≤79: Chưa Hoàn Thành
+    """
+    # Ưu tiên điểm HT/PHT trước
+    final_score = pri_score if pri_score is not None else sup_score
+    
+    if final_score is None:
+        return None
+    elif final_score <= 79:
+        return 'Chưa Hoàn Thành'
+    elif 80 <= final_score <= 89:
+        return 'Hoàn Thành Nhiệm Vụ'
+    elif 90 <= final_score <= 94:
+        return 'Hoàn Thành Tốt Nhiệm Vụ'
+    elif 95 <= final_score <= 100:
+        return 'Hoàn Thành Xuất Sắc Nhiệm Vụ'
+    else:
+        return 'Không xác định'
+
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory('static', filename)
@@ -62,7 +85,7 @@ def static_files(filename):
 def login():
     conn = get_conn()
 
-    # ✅ Tạo admin mặc định nếu chưa có tài khoản admin nào
+    # Tao admin mac dinh neu chua co tai khoan admin nao
     with conn.cursor() as cursor:
         cursor.execute("SELECT COUNT(*) AS count FROM tk WHERE nhom = 'admin'")
         result = cursor.fetchone()
@@ -78,9 +101,9 @@ def login():
                 "system"
             ))
             conn.commit()
-            print("✅ Đã tạo tài khoản admin mặc định: admin / admin123")
+            # print("Da tao tai khoan admin mac dinh: admin / admin123")
 
-    # ✅ Xử lý đăng nhập
+    # Xu ly dang nhap
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -96,7 +119,7 @@ def login():
                 user["ngay_hh"].strftime("%Y-%m-%d") if user["ngay_hh"] else "Unexpired"
             )
 
-            print(f"✅ Logged in as: {session['user']} (role: {session['role']})")
+            # print(f"Logged in as: {session['user']} (role: {session['role']})")
 
             conn.close()
             return redirect("/dashboard")
@@ -135,70 +158,94 @@ def employees():
             password_expiry=session.get("password_expiry")
         )
 
-# Thêm dữ liệu mới cho giáo viên và học sinh
+# Them du lieu moi cho giao vien va hoc sinh
 @app.route("/add", methods=["POST"])
 def add_employee():
+    # Enhanced input validation
+    if not request.is_json:
+        return jsonify({"status": "error", "message": "Content-Type phải là application/json"}), 400
+        
     data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "Dữ liệu JSON không hợp lệ"}), 400
+        
     dept = data.get("Dept", "GV").upper()
+    
+    # Department validation
+    if dept not in ["GV", "HS"]:
+        return jsonify({"status": "error", "message": "Department phải là GV hoặc HS"}), 400
 
     if dept == "GV":
-        staff_id = data.get("Ma Gv")
-        full_name = data.get("Ho Va Ten")
+        staff_id = str(data.get("Ma Gv", "")).strip()
+        full_name = str(data.get("Ho Va Ten", "")).strip()
         ten_tk = (data.get("Ten Tk") or "").strip().lower()
 
+        # Enhanced validation
         if not staff_id or not full_name:
             return jsonify({"status": "error", "message": "Missing Staff ID or Full Name"}), 400
+            
+        if len(staff_id) > 50:  # Reasonable limit
+            return jsonify({"status": "error", "message": "Mã giáo viên quá dài"}), 400
+            
+        if len(full_name) > 255:  # Database limit
+            return jsonify({"status": "error", "message": "Họ tên quá dài"}), 400
 
         conn = get_conn()
-        with conn.cursor() as cursor:
-            # ✅ Kiểm tra và tạo tài khoản trong bảng `tk` nếu chưa tồn tại
-            if ten_tk:
-                cursor.execute("SELECT 1 FROM tk WHERE ten_tk = %s", (ten_tk,))
-                if not cursor.fetchone():
-                    cursor.execute("INSERT INTO tk (ten_tk, nhom) VALUES (%s, %s)", (ten_tk, "user"))
-                    log_action(user_ten_tk=session.get("user", "user"),
-                               target_table="tk",
-                               target_staff_id=ten_tk,
-                               action=f"Created login account for teacher")
+        try:
+            with conn.cursor() as cursor:
+                # Kiem tra va tao tai khoan trong bang tk neu chua ton tai
+                if ten_tk:
+                    cursor.execute("SELECT 1 FROM tk WHERE ten_tk = %s", (ten_tk,))
+                    if not cursor.fetchone():
+                        cursor.execute("INSERT INTO tk (ten_tk, nhom) VALUES (%s, %s)", (ten_tk, "user"))
+                        log_action(user_ten_tk=session.get("user", "user"),
+                                   target_table="tk",
+                                   target_staff_id=ten_tk,
+                                   action=f"Created login account for teacher")
 
-            # ✅ Kiểm tra trùng mã giáo viên
-            cursor.execute("SELECT 1 FROM giaovien WHERE ma_gv = %s", (staff_id,))
-            if cursor.fetchone():
-                return jsonify({"status": "error", "message": f"Staff ID '{staff_id}' already exists"}), 400
+                # Kiem tra trung ma giao vien
+                cursor.execute("SELECT 1 FROM giaovien WHERE ma_gv = %s", (staff_id,))
+                if cursor.fetchone():
+                    return jsonify({"status": "error", "message": f"Staff ID '{staff_id}' already exists"}), 400
 
-            # ✅ Thêm giáo viên
-            cursor.execute("""
-                INSERT INTO giaovien (
-                    ma_gv, ho_va_ten, ten_tk, chuc_vu, ngay_sinh, que_quan, cccd,
-                    ngay_cap, mst, cmnd, so_bh, sdt, tk_nh, email, nhom_mau, dia_chi
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (
-                staff_id,
-                full_name,
-                ten_tk,
-                data.get("Chuc Vu"),
-                parse_date(data.get("Ngay Sinh")),
-                data.get("Que Quan"),
-                data.get("Cccd"),
-                parse_date(data.get("Ngay Cap")),
-                data.get("Mst"),
-                data.get("Cmnd"),
-                data.get("So Bh"),
-                data.get("Sdt"),
-                data.get("Tk Nh"),
-                data.get("Email"),
-                data.get("Nhom Mau"),
-                data.get("Dia Chi")
-            ))
+                # Them giao vien
+                cursor.execute("""
+                    INSERT INTO giaovien (
+                        ma_gv, ho_va_ten, ten_tk, chuc_vu, ngay_sinh, que_quan, cccd,
+                        ngay_cap, mst, cmnd, so_bh, sdt, tk_nh, email, nhom_mau, dia_chi
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    staff_id,
+                    full_name,
+                    ten_tk,
+                    data.get("Chuc Vu"),
+                    parse_date(data.get("Ngay Sinh")),
+                    data.get("Que Quan"),
+                    data.get("Cccd"),
+                    parse_date(data.get("Ngay Cap")),
+                    data.get("Mst"),
+                    data.get("Cmnd"),
+                    data.get("So Bh"),
+                    data.get("Sdt"),
+                    data.get("Tk Nh"),
+                    data.get("Email"),
+                    data.get("Nhom Mau"),
+                    data.get("Dia Chi")
+                ))
 
-            log_action(user_ten_tk=session.get("user", "user"),
-                       target_table="giaovien",
-                       target_staff_id=staff_id,
-                       action=f"Added GV staff {full_name}")
+                log_action(user_ten_tk=session.get("user", "user"),
+                           target_table="giaovien",
+                           target_staff_id=staff_id,
+                           action=f"Added GV staff {full_name}")
 
-        conn.commit()
-        conn.close()
-        return jsonify({"status": "ok"})
+            conn.commit()
+            return jsonify({"status": "ok"})
+        except Exception as e:
+            conn.rollback()
+            app.logger.error(f"Error in add_employee (GV): {str(e)}")
+            return jsonify({"status": "error", "message": "Đã xảy ra lỗi khi thêm giáo viên"}), 500
+        finally:
+            conn.close()
 
     elif dept == "HS":
         student_id = data.get("Ma Hs")
@@ -254,10 +301,10 @@ def delete_employee():
     try:
         with conn.cursor() as cursor:
             if dept == "GV":
-                # ❗ Chỉ xóa liên kết ở lop_gv
+                #  Chi xoa lien ket o lop_gv
                 cursor.execute("DELETE FROM lop_gv WHERE ma_gv = %s", (staff_id,))
             
-            # Xóa chính ở bảng giáo viên/học sinh
+            # Xoa chinh o bang giao vien/hoc sinh
             cursor.execute(f"DELETE FROM {table} WHERE {key} = %s", (staff_id,))
             if cursor.rowcount > 0:
                 log_action(user_ten_tk=session.get("user", "system"),
@@ -422,11 +469,16 @@ def api_employees():
         return jsonify({"error": "Invalid department"}), 400
 
     conn = get_conn()
-    with conn.cursor() as cursor:
-        cursor.execute(query)
-        rows = cursor.fetchall()
-    conn.close()
-    return jsonify({"rows": rows})
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+        return jsonify({"rows": rows})
+    except Exception as e:
+        app.logger.error(f"Error in api_employees: {str(e)}")
+        return jsonify({"error": "Đã xảy ra lỗi khi lấy dữ liệu nhân viên"}), 500
+    finally:
+        conn.close()
 
 # Update schema info
 @app.route("/update-database", methods=["POST"])
@@ -484,7 +536,7 @@ def view_stats():
         cursor.execute("SELECT COUNT(*) AS total FROM giaovien")
         total = cursor.fetchone()["total"]
 
-        # 👉 Giả định bạn thống kê theo chức vụ
+        #  Gia dinh ban thong ke theo chuc vu
         cursor.execute("""
             SELECT chuc_vu AS team, COUNT(*) AS count FROM giaovien
             WHERE chuc_vu IS NOT NULL AND chuc_vu != ''
@@ -495,7 +547,7 @@ def view_stats():
 
     return render_template("stats.html", total=total, team_stats=team_stats)
 
-# Route /api/epa-years (đã có sẵn và hoạt động)
+# Route /api/epa-years (da co san va hoat dong)
 @app.route('/api/epa-years', methods=['GET'])
 def get_epa_years():
     try:
@@ -511,26 +563,37 @@ def get_epa_years():
         app.logger.error(f'[DEBUG] Lỗi trong get_epa_years: {str(e)}')
         return jsonify({"message": str(e)}), 500
 
-# Route mới: /api/epa-data
+# Route moi: /api/epa-data va /api/epa-full (same functionality)
 @app.route('/api/epa-data', methods=['GET'])
+@app.route('/api/epa-full', methods=['GET'])
 def get_epa_data():
     try:
-        # Lấy thông tin từ session
+        # Lay thong tin tu session
         ten_tk = session.get('user')
         role = session.get('role')
         if not ten_tk or not role:
             return jsonify({"message": "Không có người dùng trong session"}), 401
 
-        # Lấy tham số year từ query string
+        # Lay tham so year va month tu query string
         year = request.args.get('year')
+        month = request.args.get('month')
+        
+        # Neu khong co, dung gia tri hien tai
         if not year:
-            return jsonify({"message": "Thiếu tham số năm"}), 400
+            from datetime import datetime
+            year = datetime.now().year
+        if not month:
+            from datetime import datetime  
+            month = datetime.now().month
+            
+        year = int(year)
+        month = int(month)
 
-        # Kết nối tới database
+        # Ket noi toi database
         conn = pymysql.connect(**DB_CONFIG)
         cursor = conn.cursor()
 
-        # Kiểm tra chuc_vu của user
+        # Kiem tra chuc_vu cua user
         is_supervisor_ht = False
         is_supervisor_tgv1 = False
         is_supervisor_tgv2 = False
@@ -549,43 +612,51 @@ def get_epa_data():
                 elif chuc_vu == 'TGV2':
                     is_supervisor_tgv2 = True
 
-        # Xây dựng truy vấn SQL
+        # Xay dung truy van SQL - Hiển thị TẤT CẢ giáo viên (dù có làm EPA hay chưa)
         query = """
-            SELECT t.id, t.ten_tk, g.ho_va_ten, t.year, t.month, 
-                   t.user_total_score, t.sup_total_score, t.pri_total_score, t.pri_comment
-            FROM tongdiem_epa t
-            LEFT JOIN giaovien g ON t.ten_tk = g.ten_tk
-            WHERE t.year = %s
+            SELECT t.id, g.ten_tk, g.ho_va_ten, g.chuc_vu, %s as year, %s as month,
+                   t.user_total_score, t.sup_total_score, t.pri_total_score, t.pri_comment,
+                   CASE
+                       WHEN COALESCE(t.pri_total_score, t.sup_total_score) IS NULL THEN NULL
+                       WHEN COALESCE(t.pri_total_score, t.sup_total_score) <= 79 THEN 'Chưa Hoàn Thành'
+                       WHEN COALESCE(t.pri_total_score, t.sup_total_score) >= 80 AND COALESCE(t.pri_total_score, t.sup_total_score) <= 89 THEN 'Hoàn Thành Nhiệm Vụ'
+                       WHEN COALESCE(t.pri_total_score, t.sup_total_score) >= 90 AND COALESCE(t.pri_total_score, t.sup_total_score) <= 94 THEN 'Hoàn Thành Tốt Nhiệm Vụ'
+                       WHEN COALESCE(t.pri_total_score, t.sup_total_score) >= 95 AND COALESCE(t.pri_total_score, t.sup_total_score) <= 100 THEN 'Hoàn Thành Xuất Sắc Nhiệm Vụ'
+                       ELSE 'Không xác định'
+                   END as xeploai
+            FROM giaovien g
+            LEFT JOIN tongdiem_epa t ON g.ten_tk = t.ten_tk AND t.year = %s AND t.month = %s
+            WHERE 1=1
         """
-        params = [year]
+        params = [year, month, year, month]
 
-        # Điều kiện lọc dữ liệu
+        # Dieu kien loc du lieu
         if role == 'user':
-            # Chỉ hiển thị dữ liệu của chính user
-            query += " AND t.ten_tk = %s"
+            # Chi hien thi du lieu cua chinh user  
+            query += " AND g.ten_tk = %s"
             params.append(ten_tk)
         elif role == 'supervisor':
             if is_supervisor_ht:
-                # Supervisor với chuc_vu = 'HT' thấy tất cả dữ liệu
+                # HT/PHT thay tat ca giao vien (QUAN TRONG: đây là lý do kimnhung phải thấy tất cả)
                 pass
             elif is_supervisor_tgv1:
-                # Supervisor với chuc_vu = 'TGV1' thấy dữ liệu của chính họ và user có chuc_vu = 'GV1'
-                query += " AND (t.ten_tk = %s OR g.chuc_vu = 'GV1')"
+                # TGV1 thay du lieu cua chinh ho va GV1
+                query += " AND (g.ten_tk = %s OR g.chuc_vu = 'GV1')"
                 params.append(ten_tk)
             elif is_supervisor_tgv2:
-                # Supervisor với chuc_vu = 'TGV2' thấy dữ liệu của chính họ và user có chuc_vu = 'GV2'
-                query += " AND (t.ten_tk = %s OR g.chuc_vu = 'GV2')"
+                # TGV2 thay du lieu cua chinh ho va GV2
+                query += " AND (g.ten_tk = %s OR g.chuc_vu = 'GV2')"
                 params.append(ten_tk)
             else:
-                # Supervisor không có chuc_vu phù hợp, không hiển thị gì
+                # Supervisor khong co chuc_vu phu hop
                 return jsonify([]), 200
         elif role != 'admin':
-            # Nếu không phải admin, không hiển thị gì
+            # Neu khong phai admin, khong hien thi gi
             return jsonify([]), 200
 
-        query += " ORDER BY t.month, t.ten_tk"
+        query += " ORDER BY g.chuc_vu, g.ten_tk"
 
-        # Thực thi truy vấn
+        # Thuc thi truy van
         cursor.execute(query, params)
         data = cursor.fetchall()
         cursor.close()
@@ -601,7 +672,7 @@ def get_epa_data():
 def show_data_epa():
     return render_template("data_epa.html")
 
-# Full dữ liệu bảng đánh giá của tất cả giáo viên.
+# Full du lieu bang danh gia cua tat ca giao vien.
 @app.route("/api/epa-full")
 def api_epa_full():
     conn = get_conn()
@@ -611,14 +682,22 @@ def api_epa_full():
                    e.year, e.month,
                    e.user_total_score, e.sup_total_score,
                    e.pri_total_score, e.pri_comment,
+                   -- Logic mới: Ưu tiên điểm HT/PHT, fallback về điểm TGV
+                   COALESCE(e.pri_total_score, e.sup_total_score) AS final_score,
                    CASE
-                       WHEN e.pri_total_score IS NULL THEN NULL
-                       WHEN e.pri_total_score <= 249 THEN 'CHƯA HOÀN THÀNH'
-                       WHEN e.pri_total_score <= 270 THEN 'HOÀN THÀNH'
-                       WHEN e.pri_total_score <= 280 THEN 'HOÀN THÀNH TỐT'
-                       WHEN e.pri_total_score <= 300 THEN 'HOÀN THÀNH XUẤT SẮC'
+                       WHEN COALESCE(e.pri_total_score, e.sup_total_score) IS NULL THEN NULL
+                       WHEN COALESCE(e.pri_total_score, e.sup_total_score) <= 79 THEN 'Chưa Hoàn Thành'
+                       WHEN COALESCE(e.pri_total_score, e.sup_total_score) >= 80 AND COALESCE(e.pri_total_score, e.sup_total_score) <= 89 THEN 'Hoàn Thành Nhiệm Vụ'
+                       WHEN COALESCE(e.pri_total_score, e.sup_total_score) >= 90 AND COALESCE(e.pri_total_score, e.sup_total_score) <= 94 THEN 'Hoàn Thành Tốt Nhiệm Vụ'
+                       WHEN COALESCE(e.pri_total_score, e.sup_total_score) >= 95 AND COALESCE(e.pri_total_score, e.sup_total_score) <= 100 THEN 'Hoàn Thành Xuất Sắc Nhiệm Vụ'
                        ELSE 'Không xác định'
-                   END AS xeploai
+                   END AS xeploai,
+                   -- Thêm thông tin về nguồn điểm
+                   CASE 
+                       WHEN e.pri_total_score IS NOT NULL THEN 'HT/PHT'
+                       WHEN e.sup_total_score IS NOT NULL THEN 'TGV'
+                       ELSE NULL
+                   END AS score_source
             FROM tongdiem_epa e
             LEFT JOIN giaovien g ON e.ten_tk = g.ten_tk
             ORDER BY e.year DESC, e.month DESC
@@ -626,28 +705,63 @@ def api_epa_full():
         result = cursor.fetchall()
     return jsonify(result)
 
-# Cập nhật dữ liệu điểm và comment từ Hiệu Trưởng
-@app.route("/api/update-epa-kimnhung", methods=["POST"])
-def update_epa_kimnhung():
-    # ✅ Chỉ cho phép nếu user là hiệu trưởng "kimnhung"
-    if session.get("user") != "kimnhung":
-        return jsonify({"error": "Bạn không có quyền chỉnh sửa"}), 403
+# Cap nhat du lieu diem va comment tu Hieu Truong / Pho Hieu Truong
+@app.route("/api/update-epa-principal", methods=["POST"])
+def update_epa_principal():
+    # Cho phep HT (kimnhung) va PHT (ngocquy) cham diem bat ky thang nao
+    current_user = session.get("user")
+    if current_user not in ["kimnhung", "ngocquy"]:
+        return jsonify({"error": "Chỉ Hiệu trưởng và Phó hiệu trưởng mới có quyền chấm điểm"}), 403
     data = request.get_json()
     epa_id = data.get("id")
     pri_score = data.get("pri_total_score")
     pri_comment = data.get("pri_comment", "")
+    
+    if not epa_id or pri_score is None:
+        return jsonify({"error": "Thiếu thông tin cần thiết"}), 400
+    
     conn = get_conn()
-    with conn.cursor() as cursor:
-        cursor.execute("""
-            UPDATE tongdiem_epa
-            SET pri_total_score = %s,
-                pri_comment = %s
-            WHERE id = %s
-        """, (pri_score, pri_comment, epa_id))
-        conn.commit()
-    return jsonify({"message": "Cập nhật thành công!"})
+    try:
+        with conn.cursor() as cursor:
+            # Lấy thông tin record trước khi update
+            cursor.execute("SELECT ten_tk, year, month FROM tongdiem_epa WHERE id = %s", (epa_id,))
+            record_info = cursor.fetchone()
+            
+            if not record_info:
+                return jsonify({"error": "Không tìm thấy bản ghi EPA"}), 404
+            
+            # Cập nhật điểm và nhận xét HT/PHT
+            cursor.execute("""
+                UPDATE tongdiem_epa
+                SET pri_total_score = %s,
+                    pri_comment = %s,
+                    pri_updated_by = %s,
+                    pri_updated_at = NOW()
+                WHERE id = %s
+            """, (pri_score, pri_comment, current_user, epa_id))
+            
+            # Ghi log
+            cursor.execute("""
+                INSERT INTO logs (user_ten_tk, target_staff_id, target_table, action, created_at)
+                VALUES (%s, %s, 'tongdiem_epa', %s, NOW())
+            """, (current_user, record_info['ten_tk'], 
+                  f"Chấm điểm EPA {record_info['month']}/{record_info['year']}: {pri_score} điểm"))
+            
+            conn.commit()
+            
+        return jsonify({
+            "message": f"✅ Đã cập nhật điểm {pri_score} cho {record_info['ten_tk']} (tháng {record_info['month']}/{record_info['year']})",
+            "updated_by": current_user,
+            "score": pri_score
+        })
+        
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": f"Lỗi cập nhật: {str(e)}"}), 500
+    finally:
+        conn.close()
 
-# Phần cập nhật thông tin giáo viên (GV) đang hiển thị
+# Phan cap nhat thong tin giao vien (GV) dang hien thi
 @app.route("/api/update_gv", methods=["POST"])
 def update_gv():
     data = request.get_json()
@@ -675,7 +789,7 @@ def update_gv():
     conn.close()
     return jsonify({"status": "success"}), 200
 
-# Phần cập nhật thông tin học sinh (HS) đang hiển thị
+# Phan cap nhat thong tin hoc sinh (HS) dang hien thi
 @app.route("/api/update_hs", methods=["POST"])
 def update_hs():
     data = request.get_json()
@@ -706,13 +820,13 @@ def update_hs():
 def epa_preview():
     return render_template("epa_preview.html")
 
-# Remove bảng dữ liệu trong sql -----> (Nguy hiểm ) <-----
+# Remove bang du lieu trong sql -----> (Nguy hiem ) <-----
 @app.route("/remove-dept-data", methods=["POST"])
 def remove_dept_data():
     data = request.get_json()
     dept = data.get("dept")
 
-    # Xác định bảng cần xóa
+    # Xac dinh bang can xoa
     if dept == "GV":
         table = "giaovien"
     elif dept == "HS":
@@ -723,13 +837,13 @@ def remove_dept_data():
     conn = get_conn()
     try:
         with conn.cursor() as cursor:
-            # 🚨 Tắt kiểm tra ràng buộc khóa ngoại
+            #  Tat kiem tra rang buoc khoa ngoai
             cursor.execute("SET FOREIGN_KEY_CHECKS=0")
 
-            # 🚮 Thực hiện xóa dữ liệu
+            #  Thuc hien xoa du lieu
             cursor.execute(f"DELETE FROM {table}")
 
-            # 🔒 Bật lại kiểm tra ràng buộc
+            #  Bat lai kiem tra rang buoc
             cursor.execute("SET FOREIGN_KEY_CHECKS=1")
 
         conn.commit()
@@ -741,13 +855,13 @@ def remove_dept_data():
         conn.close()
 
 
-# Phần xử lý câu hỏi EPA
+# Phan xu ly cau hoi EPA
 @app.route("/admin/questions")
 def admin_questions():
     if "user" not in session:
         return redirect("/")
     
-    # Chỉ cho phép admin hoặc kimnhung truy cập
+    # Chi cho phep admin hoac kimnhung truy cap
     user = session.get("user")
     role = session.get("role")
     if not (role == "admin" or user == "kimnhung"):
@@ -769,7 +883,7 @@ def add_or_update_question():
     if "user" not in session:
         return jsonify({"error": "Chưa đăng nhập"}), 401
     
-    # Chỉ cho phép admin hoặc kimnhung chỉnh sửa điểm
+    # Chi cho phep admin hoac kimnhung chinh sua diem
     user = session.get("user")
     role = session.get("role")
     can_edit_score = (role == "admin" or user == "kimnhung")
@@ -783,14 +897,14 @@ def add_or_update_question():
     if not question:
         return jsonify({"error": "Câu hỏi không được để trống!"}), 400
     
-    # Validate score chỉ khi user có quyền chỉnh sửa
+    # Validate score chi khi user co quyen chinh sua
     if can_edit_score and score not in [5, 10, 20]:
         return jsonify({"error": "Điểm phải là 5, 10 hoặc 20!"}), 400
         
     conn = get_conn()
     with conn.cursor() as cur:
         if id:
-            # Chỉ cập nhật điểm nếu user có quyền
+            # Chi cap nhat diem neu user co quyen
             if can_edit_score:
                 cur.execute(
                     "UPDATE cauhoi_epa SET question = %s, translate = %s, score = %s WHERE id = %s",
@@ -802,7 +916,7 @@ def add_or_update_question():
                     (question, translate, id)
                 )
         else:
-            # Khi tạo mới, chỉ set điểm nếu user có quyền
+            # Khi tao moi, chi set diem neu user co quyen
             if can_edit_score:
                 cur.execute(
                     "INSERT INTO cauhoi_epa (question, translate, score) VALUES (%s, %s, %s)",
@@ -826,7 +940,7 @@ def delete_question(id):
     conn.close()
     return jsonify({"success": True})
 
-# Tổng hợp điểm đánh giá EPA.
+# Tong hop diem danh gia EPA.
 @app.route("/epa_summary")
 def view_epa_summary():
     return render_template("epa_summary.html")
@@ -882,24 +996,24 @@ def api_epa_monthly_all():
         })
     return jsonify(result)
 
-#Đọc dữ liệu bảng để lấy danh sách mã
+#Doc du lieu bang de lay danh sach ma
 @app.route("/api/danh-sach-ma")
 def api_danh_sach_ma():
     conn = get_conn()
     result = {"maGVList": [], "maLopList": []}
     try:
         with conn.cursor() as cursor:
-            # Lấy danh sách mã giáo viên
+            # Lay danh sach ma giao vien
             cursor.execute("SELECT ma_gv FROM giaovien")
             result["maGVList"] = [row["ma_gv"] for row in cursor.fetchall()]
-            # Lấy danh sách mã lớp
+            # Lay danh sach ma lop
             cursor.execute("SELECT ma_lop FROM ds_lop")
             result["maLopList"] = [row["ma_lop"] for row in cursor.fetchall()]
     finally:
         conn.close()
     return jsonify(result)
 
-# 📄 ROUTE RENDER TEMPLATE
+#  ROUTE RENDER TEMPLATE
 @app.route("/classes")
 def classes_page():
     return render_template("classes.html")
@@ -912,7 +1026,7 @@ def assign_classes_page():
 def assign_teachers_page():
     return render_template("assign_teachers.html")
 
-# API: Lấy danh sách lớp
+# API: Lay danh sach lop
 @app.route("/api/classes", methods=["GET"])
 def get_classes():
     conn = get_conn()
@@ -929,18 +1043,18 @@ def delete_class():
     conn = get_conn()
     try:
         with conn.cursor() as cur:
-            # Xoá giáo viên gán với lớp đó
+            # Xoa giao vien gan voi lop do
             cur.execute("DELETE FROM lop_gv WHERE ma_lop = %s", (ma_lop,))
-            # Xoá học sinh phân lớp (nếu có)
+            # Xoa hoc sinh phan lop (neu co)
             cur.execute("DELETE FROM phan_lop WHERE ma_lop = %s", (ma_lop,))
-            # Xoá lớp
+            # Xoa lop
             cur.execute("DELETE FROM ds_lop WHERE ma_lop = %s", (ma_lop,))
             conn.commit()
         return jsonify({"message": f"Đã xoá lớp {ma_lop} và dữ liệu liên quan"})
     finally:
         conn.close()
 
-# API: Thêm lớp mới
+# API: Them lop moi
 @app.route("/api/classes", methods=["POST"])
 def add_class():
     data = request.json
@@ -951,7 +1065,7 @@ def add_class():
     conn.close()
     return jsonify({"message": "Lớp đã thêm"})
 
-# Cập nhật nút sửa tên lớp
+# Cap nhat nut sua ten lop
 @app.route("/api/update-class", methods=["POST"])
 def update_class():
     data = request.get_json()
@@ -969,7 +1083,7 @@ def update_class():
     finally:
         conn.close()
 
-# Chức năng tự nhận diện số lớn nhất có trong mã HS
+# Chuc nang tu nhan dien so lon nhat co trong ma HS
 @app.route("/api/last-ma-hs-prefix", methods=["GET"])
 def get_last_ma_hs():
     prefix = request.args.get("prefix", "HS").upper()
@@ -978,7 +1092,7 @@ def get_last_ma_hs():
         cursor.execute("SELECT ma_hs FROM hocsinh WHERE ma_hs LIKE %s", (f"{prefix}%",))
         ma_list = [row["ma_hs"] for row in cursor.fetchall()]
     conn.close()
-    # Tìm số lớn nhất
+    # Tim so lon nhat
     max_num = 0
     for m in ma_list:
         match = re.match(rf"{prefix}(\d+)", m)
@@ -988,7 +1102,7 @@ def get_last_ma_hs():
                 max_num = num
     return jsonify({"prefix": prefix, "next_num": max_num + 1})
 
-# Hiển thị gợi ý mã ma_hs tiếp theo trong input động
+# Hien thi goi y ma ma_hs tiep theo trong input dong
 @app.route("/api/next-ma-hs", methods=["GET"])
 def get_next_ma_hs():
     prefix = request.args.get("prefix", "HS").upper()
@@ -1007,7 +1121,7 @@ def get_next_ma_hs():
     next_code = f"{prefix}{str(max_num + 1).zfill(5)}"
     return jsonify({"next_ma_hs": next_code})
 
-# Hiển thị gợi ý mã ma_gv tiếp theo trong input động
+# Hien thi goi y ma ma_gv tiep theo trong input dong
 @app.route("/api/next-ma-gv", methods=["GET"])
 def get_next_ma_gv():
     prefix = request.args.get("prefix", "GV").upper()
@@ -1027,7 +1141,7 @@ def get_next_ma_gv():
     next_code = f"{prefix}{str(max_num + 1).zfill(5)}"
     return jsonify({"next_ma_gv": next_code})
 
-# API lấy danh sách học sinh kèm tên lớp
+# API lay danh sach hoc sinh kem ten lop
 @app.route("/api/students")
 def get_students():
     conn = get_conn()
@@ -1045,7 +1159,7 @@ def get_students():
     conn.close()
     return jsonify(result)
 
-# API cập nhật mã lớp cho học sinh
+# API cap nhat ma lop cho hoc sinh
 @app.route("/api/update-student-class", methods=["POST"])
 def update_student_class():
     data = request.get_json()
@@ -1053,7 +1167,7 @@ def update_student_class():
     new_ma_lop = data.get("ma_lop")
     conn = get_conn()
     with conn.cursor() as cur:
-        # ✅ Chỉ cập nhật bảng phan_lop
+        #  Chi cap nhat bang phan_lop
         cur.execute("SELECT 1 FROM phan_lop WHERE ma_hs = %s", (ma_hs,))
         if cur.fetchone():
             cur.execute("""
@@ -1079,11 +1193,11 @@ def assign_teacher():
     if not all([ma_gv, ma_lop, vai_tro]):
         return jsonify({"error": "Thiếu dữ liệu"}), 400
 
-    # 2. Mở kết nối và cursor tuple
+    # 2. Mo ket noi va cursor tuple
     conn = get_conn()
     cur  = conn.cursor()
     try:
-        # 3. Giảng viên có tồn tại?
+        # 3. Giang vien co ton tai?
         cur.execute(
             "SELECT 1 FROM giaovien WHERE ma_gv = %s LIMIT 1",
             (ma_gv,)
@@ -1091,7 +1205,7 @@ def assign_teacher():
         if cur.fetchone() is None:
             return jsonify({"error": "Giáo viên không tồn tại"}), 404
 
-        # 4. Lớp có tồn tại?
+        # 4. Lop co ton tai?
         cur.execute(
             "SELECT 1 FROM ds_lop WHERE ma_lop = %s LIMIT 1",
             (ma_lop,)
@@ -1099,7 +1213,7 @@ def assign_teacher():
         if cur.fetchone() is None:
             return jsonify({"error": "Lớp không tồn tại"}), 404
 
-        # 5. Đã phân công chưa?
+        # 5. Da phan cong chua?
         cur.execute(
             "SELECT 1 FROM lop_gv WHERE ma_lop = %s AND ma_gv = %s LIMIT 1",
             (ma_lop, ma_gv)
@@ -1107,14 +1221,14 @@ def assign_teacher():
         if cur.fetchone() is not None:
             return jsonify({"error": "Đã phân công rồi"}), 409
 
-        # 6. Thêm phân công mới
+        # 6. Them phan cong moi
         cur.execute(
             "INSERT INTO lop_gv (ma_lop, ma_gv, vai_tro) VALUES (%s, %s, %s)",
             (ma_lop, ma_gv, vai_tro)
         )
         conn.commit()
 
-        # 7. (Tuỳ chọn) Ghi log
+        # 7. (Tuy chon) Ghi log
         user = session.get("user_ten_tk")
         if user:
             action = f"Assigned teacher {ma_gv} to class {ma_lop} as {vai_tro}"
@@ -1125,19 +1239,19 @@ def assign_teacher():
             )
             conn.commit()
 
-        # 8. Thành công
+        # 8. Thanh cong
         return jsonify({"message": "Gán giáo viên thành công"}), 201
 
     except Exception as e:
-        # Trả lỗi chi tiết để debug nếu cần
+        # Tra loi chi tiet de debug neu can
         return jsonify({"error": str(e)}), 500
 
     finally:
-        # luôn đóng tài nguyên
+        # luon dong tai nguyen
         cur.close()
         conn.close()
 
-# API: Phân lớp học sinh
+# API: Phan lop hoc sinh
 @app.route("/api/assign-class", methods=["POST"])
 def assign_class():
     data = request.json
@@ -1147,20 +1261,20 @@ def assign_class():
         return jsonify({"error": "Thiếu mã học sinh hoặc mã lớp"}), 400
     conn = get_conn()
     with conn.cursor() as cur:
-        # Kiểm tra học sinh đã được phân lớp chưa
+        # Kiem tra hoc sinh da duoc phan lop chua
         cur.execute("SELECT * FROM phan_lop WHERE ma_hs = %s", (ma_hs,))
         existing = cur.fetchone()
         if existing:
-            # Cập nhật phân lớp
+            # Cap nhat phan lop
             cur.execute("UPDATE phan_lop SET ma_lop = %s WHERE ma_hs = %s", (ma_lop, ma_hs))
         else:
-            # Thêm mới phân lớp
+            # Them moi phan lop
             cur.execute("INSERT INTO phan_lop (ma_hs, ma_lop) VALUES (%s, %s)", (ma_hs, ma_lop))
         conn.commit()
     conn.close()
     return jsonify({"message": "Đã gán học sinh vào lớp thành công"})
 
-# API: Lấy danh sách giáo viên
+# API: Lay danh sach giao vien
 @app.route("/api/teachers", methods=["GET"])
 def get_teachers():
     conn = get_conn()
@@ -1170,7 +1284,7 @@ def get_teachers():
     conn.close()
     return jsonify(result)
 
-# API: Gán giáo viên cho lớp
+# API: Gan giao vien cho lop
 @app.route("/api/assigned-teachers", methods=["GET"])
 def get_assigned_teachers():
     conn = get_conn()
@@ -1186,7 +1300,7 @@ def get_assigned_teachers():
     conn.close()
     return jsonify(rows)
 
-#API: Cập nhật vai trò hoặc lớp học
+#API: Cap nhat vai tro hoac lop hoc
 @app.route("/api/update-assignment", methods=["POST"])
 def update_assignment():
     data = request.get_json()
@@ -1198,7 +1312,7 @@ def update_assignment():
     conn = get_conn()
     with conn.cursor() as cur:
         if field == "ma_lop":
-            # Khi đổi lớp, cần biết lớp cũ để cập nhật đúng dòng
+            # Khi doi lop, can biet lop cu de cap nhat dung dong
             cur.execute("SELECT ma_lop FROM lop_gv WHERE ma_gv = %s", (ma_gv,))
             old = cur.fetchone()
             if not old:
@@ -1218,7 +1332,7 @@ def update_assignment():
     conn.close()
     return jsonify({"message": "Đã cập nhật"})
 
-#API: Xóa phân công giáo viên khỏi lớp
+#API: Xoa phan cong giao vien khoi lop
 @app.route("/api/delete-assignment", methods=["POST"])
 def delete_assignment():
     data = request.get_json()
@@ -1238,17 +1352,213 @@ def delete_assignment():
 def view_export_data():
     return render_template("export_data.html")
 
-# THời gian mở EPA  
+@app.route("/export-excel/<dept>")
+def export_excel(dept):
+    """Xuất dữ liệu ra file Excel với định dạng đẹp"""
+    try:
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.utils.dataframe import dataframe_to_rows
+        import pandas as pd
+        from io import BytesIO
+        from flask import send_file
+        
+        # Kết nối database  
+        conn = get_conn()
+        
+        # Tạo workbook mới
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        
+        if dept.upper() == 'HS':
+            # Lấy dữ liệu học sinh
+            query = """
+            SELECT ma_hs, ho_va_ten, ngay_sinh, gioi_tinh, dan_toc, ma_dinh_danh,
+                   ho_ten_bo, nghe_nghiep_bo, ho_ten_me, nghe_nghiep_me, 
+                   ho_khau, cccd_bo_me, sdt
+            FROM hocsinh 
+            ORDER BY ho_va_ten
+            """
+            
+            with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+                cursor.execute(query)
+                data = cursor.fetchall()
+            
+            # Thiết lập tiêu đề
+            ws.title = "Danh Sách Học Sinh"
+            headers = ['STT', 'Mã HS', 'Họ và Tên', 'Ngày Sinh', 'Giới Tính', 'Dân Tộc', 
+                      'Mã Định Danh', 'Họ Tên Bố', 'Nghề Nghiệp Bố', 'Họ Tên Mẹ', 
+                      'Nghề Nghiệp Mẹ', 'Hộ Khẩu', 'CCCD Bố/Mẹ', 'SĐT']
+            filename = 'danh_sach_hoc_sinh.xlsx'
+            
+        elif dept.upper() == 'GV':
+            # Lấy dữ liệu giáo viên
+            query = """
+            SELECT ma_gv, ho_va_ten, ten_tk, chuc_vu, ngay_sinh, que_quan,
+                   cccd, ngay_cap, mst, cmnd, so_bh, sdt, tk_nh, email, nhom_mau, dia_chi
+            FROM giaovien 
+            ORDER BY ho_va_ten
+            """
+            
+            with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+                cursor.execute(query)
+                data = cursor.fetchall()
+            
+            # Thiết lập tiêu đề
+            ws.title = "Danh Sách Giáo Viên"
+            headers = ['STT', 'Mã GV', 'Họ và Tên', 'Tên TK', 'Chức Vụ', 'Ngày Sinh', 
+                      'Quê Quán', 'CCCD', 'Ngày Cấp', 'MST', 'CMND', 'Số BH', 
+                      'SĐT', 'TK NH', 'Email', 'Nhóm Máu', 'Địa Chỉ']
+            filename = 'danh_sach_giao_vien.xlsx'
+        else:
+            conn.close()
+            return jsonify({"error": "Loại dữ liệu không hợp lệ"}), 400
+        
+        conn.close()
+        
+        # Thêm tiêu đề chính
+        ws.merge_cells(f'A1:{chr(ord("A") + len(headers) - 1)}1')
+        title_cell = ws['A1']
+        title_cell.value = f'DANH SÁCH {dept.upper() == "HS" and "HỌC SINH" or "GIÁO VIÊN"}'
+        title_cell.font = Font(name='Times New Roman', size=16, bold=True, color='FFFFFF')
+        title_cell.alignment = Alignment(horizontal='center', vertical='center')
+        title_cell.fill = PatternFill(start_color='2E75B6', end_color='2E75B6', fill_type='solid')
+        
+        # Thêm thông tin trường
+        ws.merge_cells(f'A2:{chr(ord("A") + len(headers) - 1)}2')
+        school_cell = ws['A2']
+        school_cell.value = 'TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG'
+        school_cell.font = Font(name='Times New Roman', size=12, bold=True)
+        school_cell.alignment = Alignment(horizontal='center', vertical='center')
+        
+        # Tăng chiều cao hàng tiêu đề
+        ws.row_dimensions[1].height = 25
+        ws.row_dimensions[2].height = 20
+        ws.row_dimensions[3].height = 5  # Hàng trống
+        
+        # Thêm headers
+        for col_idx, header in enumerate(headers, 1):
+            cell = ws.cell(row=4, column=col_idx, value=header)
+            cell.font = Font(name='Times New Roman', size=11, bold=True, color='FFFFFF')
+            cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+            cell.fill = PatternFill(start_color='4472C4', end_color='4472C4', fill_type='solid')
+            cell.border = Border(
+                left=Side(style='thin'),
+                right=Side(style='thin'),
+                top=Side(style='thin'),
+                bottom=Side(style='thin')
+            )
+        
+        # Thêm dữ liệu
+        for row_idx, row_data in enumerate(data, 5):
+            # STT
+            stt_cell = ws.cell(row=row_idx, column=1, value=row_idx - 4)
+            stt_cell.alignment = Alignment(horizontal='center', vertical='center')
+            stt_cell.font = Font(name='Times New Roman', size=10)
+            stt_cell.border = Border(
+                left=Side(style='thin'),
+                right=Side(style='thin'), 
+                top=Side(style='thin'),
+                bottom=Side(style='thin')
+            )
+            
+            # Dữ liệu theo thứ tự columns trong query
+            if dept.upper() == 'HS':
+                column_keys = ['ma_hs', 'ho_va_ten', 'ngay_sinh', 'gioi_tinh', 'dan_toc', 'ma_dinh_danh',
+                              'ho_ten_bo', 'nghe_nghiep_bo', 'ho_ten_me', 'nghe_nghiep_me', 
+                              'ho_khau', 'cccd_bo_me', 'sdt']
+            else:
+                column_keys = ['ma_gv', 'ho_va_ten', 'ten_tk', 'chuc_vu', 'ngay_sinh', 'que_quan',
+                              'cccd', 'ngay_cap', 'mst', 'cmnd', 'so_bh', 'sdt', 'tk_nh', 'email', 'nhom_mau', 'dia_chi']
+            
+            for col_idx, key in enumerate(column_keys, 2):
+                value = row_data.get(key, '')
+                cell = ws.cell(row=row_idx, column=col_idx, value=value)
+                cell.font = Font(name='Times New Roman', size=10)
+                cell.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True)
+                
+                # Định dạng ngày tháng
+                if 'ngay' in key and value:
+                    try:
+                        from datetime import datetime
+                        if hasattr(value, 'strftime'):
+                            # Nếu là datetime object
+                            cell.value = value.strftime('%d/%m/%Y')
+                        elif isinstance(value, str):
+                            # Nếu là string
+                            date_obj = datetime.strptime(str(value)[:10], '%Y-%m-%d')
+                            cell.value = date_obj.strftime('%d/%m/%Y')
+                    except:
+                        pass
+                
+                # Border cho tất cả các cell
+                cell.border = Border(
+                    left=Side(style='thin'),
+                    right=Side(style='thin'),
+                    top=Side(style='thin'),
+                    bottom=Side(style='thin')
+                )
+                
+                # Zebra striping
+                if row_idx % 2 == 0:
+                    cell.fill = PatternFill(start_color='F2F2F2', end_color='F2F2F2', fill_type='solid')
+            
+            # Zebra striping cho cột STT
+            if row_idx % 2 == 0:
+                stt_cell.fill = PatternFill(start_color='F2F2F2', end_color='F2F2F2', fill_type='solid')
+        
+        # Tự động điều chỉnh độ rộng cột
+        for column_cells in ws.columns:
+            max_length = 0
+            column_letter = None
+            for cell in column_cells:
+                try:
+                    # Skip merged cells
+                    if hasattr(cell, 'coordinate') and cell.coordinate in ws.merged_cells:
+                        continue 
+                    if hasattr(cell, 'column_letter'):
+                        column_letter = cell.column_letter
+                    if cell.value and len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            if column_letter:
+                adjusted_width = min(max_length + 2, 30)  # Tối đa 30 ký tự
+                ws.column_dimensions[column_letter].width = max(adjusted_width, 12)  # Tối thiểu 12
+        
+        # Cố định hàng tiêu đề
+        ws.freeze_panes = 'A5'
+        
+        # Lưu file vào memory
+        output = BytesIO()
+        wb.save(output)
+        output.seek(0)
+        
+        return send_file(
+            output,
+            as_attachment=True,
+            download_name=filename,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        
+    except ImportError:
+        return jsonify({
+            "error": "Thư viện openpyxl chưa được cài đặt. Chạy: pip install openpyxl pandas"
+        }), 500
+    except Exception as e:
+        return jsonify({"error": f"Lỗi xuất Excel: {str(e)}"}), 500
+
+# THoi gian mo EPA  
 def open_browser():
-    # Sử dụng protocol-relative URL hoặc để browser tự detect
+    # Su dung protocol-relative URL hoac de browser tu detect
     import socket
     try:
-        # Kiểm tra xem có đang chạy trên HTTPS không
+        # Kiem tra xem co dang chay tren HTTPS khong
         webbrowser.open("http://localhost:5000")
     except Exception as e:
-        print(f"❌ Could not open browser: {e}")
+        print(f" Could not open browser: {e}")
 
-#Hàm đổi mật khẩu user đang logging
+#Ham doi mat khau user dang logging
 @app.route('/change-password', methods=['POST'])
 def change_password():
     data = request.get_json()
@@ -1274,14 +1584,20 @@ def change_password():
     finally:
         conn.close()
 
-#Bảng đánh giá dành cho tổ trưởng 
+#Bang danh gia danh cho to truong 
 @app.route('/sup-epa-score')
 def sup_epa_score():
     from datetime import datetime
     import pymysql
 
     user = session.get('user')
+    role = session.get('role', '')
+    
+    # DEBUG: Log session info
+    print(f"[DEBUG] sup-epa-score accessed by user='{user}', role='{role}'")
+    
     if not user:
+        print(f"[DEBUG] No user in session, redirecting to login")
         return redirect('/login')
 
     now = datetime.now()
@@ -1291,22 +1607,63 @@ def sup_epa_score():
     conn = pymysql.connect(**DB_CONFIG)
     try:
         with conn.cursor(pymysql.cursors.DictCursor) as cursor:
-            # 📌 Lấy chức vụ của user
+            # Kiểm tra quyền supervisor EPA thay vì chuc_vu
+            cursor.execute("""
+                SELECT make_epa_tgv, make_epa_all FROM thoigianmoepa WHERE ten_tk = %s
+            """, (user,))
+            epa_record = cursor.fetchone()
+            
+            print(f"[DEBUG] EPA record for {user}: {epa_record}")
+            
+            # Kiểm tra quyền supervisor EPA
+            can_supervise = False
+            if epa_record:
+                if epa_record['make_epa_all'] == 'yes':
+                    can_supervise = True
+                    print(f"[DEBUG] Access granted: make_epa_all = yes")
+                elif role == 'supervisor' and epa_record['make_epa_tgv'] == 'yes':
+                    can_supervise = True
+                    print(f"[DEBUG] Access granted: role=supervisor AND make_epa_tgv=yes")
+                else:
+                    print(f"[DEBUG] Access check failed: role={role}, make_epa_tgv={epa_record['make_epa_tgv']}")
+            else:
+                print(f"[DEBUG] No EPA record found for user {user}")
+            
+            # Admin luôn được phép
+            if role == 'admin':
+                can_supervise = True
+                print(f"[DEBUG] Access granted: role = admin")
+                
+            if not can_supervise:
+                print(f"[DEBUG] RETURNING 403: can_supervise = {can_supervise}")
+                return "Bạn không có quyền xem trang này", 403
+                
+            print(f"[DEBUG] Permission check passed for {user}")
+
+            # Lấy chuc_vu để xác định nhóm cần đánh giá  
             cursor.execute("""
                 SELECT chuc_vu FROM giaovien WHERE ten_tk=%s
             """, (user,))
             row = cursor.fetchone()
             if not row:
-                return "Không tìm thấy người dùng", 404
+                return "Không tìm thấy thông tin giáo viên", 404
 
             chuc_vu = row['chuc_vu']
-            if not chuc_vu.startswith("TGV"):
-                return "Bạn không có quyền xem trang này", 403
+            
+            # Xác định target_chuc_vu dựa trên chuc_vu hiện tại
+            if chuc_vu.startswith("TGV"):
+                # TGV -> quản lý GV cùng tổ (cùng số)
+                suffix = chuc_vu[3:]  # ví dụ: '2' từ 'TGV2'
+                target_chuc_vu = f"GV{suffix}"
+            elif chuc_vu.startswith("GV"):
+                # GV -> có thể được phép chấm điểm cho GV cùng tổ
+                suffix = chuc_vu[2:]  # ví dụ: '1' từ 'GV1'
+                target_chuc_vu = f"GV{suffix}"
+            else:
+                # Chức vụ khác -> không xác định được tổ, từ chối
+                return f"Không xác định được tổ cho chức vụ '{chuc_vu}'", 403
 
-            suffix = chuc_vu[3:]  # ví dụ: '2' từ 'TGV2'
-            target_chuc_vu = f"GV{suffix}"
-
-            # 📌 Lấy danh sách tổ viên và trạng thái đánh giá từ tongdiem_epa
+            #  Lay danh sach thanh vien cung to va trang thai danh gia tu tongdiem_epa
             cursor.execute("""
                 SELECT g.ten_tk, g.ho_va_ten, g.chuc_vu,
                        t.user_total_score,
@@ -1373,7 +1730,7 @@ def update_sup_epa():
         with conn.cursor(pymysql.cursors.DictCursor) as cursor:
             updates = request.form
 
-            # ✅ Cập nhật từng câu hỏi trong bangdanhgia
+            #  Cap nhat tung cau hoi trong bangdanhgia
             for key, value in updates.items():
                 if key.startswith('sup_comment_') or key.startswith('sup_score_'):
                     col, id_ = key.rsplit('_', 1)
@@ -1382,7 +1739,7 @@ def update_sup_epa():
                         (value, id_)
                     )
 
-            # ✅ Tổng hợp lại sup_score từ bangdanhgia
+            #  Tong hop lai sup_score tu bangdanhgia
             cursor.execute("""
                 SELECT ten_tk, year, month, SUM(sup_score) AS total_sup
                 FROM bangdanhgia
@@ -1392,7 +1749,7 @@ def update_sup_epa():
 
             rows = cursor.fetchall()
 
-            # ✅ Cập nhật hoặc chèn mới vào tongdiem_epa
+            #  Cap nhat hoac chen moi vao tongdiem_epa
             for row in rows:
                 cursor.execute("""
                     INSERT INTO tongdiem_epa (ten_tk, year, month, sup_total_score)
