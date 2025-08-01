@@ -12,10 +12,7 @@
       "Bash(rm:*)",
       "Bash(find:*)",
       "Bash(mysql:*)",
-      "Bash(powershell \"Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force\")",
-      "Bash(ls:*)",
-      "Bash(mkdir:*)",
-      "Bash(del temp_hs_columns.txt temp_gv_columns.txt test_import_fixed.py)"
+      "Bash(powershell \"Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force\")"
     ],
     "deny": []
   }

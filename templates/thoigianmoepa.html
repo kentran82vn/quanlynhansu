@@ -207,14 +207,6 @@
   </div>
 
   <div class="content-card">
-    
-    <!-- Thông tin tháng hiện tại -->
-    <div class="alert-info" style="margin-bottom: 20px; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196f3; color: #0d47a1;">
-      <i class="fas fa-info-circle"></i>
-      <strong>Thông tin tháng hiện tại:</strong> 
-      Tháng {{ current_month }}/{{ current_year }} có <strong>{{ days_in_current_month }} ngày</strong>. 
-      Ngày EPA được giới hạn từ 1-{{ days_in_current_month }}.
-    </div>
 
     {% if not tk_list %}
     <div class="alert-warning">
@@ -256,32 +248,32 @@
           
           <!-- Giai đoạn 1: Tự đánh giá -->
           <td>
-            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase1_start" required type="number" style="width: 60px;"
+            <input class="form-control" max="31" min="1" name="phase1_start" required type="number" style="width: 60px;"
               value="{{ records.get(tk).phase1_start if records.get(tk) and records.get(tk).phase1_start else '20' }}"/>
           </td>
           <td>
-            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase1_end" required type="number" style="width: 60px;"
+            <input class="form-control" max="31" min="1" name="phase1_end" required type="number" style="width: 60px;"
               value="{{ records.get(tk).phase1_end if records.get(tk) and records.get(tk).phase1_end else '25' }}"/>
           </td>
           
           <!-- Giai đoạn 2: TGV chấm điểm -->
           <td>
-            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase2_start" required type="number" style="width: 60px;"
+            <input class="form-control" max="31" min="1" name="phase2_start" required type="number" style="width: 60px;"
               value="{{ records.get(tk).phase2_start if records.get(tk) and records.get(tk).phase2_start else '26' }}"/>
           </td>
           <td>
-            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase2_end" required type="number" style="width: 60px;"
+            <input class="form-control" max="31" min="1" name="phase2_end" required type="number" style="width: 60px;"
               value="{{ records.get(tk).phase2_end if records.get(tk) and records.get(tk).phase2_end else '27' }}"/>
           </td>
           
           <!-- Giai đoạn 3: HT/PHT chấm điểm -->
           <td>
-            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase3_start" required type="number" style="width: 60px;"
+            <input class="form-control" max="31" min="1" name="phase3_start" required type="number" style="width: 60px;"
               value="{{ records.get(tk).phase3_start if records.get(tk) and records.get(tk).phase3_start else '28' }}"/>
           </td>
           <td>
-            <input class="form-control" max="{{ days_in_current_month }}" min="1" name="phase3_end" required type="number" style="width: 60px;"
-              value="{{ records.get(tk).phase3_end if records.get(tk) and records.get(tk).phase3_end else (30 if days_in_current_month >= 30 else days_in_current_month) }}"/>
+            <input class="form-control" max="31" min="1" name="phase3_end" required type="number" style="width: 60px;"
+              value="{{ records.get(tk).phase3_end if records.get(tk) and records.get(tk).phase3_end else '30' }}"/>
           </td>
           
           <!-- Quyền -->

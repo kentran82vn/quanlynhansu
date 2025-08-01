@@ -1,642 +1,1199 @@
 <!DOCTYPE html>
+<html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<title>- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
-<script>
-  tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {
-        colors: {
-          primary: '#0d6efd',
-          secondary: '#6c757d'
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👥 Quản Lý Nhân Sự - Trường Mầm Non Hoa Hướng Dương</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static_files', filename='css/modern.css') }}" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', var(--font-family-sans);
+      background: var(--bg-secondary);
+      padding: var(--spacing-lg);
+    }
+    
+    .page-header {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-200);
+    }
+    
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .page-title h1 {
+      font-size: var(--text-3xl);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .page-title .icon {
+      font-size: var(--text-4xl);
+      color: var(--primary-color);
+    }
+    
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+    
+    .controls-section {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-200);
+    }
+    
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+      align-items: end;
+    }
+    
+    .form-group {
+      margin-bottom: 0;
+    }
+    
+    .data-section {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+    }
+    
+    .section-header {
+      padding: var(--spacing-lg);
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 70vh;
+    }
+    
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+      margin: 0;
+      table-layout: auto;
+    }
+    
+    .data-table th {
+      background: var(--primary-color);
+      color: white;
+      padding: var(--spacing-md);
+      text-align: left;
+      font-weight: var(--font-semibold);
+      border-bottom: 1px solid var(--primary-dark);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      white-space: nowrap;
+      min-width: 150px;
+    }
+    
+    .data-table td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--gray-200);
+      vertical-align: middle;
+      word-wrap: break-word;
+      white-space: normal;
+      min-width: 150px;
+      max-width: none;
+      overflow: visible;
+      text-overflow: clip;
+      text-align: left !important;
+    }
+    
+    .data-table tbody tr:hover {
+      background: var(--gray-50);
+    }
+    
+    .data-table tbody tr:nth-child(even) {
+      background: var(--gray-25, #fafafa);
+    }
+    
+    .data-table tbody tr:nth-child(even):hover {
+      background: var(--gray-50);
+    }
+    
+    .inline-edit {
+      border: none;
+      background: transparent;
+      width: 100%;
+      padding: 0;
+      font-size: inherit;
+      border-radius: var(--border-radius-sm);
+      transition: all var(--transition-fast);
+    }
+    
+    .inline-edit:focus {
+      background: var(--bg-primary);
+      border: 1px solid var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: var(--spacing-xs);
+    }
+    
+    .btn-action {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: var(--text-xs);
+      border-radius: var(--border-radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .btn-edit {
+      background: var(--warning-color);
+      color: white;
+    }
+    
+    .btn-edit:hover {
+      background: #c2410c;
+    }
+    
+    .btn-delete {
+      background: var(--error-color);
+      color: white;
+    }
+    
+    .btn-delete:hover {
+      background: #b91c1c;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-2xl);
+      color: var(--text-tertiary);
+    }
+    
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: var(--spacing-lg);
+      color: var(--gray-300);
+    }
+    
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: var(--text-xs);
+      font-weight: var(--font-medium);
+      border-radius: var(--border-radius-sm);
+      line-height: 1;
+    }
+    
+    .badge-department {
+      background: var(--info-color);
+      color: white;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .stat-card {
+      background: var(--bg-primary);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-lg);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-normal);
+    }
+    
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--border-radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xl);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .stat-icon.students {
+      background: #dbeafe;
+      color: var(--primary-color);
+    }
+    
+    .stat-icon.teachers {
+      background: #d1fae5;
+      color: var(--success-color);
+    }
+    
+    .stat-value {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .stat-label {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+    }
+    
+    /* Loading States */
+    .loading {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gray-300);
+      border-top: 2px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: var(--spacing-md);
+      }
+      
+      .page-header {
+        padding: var(--spacing-lg);
+      }
+      
+      .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .data-table th,
+      .data-table td {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--text-xs);
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
       }
     }
-  }
-</script>
+    
+    /* Hide sections initially */
+    .department-section {
+      display: none;
+    }
+    
+    .department-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tăng độ rộng cho các cột cụ thể */
+    .data-table td:nth-child(3), /* Họ và tên */
+    .data-table td:nth-child(8), /* Họ tên bố */
+    .data-table td:nth-child(10), /* Họ tên mẹ */
+    .data-table td:nth-child(12), /* Hộ khẩu */
+    .data-table td:nth-child(13) { /* CCCD Bố/Mẹ */
+      min-width: 200px;
+      max-width: none;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .data-table td:nth-child(14) { /* SĐT */
+      min-width: 120px;
+      max-width: none;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 min-h-screen p-6 transition-colors duration-300">
-  
-  <div class="mb-6">
-    <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white">
-        - 🏫 - TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG - 🏫-
-    </h3>
-  </div>
 
-{% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-  <div class="flex flex-wrap gap-3 justify-center">
-    <a class="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" href="/users">👥 Tài Khoản</a>
-    <a class="px-4 py-2 text-sm border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" href="/data_epa">📝 Bảng Đánh Giá</a>
-    <a class="px-4 py-2 text-sm border border-cyan-300 dark:border-cyan-600 text-cyan-700 dark:text-cyan-300 rounded-lg hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors" href="/epa_summary">📊 Bảng xếp hạng</a>
-    <a class="px-4 py-2 text-sm border border-green-300 dark:border-green-600 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors" href="/export-data">📤 Xuất Dữ Liệu</a>
+<body>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <i class="fas fa-users icon"></i>
+      <div>
+        <h1>Quản Lý Nhân Sự</h1>
+        <p style="margin: 0; color: var(--text-tertiary); font-size: var(--text-sm);">
+          Trường Mầm Non Hoa Hướng Dương
+        </p>
+      </div>
+    </div>
     
-    <button class="px-4 py-2 text-sm border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" onclick="document.getElementById('excelFileInput').click()">
-      📚 Nhập Dữ Liệu
-    </button>
-    <input accept=".xlsx" hidden id="excelFileInput" onchange="importExcel()" type="file"/>
-
-    {% if session['role'] == 'admin' %}
-    <button class="px-4 py-2 text-sm border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" onclick="updateDataBase()">⏳ Cập Nhật Dữ Liệu</button>
-    <button class="px-4 py-2 text-sm border border-yellow-300 dark:border-yellow-600 text-yellow-700 dark:text-yellow-300 rounded-lg hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors" onclick="removeDeptData()">🗑 Xóa Dữ Liệu</button>
+    <!-- Action Bar -->
+    {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+    <div class="action-bar">
+      <div class="action-group">
+        <a href="/users" class="btn btn-outline-primary">
+          <i class="fas fa-users-cog"></i>
+          Tài Khoản
+        </a>
+        <a href="/data_epa" class="btn btn-outline-success">
+          <i class="fas fa-chart-line"></i>
+          Đánh Giá EPA
+        </a>
+        <a href="/epa_summary" class="btn btn-outline-info">
+          <i class="fas fa-trophy"></i>
+          Xếp Hạng
+        </a>
+        <a href="/export-data" class="btn btn-outline-secondary">
+          <i class="fas fa-download"></i>
+          Xuất Dữ Liệu
+        </a>
+      </div>
+      
+      <div class="action-group">
+        <button class="btn btn-primary" onclick="document.getElementById('excelFileInput').click()">
+          <i class="fas fa-upload"></i>
+          Nhập Excel
+        </button>
+        <input accept=".xlsx" hidden id="excelFileInput" onchange="importExcel()" type="file"/>
+        
+        {% if session['role'] == 'admin' %}
+        <button class="btn btn-secondary" onclick="updateDataBase()">
+          <i class="fas fa-sync"></i>
+          Cập Nhật DB
+        </button>
+        <button class="btn btn-danger" onclick="removeDeptData()">
+          <i class="fas fa-trash"></i>
+          Xóa Dữ Liệu
+        </button>
+        {% endif %}
+      </div>
+    </div>
     {% endif %}
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon students">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <div class="stat-value" id="studentCount">-</div>
+      <div class="stat-label">Học Sinh</div>
+    </div>
     
-    <a class="px-4 py-2 text-sm border border-yellow-300 dark:border-yellow-600 text-yellow-700 dark:text-yellow-300 rounded-lg hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors" href="/admin/questions">📝 Câu Hỏi Đánh Giá</a>
-    <a class="px-4 py-2 text-sm border border-yellow-300 dark:border-yellow-600 text-yellow-700 dark:text-yellow-300 rounded-lg hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors" href="/thoigianmoepa">📆 Đặt Thời Gian Đánh Giá</a>
-    <a class="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" href="/stats">📊 Thông tin</a>
-    <a class="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" href="/logs">📜 Nhật Ký</a>
-  </div>
-  <div class="mt-4" id="dbStructureResult"></div>
-</div>
-
-<!-- Dept select -->
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
-  <div class="flex flex-wrap gap-4 items-end">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="deptSelect">Thông Tin</label>
-      <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="deptSelect" onchange="switchDept()">
-        <option value="">-- Chọn --</option>
-        <option value="HS">👧 Học Sinh</option>
-        <option value="GV">👩‍🏫 Giáo Viên</option>
-      </select>
-    </div>
-    <div>
-      <label class="sr-only" for="searchInput">Tìm kiếm</label>
-      <input class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="searchInput" placeholder="🔍 Tìm kiếm..." type="text"/>
-    </div>
-  </div>
-  
-  <!-- Dynamic input fields -->
-  <div class="mt-4" id="dynamicInputRow"></div>
-</div>
-{% endif %}
-
-<!-- Tables -->
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-  <!-- Student Table -->
-  <div id="table_hs" style="display: none;">
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-center">
-        <thead class="bg-gray-900 text-white dark:bg-gray-700">
-          <tr>
-            <th class="px-4 py-3">STT</th>
-            <th class="px-4 py-3">Mã HS</th>
-            <th class="px-4 py-3">Họ và Tên</th>
-            <th class="px-4 py-3">Ngày Sinh</th>
-            <th class="px-4 py-3">Giới Tính</th>
-            <th class="px-4 py-3">Dân Tộc</th>
-            <th class="px-4 py-3">Mã Định Danh</th>
-            <th class="px-4 py-3">Họ Tên Bố</th>
-            <th class="px-4 py-3">Nghề Nghiệp Bố</th>
-            <th class="px-4 py-3">Họ Tên Mẹ</th>
-            <th class="px-4 py-3">Nghề Nghiệp Mẹ</th>
-            <th class="px-4 py-3">Hộ Khẩu</th>
-            <th class="px-4 py-3">CCCD Bố/Mẹ</th>
-            <th class="px-4 py-3">SĐT</th>
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-            <th class="px-4 py-3">Action</th>
-            {% endif %}
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-          {% for row in data_hs %}
-          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ loop.index }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['ma_hs'] }}</td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Ho Va Ten', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_va_ten'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['ho_va_ten'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Ngay Sinh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Gioi Tinh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['gioi_tinh'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['gioi_tinh'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Dan Toc', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['dan_toc'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['dan_toc'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Ma Dinh Danh', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ma_dinh_danh'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['ma_dinh_danh'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Ho Ten Bo', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_ten_bo'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['ho_ten_bo'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Nghe Nghiep Bo', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['nghe_nghiep_bo'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['nghe_nghiep_bo'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Ho Ten Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_ten_me'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['ho_ten_me'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Nghe Nghiep Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['nghe_nghiep_me'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['nghe_nghiep_me'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Ho Khau', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['ho_khau'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['ho_khau'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Cccd Bo Me', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['cccd_bo_me'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['cccd_bo_me'] }}</span>
-              {% endif %}
-            </td>
-            <td class="px-4 py-3">
-              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-                <input class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-1 focus:ring-blue-500 dark:bg-gray-600 dark:text-white" onkeypress="saveEdit(event, this, 'Sdt', '{{ row['ma_hs'] }}', 'HS')" type="text" value="{{ row['sdt'] }}"/>
-              {% else %}
-                <span class="text-gray-900 dark:text-gray-300">{{ row['sdt'] }}</span>
-              {% endif %}
-            </td>
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-            <td class="px-4 py-3">
-              <div class="flex gap-2">
-                <button class="px-2 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors" onclick="populateModalHS('{{ row['ma_hs'] }}', '{{ row['ho_va_ten'] }}', '{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}', '{{ row['gioi_tinh'] }}')">Edit</button>
-                <button class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors" onclick="deleteRow('HS', '{{ row['ma_hs'] }}')">Delete</button>
-              </div>
-            </td>
-            {% endif %}
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="stat-card">
+      <div class="stat-icon teachers">
+        <i class="fas fa-chalkboard-teacher"></i>
+      </div>
+      <div class="stat-value" id="teacherCount">-</div>
+      <div class="stat-label">Giáo Viên</div>
     </div>
   </div>
 
-  <!-- Teacher Table -->
-  <div id="table_gv" style="display: none;">
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-center">
-        <thead class="bg-gray-900 text-white dark:bg-gray-700">
-          <tr>
-            <th class="px-4 py-3">STT</th>
-            <th class="px-4 py-3">Mã GV</th>
-            <th class="px-4 py-3">Họ và Tên</th>
-            <th class="px-4 py-3">Tên TK</th>
-            <th class="px-4 py-3">Chức vụ</th>
-            <th class="px-4 py-3">Ngày Sinh</th>
-            <th class="px-4 py-3">Quê Quán</th>
-            <th class="px-4 py-3">CCCD</th>
-            <th class="px-4 py-3">Ngày Cấp</th>
-            <th class="px-4 py-3">MST</th>
-            <th class="px-4 py-3">CMND</th>
-            <th class="px-4 py-3">Số BH</th>
-            <th class="px-4 py-3">SĐT</th>
-            <th class="px-4 py-3">Số TK</th>
-            <th class="px-4 py-3">Email</th>
-            <th class="px-4 py-3">Nhóm Máu</th>
-            <th class="px-4 py-3">Địa Chỉ</th>
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-            <th class="px-4 py-3">Action</th>
-            {% endif %}
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-          {% for row in data_gv %}
-          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" data-staff-id="{{ row['ma_gv'] }}">
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ loop.index }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['ma_gv'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['ho_va_ten'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['ten_tk'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['chuc_vu'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['ngay_sinh'].strftime('%d/%m/%Y') if row['ngay_sinh'] else '' }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['que_quan'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['cccd'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['ngay_cap'].strftime('%d/%m/%Y') if row['ngay_cap'] else '' }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['mst'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['cmnd'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['so_bh'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['sdt'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['tk_nh'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['email'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['nhom_mau'] }}</td>
-            <td class="px-4 py-3 text-gray-900 dark:text-gray-300">{{ row['dia_chi'] }}</td>
-            {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
-            <td class="px-4 py-3">
-              <button class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors" onclick="deleteRowGV('{{ row['ma_gv'] }}')">Delete</button>
-            </td>
-            {% endif %}
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <div class="controls-grid">
+      <div class="form-group">
+        <label class="form-label" for="deptSelect">
+          <i class="fas fa-filter"></i>
+          Loại Dữ Liệu
+        </label>
+        <select class="form-control" id="deptSelect" onchange="switchDept()">
+          <option value="">-- Chọn loại dữ liệu --</option>
+          <option value="HS">👧 Học Sinh</option>
+          <option value="GV">👩‍🏫 Giáo Viên</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="searchInput">
+          <i class="fas fa-search"></i>
+          Tìm Kiếm
+        </label>
+        <input 
+          class="form-control" 
+          id="searchInput" 
+          placeholder="Tìm kiếm theo họ và tên..." 
+          type="text"
+          oninput="performSearch()"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">&nbsp;</label>
+        <button class="btn btn-success w-full" onclick="showAddForm()">
+          <i class="fas fa-plus"></i>
+          Thêm Mới
+        </button>
+      </div>
+    </div>
+    
+    <!-- Dynamic Input Row -->
+    <div id="dynamicInputRow" style="margin-top: var(--spacing-lg); display: none;">
+      <!-- Sẽ được render động bằng JavaScript -->
     </div>
   </div>
-</div>
+  {% endif %}
 
-<script>
-// Initialize dark mode
-window.addEventListener('message', (event) => {
-  if (event.data.type === 'darkModeToggle') {
-    if (event.data.isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }
-});
+  <!-- Students Section -->
+  <div class="department-section" id="section_hs">
+    <div class="data-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i class="fas fa-graduation-cap"></i>
+          Danh Sách Học Sinh
+        </h3>
+        <span class="badge badge-department">
+          <i class="fas fa-users"></i>
+          <span id="hsCount">0</span> học sinh
+        </span>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="data-table" id="table_hs">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã HS</th>
+              <th>Họ và Tên</th>
+              <th>Ngày Sinh</th>
+              <th>Giới Tính</th>
+              <th>Dân Tộc</th>
+              <th>Mã Định Danh</th>
+              <th>Họ Tên Bố</th>
+              <th>Nghề Nghiệp Bố</th>
+              <th>Họ Tên Mẹ</th>
+              <th>Nghề Nghiệp Mẹ</th>
+              <th>Hộ Khẩu</th>
+              <th>CCCD Bố/Mẹ</th>
+              <th>SĐT</th>
+              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+              <th>Hành Động</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody id="hsTableBody">
+            <tr>
+              <td colspan="15" class="empty-state">
+                <i class="fas fa-search"></i>
+                <div>Chọn "Học Sinh" để xem dữ liệu</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-// Initialize dark mode based on localStorage
-const isDarkMode = localStorage.getItem('darkMode') === 'true';
-if (isDarkMode) {
-  document.documentElement.classList.add('dark');
-}
+  <!-- Teachers Section -->
+  <div class="department-section" id="section_gv">
+    <div class="data-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i class="fas fa-chalkboard-teacher"></i>
+          Danh Sách Giáo Viên
+        </h3>
+        <span class="badge badge-department">
+          <i class="fas fa-users"></i>
+          <span id="gvCount">0</span> giáo viên
+        </span>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="data-table" id="table_gv">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã GV</th>
+              <th>Họ và Tên</th>
+              <th>Tên TK</th>
+              <th>Chức Vụ</th>
+              <th>Ngày Sinh</th>
+              <th>Quê Quán</th>
+              <th>CCCD</th>
+              <th>Ngày Cấp</th>
+              <th>MST</th>
+              <th>CMND</th>
+              <th>Số BH</th>
+              <th>SĐT</th>
+              <th>TK NH</th>
+              <th>Email</th>
+              <th>Nhóm Máu</th>
+              <th>Địa Chỉ</th>
+              {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+              <th>Hành Động</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody id="gvTableBody">
+            <tr>
+              <td colspan="18" class="empty-state">
+                <i class="fas fa-search"></i>
+                <div>Chọn "Giáo Viên" để xem dữ liệu</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-// Existing JavaScript functions remain the same
-let schemaByDept = {};
+  <!-- Database Structure Result -->
+  <div id="dbStructureResult" style="margin-top: var(--spacing-lg);"></div>
 
-async function fetchSchema() {
-  const res = await fetch("/api/table-schema");
-  schemaByDept = await res.json();
-  switchDept();
-}
-
-async function switchDept() {
-  console.log("DEBUG: switchDept started");
-  const dept = document.getElementById("deptSelect").value;
-  const container = document.getElementById("dynamicInputRow");
-  console.log(`DEBUG: Selected dept: ${dept}`);
-  
-  container.innerHTML = "";
-  console.log("DEBUG: Container content reset");
-  
-  document.getElementById("table_hs").style.display = (dept === "HS") ? "block" : "none";
-  document.getElementById("table_gv").style.display = (dept === "GV") ? "block" : "none";
-  console.log(`DEBUG: Table HS display: ${document.getElementById("table_hs").style.display}, Table GV display: ${document.getElementById("table_gv").style.display}`);
-  
-  if (!dept || !schemaByDept[dept]) {
-    console.log(`DEBUG: Invalid dept or schema not found for ${dept}, exiting`);
-    return;
-  }
-  
-  console.log(`DEBUG: Rendering inputs for schema: ${schemaByDept[dept]}`);
-  let rowDiv = document.createElement("div");
-  rowDiv.className = "flex flex-wrap gap-3 mb-4";
-  
-  for (let index = 0; index < schemaByDept[dept].length; index++) {
-    const field = schemaByDept[dept][index];
-    const label = field.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-    const colDiv = document.createElement("div");
-    colDiv.className = "flex-1 min-w-0";
-
-    colDiv.innerHTML = `
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">${label}</label>
-      <input type="text" id="${field}" class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" placeholder="${label}">
-    `;
-
-    rowDiv.appendChild(colDiv);
-
-    if ((index + 1) % 4 === 0) {
-      container.appendChild(rowDiv);
-      rowDiv = document.createElement("div");
-      rowDiv.className = "flex flex-wrap gap-3 mb-4";
-    }
-  }
-
-  if (rowDiv.childElementCount > 0) {
-    container.appendChild(rowDiv);
-  }
-
-  const buttonRow = document.createElement("div");
-  buttonRow.className = "mt-4";
-  buttonRow.innerHTML = `
-    <button class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors" onclick="addEmployee()">➕ Add</button>
-  `;
-  container.appendChild(buttonRow);
-  console.log("DEBUG: Added 'Add' button row");
-
-  console.log(`DEBUG: Fetching data for dept: ${dept}`);
-  await fetchAndRenderDept(dept);
-  console.log("DEBUG: switchDept completed");
-}
-
-async function fetchAndRenderDept(dept) {
-  console.log(`DEBUG: fetchAndRenderDept started for dept: ${dept}`);
-  try {
-    const res = await fetch(`/api/employees?dept=${dept}`);
-    console.log(`DEBUG: Fetch response status: ${res.status}`);
-    const result = await res.json();
-    const rows = result.rows || [];
-    console.log(`DEBUG: Fetched ${rows.length} rows for dept: ${dept}`);
-    if (dept === "HS") {
-      console.log("DEBUG: Rendering HS table");
-      renderTable("table_hs", rows);
-    } else if (dept === "GV") {
-      console.log("DEBUG: Rendering GV table");
-      renderTable("table_gv", rows);
-    }
-  } catch (err) {
-    console.error(`❌ DEBUG: Fetch failed for dept ${dept}:`, err);
-  }
-  console.log("DEBUG: fetchAndRenderDept completed");
-}
-
-function renderTable(tableId, rows) {
-  console.log(`DEBUG: renderTable started for table: ${tableId}, rows: ${rows.length}`);
-  const table = document.getElementById(tableId).querySelector("tbody");
-  table.innerHTML = "";
-  console.log(`DEBUG: Cleared tbody for table: ${tableId}`);
-  rows.forEach((row, idx) => {
-    console.log(`DEBUG: Generating row ${idx + 1} for table: ${tableId}`);
-    const tr = document.createElement("tr");
-    tr.className = "hover:bg-gray-50 dark:hover:bg-gray-700";
-    tr.innerHTML = generateRowHtml(tableId, row, idx + 1);
-    table.appendChild(tr);
-  });
-  console.log(`DEBUG: renderTable completed for table: ${tableId}`);
-}
-
-function generateRowHtml(tableId, row, index) {
-  console.log(`DEBUG: generateRowHtml for table: ${tableId}, row index: ${index}`);
-  if (tableId === "table_hs") {
-    console.log(`DEBUG: Generating HS row with data: ${JSON.stringify(row)}`);
-    return `
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${index}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ma_hs || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ho_va_ten || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${formatDate(row.ngay_sinh)}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.gioi_tinh || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.dan_toc || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ma_dinh_danh || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ho_ten_bo || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.nghe_nghiep_bo || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ho_ten_me || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.nghe_nghiep_me || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ho_khau || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.cccd_bo_me || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.sdt || ""}</td>
-      <td class="px-4 py-3">
-        <button class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors" onclick="deleteRowHS('${row.ma_hs}')">Delete</button>
-      </td>
-    `;
-  }
-  if (tableId === "table_gv") {
-    console.log(`DEBUG: Generating GV row with data: ${JSON.stringify(row)}`);
-    return `
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${index}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ma_gv || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ho_va_ten || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.ten_tk || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.chuc_vu || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${formatDate(row.ngay_sinh)}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.que_quan || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.cccd || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${formatDate(row.ngay_cap)}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.mst || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.cmnd || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.so_bh || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.sdt || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.tk_nh || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.email || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.nhom_mau || ""}</td>
-      <td class="px-4 py-3 text-gray-900 dark:text-gray-300">${row.dia_chi || ""}</td>
-      <td class="px-4 py-3">
-        <button class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors" onclick="deleteRowGV('${row.ma_gv}')">Delete</button>
-      </td>
-    `;
-  }
-  console.log(`DEBUG: No matching tableId: ${tableId}, returning empty string`);
-  return "";
-}
-
-function formatDate(dateStr) {
-  if (!dateStr || isNaN(new Date(dateStr))) return "";
-  const d = new Date(dateStr);
-  return d.getDate().toString().padStart(2, '0') + "/" +
-         (d.getMonth() + 1).toString().padStart(2, '0') + "/" +
-         d.getFullYear();
-}
-
-async function addEmployee() {
-  const dept = document.getElementById("deptSelect").value;
-  if (!dept || !schemaByDept[dept]) {
-    alert("Please select a department.");
-    return;
-  }
-  const data = { "Dept": dept };
-  schemaByDept[dept].forEach(field => {
-    const key = field.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-    let value = document.getElementById(field)?.value?.trim() || "";
-    data[key] = value;
-  });
-
-  if (dept === "HS" && (!data["Ma Hs"] || !data["Ho Va Ten"])) {
-    alert("Mã HS và Họ và Tên là bắt buộc.");
-    return;
-  }
-  const res = await fetch("/add", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
-  const result = await res.json();
-  if (result.status === "ok") {
-    window.location.href = "/employees";
-  } else {
-    alert("❌ Failed to add employee: " + (result.message || ""));
-  }
-}
-
-async function deleteRowHS(identifier_code) {
-  if (!confirm(`Xóa học sinh Mã Định Danh: ${identifier_code}?`)) return;
-  await deleteRow("HS", identifier_code);
-}
-
-async function deleteRowGV(staff_id) {
-  if (!confirm(`Xóa giáo viên Staff ID: ${staff_id}?`)) return;
-  await deleteRow("GV", staff_id);
-}
-
-async function deleteRow(dept, id) {
-  const res = await fetch("/delete", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ staff_id: id, dept: dept })
-  });
-  const result = await res.json();
-  if (result.status === "ok") {
-    alert("✅ Xóa thành công!");
-    await fetchAndRenderDept(dept);
-  } else {
-    alert("❌ Xóa thất bại: " + (result.reason || ""));
-  }
-}
-
-async function importExcel() {
-  console.log("importExcel() called");
-  const dept = document.getElementById("deptSelect").value;
-  const input = document.getElementById('excelFileInput');
-  const file = input.files[0];
-  if (!file) {
-    console.log("⚠️ No file selected");
-    return;
-  }
-  if (!dept) {
-    alert("⚠️ Bạn chưa chọn Dept.");
-    return;
-  }
-  const formData = new FormData();
-  formData.append('file', file);
-  let endpoint = "";
-  switch (dept) {
-    case "HS":
-      endpoint = "/import_hs";
-      break;
-    case "GV":
-      endpoint = "/import_gv";
-      break;
-    default:
-      alert(`⚠️ Dept ${dept} chưa hỗ trợ import.`);
-      return;
-  }
-  console.log(`Uploading file to: ${endpoint}`);
-  try {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      body: formData
-    });
-    const result = await res.json();
-    if (result.status === "success") {
-      alert("✅ Import thành công!");
-      window.location.reload();
-    } else {
-      alert("❌ Import lỗi: " + (result.error || ""));
-    }
-  } catch (err) {
-    console.error(err);
-    alert("❌ Có lỗi xảy ra khi upload file.");
-  }
-}
-
-function removeDeptData() {
-  const deptSelect = document.getElementById("deptSelect");
-  const dept = deptSelect.value;
-
-  if (!dept) return alert("Please select a Dept first.");
-  if (!confirm(`Are you sure to remove all data from ${dept}?`)) return;
-  if (!confirm(`This action cannot be undone. Are you really sure?`)) return;
-
-  fetch(`/remove-dept-data`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ dept }),
-  })
-  .then(res => res.json())
-  .then(data => {
-    alert(data.message);
-    const currentDept = dept;
-    window.location.reload();
-  })
-  .catch(err => alert("Error: " + err));
-}
-
-function updateDataBase() {
-  fetch("/update-database", { method: "POST" })
-    .then(response => response.json())
-    .then(data => {
-      const container = document.getElementById("dbStructureResult");
-      if (data.success) {
-        let html = `<div class="mt-4 overflow-x-auto"><table class="w-full text-sm border border-gray-300 dark:border-gray-600"><thead class="bg-gray-100 dark:bg-gray-700"><tr>
-          <th class="px-4 py-2 text-left border-b border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">Tên bảng</th>
-          <th class="px-4 py-2 text-left border-b border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">Tên các cột</th>
-          <th class="px-4 py-2 text-left border-b border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">Số lượng cột</th>
-          <th class="px-4 py-2 text-left border-b border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">Số lượng dòng</th>
-        </tr></thead><tbody>`;
-        data.tables.forEach(row => {
-          html += `<tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-300">${row.table_name}</td>
-            <td class="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-300">${row.column_names}</td>
-            <td class="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-300">${row.column_count}</td>
-            <td class="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-300">${row.row_count}</td>
-          </tr>`;
-        });
-        html += "</tbody></table></div>";
-        container.innerHTML = html;
+  <script>
+    // Global variables
+    let currentDept = '';
+    let allData = {};
+    let filteredData = {};
+    
+    // Department switching
+    function switchDept() {
+      const deptSelect = document.getElementById('deptSelect');
+      const selectedDept = deptSelect.value;
+      
+      // Hide all sections
+      document.querySelectorAll('.department-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      if (selectedDept) {
+        currentDept = selectedDept;
+        
+        // Show selected section
+        const targetSection = document.getElementById(`section_${selectedDept.toLowerCase()}`);
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+        
+        // Load data for selected department
+        loadDepartmentData(selectedDept);
+        
+        // Show dynamic input row for adding new records
+        {% if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' %}
+        showDynamicInputs(selectedDept);
+        {% endif %}
       } else {
-        container.innerHTML = `<div class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-800 dark:text-red-200">${data.message}</div>`;
+        currentDept = '';
+        document.getElementById('dynamicInputRow').style.display = 'none';
       }
-    })
-    .catch(error => {
-      document.getElementById("dbStructureResult").innerHTML = `<div class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-800 dark:text-red-200">Lỗi kết nối máy chủ.</div>`;
-      console.error("❌ Update DB error:", error);
-    });
-}
-
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function() {
-  const q = this.value.trim().toLowerCase();
-  const tbody = document.getElementById('table_hs').style.display === 'block'
-    ? document.querySelector('#table_hs tbody')
-    : document.getElementById('table_gv').style.display === 'block'
-      ? document.querySelector('#table_gv tbody')
-      : null;
-  if (!tbody) return;
-
-  tbody.querySelectorAll('tr').forEach(tr => {
-    const nameTd = tr.querySelector('td:nth-child(3)');
-    const name = nameTd ? nameTd.innerText.toLowerCase() : '';
-    tr.style.display = name.includes(q) ? '' : 'none';
-  });
-});
-
-window.addEventListener("DOMContentLoaded", async () => {
-  await fetchSchema();
-  const lastFile = localStorage.getItem('lastImportedFile');
-  if (lastFile) {
-    if (lastFile.includes("hocsinh")) {
-      document.getElementById("deptSelect").value = "HS";
-    } else if (lastFile.includes("giaovien")) {
-      document.getElementById("deptSelect").value = "GV";
     }
-    await switchDept();
-    localStorage.removeItem('lastImportedFile');
-  }
-});
-</script>
-
+    
+    // Load department data
+    async function loadDepartmentData(dept) {
+      try {
+        const tableBody = document.getElementById(`${dept.toLowerCase()}TableBody`);
+        tableBody.innerHTML = '<tr><td colspan="20" class="loading">Đang tải dữ liệu...</td></tr>';
+        
+        const endpoint = dept === 'HS' ? '/fetch_hs' : '/fetch_gv';
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        
+        if (data.rows && data.rows.length > 0) {
+          allData[dept] = data.rows;
+          filteredData[dept] = data.rows;
+          renderTable(dept, data.rows);
+          updateStats();
+        } else {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="20" class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <div>Không có dữ liệu ${dept === 'HS' ? 'học sinh' : 'giáo viên'}</div>
+              </td>
+            </tr>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        const tableBody = document.getElementById(`${dept.toLowerCase()}TableBody`);
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="20" class="empty-state" style="color: var(--error-color);">
+              <i class="fas fa-exclamation-triangle"></i>
+              <div>Lỗi tải dữ liệu: ${error.message}</div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+    
+    // Render table with data
+    function renderTable(dept, data) {
+      const tableBody = document.getElementById(`${dept.toLowerCase()}TableBody`);
+      const canEdit = {{ 'true' if session['role'] == 'admin' or session['user'] == 'kimnhung' or session['user'] == 'ngocquy' else 'false' }};
+      
+      // Format date - remove GMT timezone info
+      const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('vi-VN');
+      };
+      
+      if (!data || data.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="20" class="empty-state">
+              <i class="fas fa-search"></i>
+              <div>Không tìm thấy kết quả</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      let html = '';
+      data.forEach((row, index) => {
+        html += '<tr>';
+        html += `<td>${index + 1}</td>`;
+        
+        if (dept === 'HS') {
+          html += `<td>${row.ma_hs || ''}</td>`;
+          html += `<td title="${row.ho_va_ten || ''}">${canEdit ? `<input class="inline-edit" value="${row.ho_va_ten || ''}" onkeypress="saveEdit(event, this, 'Ho Va Ten', '${row.ma_hs}', 'HS')" />` : (row.ho_va_ten || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${formatDate(row.ngay_sinh)}" onkeypress="saveEdit(event, this, 'Ngay Sinh', '${row.ma_hs}', 'HS')" />` : formatDate(row.ngay_sinh)}</td>`;
+          html += `<td>${canEdit ? `<select class="inline-edit" onchange="saveEdit(null, this, 'Gioi Tinh', '${row.ma_hs}', 'HS')"><option value="Nam" ${row.gioi_tinh === 'Nam' ? 'selected' : ''}>Nam</option><option value="Nu" ${row.gioi_tinh === 'Nu' ? 'selected' : ''}>Nữ</option></select>` : (row.gioi_tinh === 'Nu' ? 'Nữ' : row.gioi_tinh || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.dan_toc || ''}" onkeypress="saveEdit(event, this, 'Dan Toc', '${row.ma_hs}', 'HS')" />` : (row.dan_toc || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.ma_dinh_danh || ''}" onkeypress="saveEdit(event, this, 'Ma Dinh Danh', '${row.ma_hs}', 'HS')" />` : (row.ma_dinh_danh || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.ho_ten_bo || ''}" onkeypress="saveEdit(event, this, 'Ho Ten Bo', '${row.ma_hs}', 'HS')" />` : (row.ho_ten_bo || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.nghe_nghiep_bo || ''}" onkeypress="saveEdit(event, this, 'Nghe Nghiep Bo', '${row.ma_hs}', 'HS')" />` : (row.nghe_nghiep_bo || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.ho_ten_me || ''}" onkeypress="saveEdit(event, this, 'Ho Ten Me', '${row.ma_hs}', 'HS')" />` : (row.ho_ten_me || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.nghe_nghiep_me || ''}" onkeypress="saveEdit(event, this, 'Nghe Nghiep Me', '${row.ma_hs}', 'HS')" />` : (row.nghe_nghiep_me || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.ho_khau || ''}" onkeypress="saveEdit(event, this, 'Ho Khau', '${row.ma_hs}', 'HS')" />` : (row.ho_khau || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.cccd_bo_me || ''}" onkeypress="saveEdit(event, this, 'Cccd Bo Me', '${row.ma_hs}', 'HS')" />` : (row.cccd_bo_me || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.sdt || ''}" onkeypress="saveEdit(event, this, 'Sdt', '${row.ma_hs}', 'HS')" />` : (row.sdt || '')}</td>`;
+        } else {
+          // Teacher data
+          html += `<td>${row.ma_gv || ''}</td>`;
+          html += `<td title="${row.ho_va_ten || ''}">${canEdit ? `<input class="inline-edit" value="${row.ho_va_ten || ''}" onkeypress="saveEdit(event, this, 'Ho Va Ten', '${row.ma_gv}', 'GV')" />` : (row.ho_va_ten || '')}</td>`;
+          html += `<td>${row.ten_tk || ''}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.chuc_vu || ''}" onkeypress="saveEdit(event, this, 'Chuc Vu', '${row.ma_gv}', 'GV')" />` : (row.chuc_vu || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${formatDate(row.ngay_sinh)}" onkeypress="saveEdit(event, this, 'Ngay Sinh', '${row.ma_gv}', 'GV')" />` : formatDate(row.ngay_sinh)}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.que_quan || ''}" onkeypress="saveEdit(event, this, 'Que Quan', '${row.ma_gv}', 'GV')" />` : (row.que_quan || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.cccd || ''}" onkeypress="saveEdit(event, this, 'Cccd', '${row.ma_gv}', 'GV')" />` : (row.cccd || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${formatDate(row.ngay_cap)}" onkeypress="saveEdit(event, this, 'Ngay Cap', '${row.ma_gv}', 'GV')" />` : formatDate(row.ngay_cap)}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.mst || ''}" onkeypress="saveEdit(event, this, 'Mst', '${row.ma_gv}', 'GV')" />` : (row.mst || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.cmnd || ''}" onkeypress="saveEdit(event, this, 'Cmnd', '${row.ma_gv}', 'GV')" />` : (row.cmnd || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.so_bh || ''}" onkeypress="saveEdit(event, this, 'So Bh', '${row.ma_gv}', 'GV')" />` : (row.so_bh || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.sdt || ''}" onkeypress="saveEdit(event, this, 'Sdt', '${row.ma_gv}', 'GV')" />` : (row.sdt || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.tk_nh || ''}" onkeypress="saveEdit(event, this, 'Tk Nh', '${row.ma_gv}', 'GV')" />` : (row.tk_nh || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.email || ''}" onkeypress="saveEdit(event, this, 'Email', '${row.ma_gv}', 'GV')" />` : (row.email || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.nhom_mau || ''}" onkeypress="saveEdit(event, this, 'Nhom Mau', '${row.ma_gv}', 'GV')" />` : (row.nhom_mau || '')}</td>`;
+          html += `<td>${canEdit ? `<input class="inline-edit" value="${row.dia_chi || ''}" onkeypress="saveEdit(event, this, 'Dia Chi', '${row.ma_gv}', 'GV')" />` : (row.dia_chi || '')}</td>`;
+        }
+        
+        if (canEdit) {
+          html += `<td>
+            <div class="action-buttons">
+              <button class="btn-action btn-delete" onclick="deleteRecord('${dept === 'HS' ? row.ma_hs : row.ma_gv}', '${dept}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>`;
+        }
+        
+        html += '</tr>';
+      });
+      
+      tableBody.innerHTML = html;
+      
+      // Update count badge
+      const countElement = document.getElementById(`${dept.toLowerCase()}Count`);
+      if (countElement) {
+        countElement.textContent = data.length;
+      }
+    }
+    
+    // Search functionality - search only in name column
+    function performSearch() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      
+      if (!currentDept || !allData[currentDept]) return;
+      
+      if (!searchTerm) {
+        filteredData[currentDept] = allData[currentDept];
+      } else {
+        filteredData[currentDept] = allData[currentDept].filter(row => {
+          // Search only in the name column (ho_va_ten)
+          const name = String(row.ho_va_ten || '').toLowerCase();
+          return name.includes(searchTerm);
+        });
+      }
+      
+      renderTable(currentDept, filteredData[currentDept]);
+    }
+    
+    // Update statistics
+    function updateStats() {
+      const studentCount = allData.HS ? allData.HS.length : 0;
+      const teacherCount = allData.GV ? allData.GV.length : 0;
+      
+      document.getElementById('studentCount').textContent = studentCount;
+      document.getElementById('teacherCount').textContent = teacherCount;
+    }
+    
+    // Save edit functionality
+    async function saveEdit(event, element, field, id, dept) {
+      if (event && event.key !== 'Enter') return;
+      
+      const value = element.value;
+      
+      try {
+        const response = await fetch('/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            Dept: dept,
+            id: id,
+            data: { [field]: value }
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'ok') {
+          element.style.background = '#d4edda';
+          setTimeout(() => {
+            element.style.background = '';
+          }, 1000);
+          
+          // Update local data
+          if (allData[dept]) {
+            const record = allData[dept].find(r => 
+              r[dept === 'HS' ? 'ma_hs' : 'ma_gv'] === id
+            );
+            if (record) {
+              const fieldKey = field.toLowerCase().replace(/ /g, '_');
+              record[fieldKey] = value;
+            }
+          }
+        } else {
+          element.style.background = '#f8d7da';
+          alert('Lỗi cập nhật: ' + (result.reason || 'Unknown error'));
+        }
+      } catch (error) {
+        element.style.background = '#f8d7da';
+        alert('Lỗi kết nối: ' + error.message);
+      }
+    }
+    
+    // Delete record
+    async function deleteRecord(id, dept) {
+      if (!confirm(`Bạn có chắc chắn muốn xóa ${dept === 'HS' ? 'học sinh' : 'giáo viên'} này?`)) {
+        return;
+      }
+      
+      try {
+        const response = await fetch('/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            staff_id: id,
+            dept: dept
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'ok') {
+          // Remove from local data
+          if (allData[dept]) {
+            allData[dept] = allData[dept].filter(r => 
+              r[dept === 'HS' ? 'ma_hs' : 'ma_gv'] !== id
+            );
+            filteredData[dept] = allData[dept];
+          }
+          
+          // Re-render table
+          renderTable(dept, filteredData[dept]);
+          updateStats();
+          
+          alert('Xóa thành công!');
+        } else {
+          alert('Lỗi xóa: ' + (result.reason || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Lỗi kết nối: ' + error.message);
+      }
+    }
+    
+    // Show dynamic inputs for adding new records
+    function showDynamicInputs(dept) {
+      const dynamicRow = document.getElementById('dynamicInputRow');
+      
+      let html = '<div style="border-top: 1px solid var(--gray-200); padding-top: var(--spacing-lg);"><h5 style="margin-bottom: var(--spacing-md); color: var(--text-primary);">Thêm mới ' + (dept === 'HS' ? 'học sinh' : 'giáo viên') + '</h5>';
+      html += '<div class="row g-2">';
+      
+      if (dept === 'HS') {
+        html += `
+          <div class="col-md-3"><input class="form-control" id="new_ma_hs" placeholder="Mã HS" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ho_va_ten" placeholder="Họ và tên" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ngay_sinh" placeholder="Ngày sinh (DD/MM/YYYY)" /></div>
+          <div class="col-md-3">
+            <select class="form-control" id="new_gioi_tinh">
+              <option value="">Giới tính</option>
+              <option value="Nam">Nam</option>
+              <option value="Nu">Nữ</option>
+            </select>
+          </div>
+          <div class="col-md-3"><input class="form-control" id="new_dan_toc" placeholder="Dân tộc" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ma_dinh_danh" placeholder="Mã định danh" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ho_ten_bo" placeholder="Họ tên bố" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_nghe_nghiep_bo" placeholder="Nghề nghiệp bố" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ho_ten_me" placeholder="Họ tên mẹ" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_nghe_nghiep_me" placeholder="Nghề nghiệp mẹ" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ho_khau" placeholder="Hộ khẩu" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_cccd_bo_me" placeholder="CCCD bố/mẹ" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_sdt" placeholder="SĐT" /></div>
+        `;
+      } else {
+        html += `
+          <div class="col-md-3"><input class="form-control" id="new_ma_gv" placeholder="Mã GV" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ho_va_ten" placeholder="Họ và tên" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ten_tk" placeholder="Tên TK" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_chuc_vu" placeholder="Chức vụ" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ngay_sinh" placeholder="Ngày sinh (DD/MM/YYYY)" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_que_quan" placeholder="Quê quán" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_cccd" placeholder="CCCD" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_ngay_cap" placeholder="Ngày cấp (DD/MM/YYYY)" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_mst" placeholder="MST" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_cmnd" placeholder="CMND" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_so_bh" placeholder="Số BH" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_sdt" placeholder="SĐT" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_tk_nh" placeholder="TK NH" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_email" placeholder="Email" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_nhom_mau" placeholder="Nhóm máu" /></div>
+          <div class="col-md-3"><input class="form-control" id="new_dia_chi" placeholder="Địa chỉ" /></div>
+        `;
+      }
+      
+      html += '<div class="col-12" style="margin-top: var(--spacing-md);"><button class="btn btn-success" onclick="addNewRecord(\'' + dept + '\')"><i class="fas fa-plus"></i> Thêm mới</button></div>';
+      html += '</div></div>';
+      
+      dynamicRow.innerHTML = html;
+      dynamicRow.style.display = 'block';
+    }
+    
+    // Add new record
+    async function addNewRecord(dept) {
+      const data = {};
+      const prefix = 'new_';
+      
+      // Collect form data
+      const inputs = document.querySelectorAll('#dynamicInputRow input, #dynamicInputRow select');
+      inputs.forEach(input => {
+        const fieldName = input.id.replace(prefix, '');
+        const camelCase = fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        data[camelCase] = input.value;
+      });
+      
+      // Set department
+      data.Dept = dept;
+      
+      try {
+        const response = await fetch('/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'ok') {
+          alert('Thêm mới thành công!');
+          
+          // Clear form
+          inputs.forEach(input => input.value = '');
+          
+          // Reload data
+          loadDepartmentData(dept);
+        } else {
+          alert('Lỗi thêm mới: ' + (result.message || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Lỗi kết nối: ' + error.message);
+      }
+    }
+    
+    // Other functions (importExcel, updateDataBase, removeDeptData)
+    async function importExcel() {
+      const fileInput = document.getElementById('excelFileInput');
+      if (!fileInput.files[0]) return;
+      
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      
+      try {
+        const response = await fetch('/import-data', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Import thành công!');
+          if (currentDept) {
+            loadDepartmentData(currentDept);
+          }
+        } else {
+          alert('Lỗi import: ' + (result.message || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Lỗi kết nối: ' + error.message);
+      }
+      
+      fileInput.value = '';
+    }
+    
+    async function updateDataBase() {
+      if (!confirm('Bạn có chắc chắn muốn cập nhật database?')) return;
+      
+      try {
+        const response = await fetch('/update-database', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Cập nhật database thành công!');
+          
+          // Show database structure
+          let html = '<div class="mt-3"><h5>Cấu trúc Database:</h5><div class="table-responsive"><table class="table table-sm table-bordered">';
+          html += '<thead><tr><th>Bảng</th><th>Số cột</th><th>Số dòng</th></tr></thead><tbody>';
+          
+          result.tables.forEach(table => {
+            html += `<tr><td>${table.table_name}</td><td>${table.column_count}</td><td>${table.row_count}</td></tr>`;
+          });
+          
+          html += '</tbody></table></div></div>';
+          
+          document.getElementById('dbStructureResult').innerHTML = html;
+        } else {
+          alert('Lỗi cập nhật: ' + (result.message || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Lỗi kết nối: ' + error.message);
+      }
+    }
+    
+    async function removeDeptData() {
+      const dept = prompt('Nhập loại dữ liệu cần xóa (GV hoặc HS):');
+      if (!dept || !['GV', 'HS'].includes(dept.toUpperCase())) {
+        alert('Loại dữ liệu không hợp lệ!');
+        return;
+      }
+      
+      if (!confirm(`Bạn có chắc chắn muốn xóa TẤT CẢ dữ liệu ${dept}? Hành động này không thể hoàn tác!`)) {
+        return;
+      }
+      
+      try {
+        const response = await fetch('/remove-dept-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dept: dept.toUpperCase() })
+        });
+        
+        const result = await response.json();
+        alert(result.message);
+        
+        if (currentDept) {
+          loadDepartmentData(currentDept);
+        }
+      } catch (error) {
+        alert('Lỗi kết nối: ' + error.message);
+      }
+    }
+    
+    // Show add form
+    function showAddForm() {
+      if (!currentDept) {
+        alert('Vui lòng chọn loại dữ liệu trước!');
+        return;
+      }
+      
+      // Scroll to dynamic input row
+      document.getElementById('dynamicInputRow').scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    
+    // Import Excel function
+    async function importExcel() {
+      const fileInput = document.getElementById('excelFileInput');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        alert('Vui lòng chọn file Excel!');
+        return;
+      }
+      
+      if (!currentDept) {
+        alert('Vui lòng chọn loại dữ liệu (HS hoặc GV) trước khi import!');
+        return;
+      }
+      
+      // Validate file type
+      const allowedTypes = [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel'
+      ];
+      
+      if (!allowedTypes.includes(file.type)) {
+        alert('Chỉ chấp nhận file Excel (.xlsx, .xls)!');
+        return;
+      }
+      
+      // Create FormData
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Determine endpoint based on department
+      const endpoint = currentDept === 'HS' ? '/import_hs' : '/import_gv';
+      
+      try {
+        // Show loading state
+        const importBtn = document.querySelector('button[onclick="document.getElementById(\'excelFileInput\').click()"]');
+        const originalText = importBtn.innerHTML;
+        importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang import...';
+        importBtn.disabled = true;
+        
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: formData
+        });
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          // If not JSON, try to get text content for error diagnosis
+          const text = await response.text();
+          console.error('Non-JSON response:', text);
+          throw new Error('Server trả về định dạng không hợp lệ. Vui lòng kiểm tra log server.');
+        }
+        
+        const result = await response.json();
+        
+        if (response.ok && result.status === 'success') {
+          alert('Import thành công!');
+          
+          // Reset file input
+          fileInput.value = '';
+          
+          // Reload data for current department
+          if (currentDept) {
+            await loadDepartmentData(currentDept);
+          }
+          
+          // Update stats
+          updateStats();
+        } else {
+          throw new Error(result.error || result.message || 'Import thất bại');
+        }
+        
+      } catch (error) {
+        console.error('Import error:', error);
+        
+        // More specific error messages
+        if (error.message.includes('fetch')) {
+          alert('Lỗi kết nối server. Vui lòng kiểm tra kết nối mạng.');
+        } else if (error.message.includes('JSON')) {
+          alert('Lỗi định dạng dữ liệu từ server. Vui lòng liên hệ quản trị viên.');
+        } else {
+          alert('Lỗi import: ' + error.message);
+        }
+      } finally {
+        // Restore button state
+        const importBtn = document.querySelector('button[onclick="document.getElementById(\'excelFileInput\').click()"]');
+        importBtn.innerHTML = '<i class="fas fa-upload"></i> Nhập Excel';
+        importBtn.disabled = false;
+      }
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load initial stats
+      updateStats();
+    });
+  </script>
 </body>
 </html>

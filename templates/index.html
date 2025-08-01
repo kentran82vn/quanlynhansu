@@ -1,355 +1,748 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>- 🏫 TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG 🎈-</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-<script>
-  tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {
-        colors: {
-          primary: '#0d6efd',
-          secondary: '#6c757d'
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏫 Dashboard - Trường Mầm Non Hoa Hướng Dương</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static_files', filename='css/modern.css') }}" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', var(--font-family-sans);
+      background: var(--bg-secondary);
+    }
+    
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      width: 280px;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      transition: transform var(--transition-normal);
+      z-index: 100;
+    }
+    
+    .sidebar-header {
+      padding: var(--spacing-xl) var(--spacing-lg);
+      border-bottom: 1px solid var(--gray-200);
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      text-align: center;
+    }
+    
+    .sidebar-logo {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .sidebar-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--spacing-xs);
+      line-height: 1.2;
+    }
+    
+    .sidebar-subtitle {
+      font-size: var(--text-xs);
+      opacity: 0.9;
+      font-weight: var(--font-medium);
+      letter-spacing: 0.5px;
+    }
+    
+    .sidebar-nav {
+      padding: var(--spacing-lg) 0;
+    }
+    
+    .nav-section {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .nav-section-title {
+      padding: 0 var(--spacing-lg) var(--spacing-sm);
+      font-size: var(--text-xs);
+      font-weight: var(--font-semibold);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .nav-item {
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      transition: all var(--transition-fast);
+      border-left: 3px solid transparent;
+      position: relative;
+    }
+    
+    .nav-link:hover {
+      background: var(--gray-50);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+      text-decoration: none;
+      transform: translateX(2px);
+    }
+    
+    .nav-link.active {
+      background: var(--bg-accent);
+      color: var(--primary-color);
+      border-left-color: var(--primary-color);
+      font-weight: var(--font-semibold);
+    }
+    
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      right: var(--spacing-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--primary-color);
+      border-radius: 50%;
+    }
+    
+    .nav-link i {
+      font-size: var(--text-base);
+      width: 20px;
+      text-align: center;
+    }
+    
+    .nav-link.text-danger {
+      color: var(--error-color);
+      margin-top: var(--spacing-lg);
+    }
+    
+    .nav-link.text-danger:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-left-color: var(--error-color);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .topbar {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--gray-200);
+      padding: var(--spacing-md) var(--spacing-xl);
+      display: flex;
+      align-items: center;
+      justify-content: between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+    }
+    
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: var(--text-xl);
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: var(--spacing-xs);
+      border-radius: var(--border-radius);
+      transition: all var(--transition-fast);
+    }
+    
+    .mobile-menu-btn:hover {
+      background: var(--gray-100);
+      color: var(--text-primary);
+    }
+    
+    .topbar-title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-left: auto;
+    }
+    
+    .btn-topbar {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: var(--text-sm);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--border-radius);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+    
+    .btn-topbar:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--bg-accent);
+      border-radius: var(--border-radius-lg);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+    }
+    
+    .user-details {
+      font-size: var(--text-sm);
+    }
+    
+    .user-name {
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      display: block;
+    }
+    
+    .user-role {
+      color: var(--text-tertiary);
+      font-size: var(--text-xs);
+    }
+    
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: var(--spacing-lg);
+      overflow-y: auto;
+    }
+    
+    .content-frame {
+      width: 100%;
+      height: calc(100vh - 120px);
+      border: none;
+      border-radius: var(--border-radius-lg);
+      background: var(--bg-primary);
+      box-shadow: var(--shadow);
+      transition: all var(--transition-normal);
+    }
+    
+    .content-frame:hover {
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        z-index: 200;
+      }
+      
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      .topbar {
+        padding: var(--spacing-sm) var(--spacing-md);
+      }
+      
+      .topbar-title {
+        font-size: var(--text-lg);
+      }
+      
+      .topbar-actions {
+        gap: var(--spacing-sm);
+      }
+      
+      .btn-topbar {
+        padding: var(--spacing-xs);
+        font-size: var(--text-xs);
+      }
+      
+      .btn-topbar span {
+        display: none;
+      }
+      
+      .user-details {
+        display: none;
+      }
+      
+      .content-area {
+        padding: var(--spacing-md);
+      }
+      
+      .content-frame {
+        height: calc(100vh - 100px);
       }
     }
-  }
-</script>
+    
+    /* Mobile Overlay */
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 150;
+    }
+    
+    .mobile-overlay.show {
+      display: block;
+    }
+    
+    /* Loading States */
+    .content-frame.loading {
+      background: var(--gray-100);
+      position: relative;
+    }
+    
+    .content-frame.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--gray-300);
+      border-top: 3px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-<div class="min-h-screen flex">
-  <!-- Sidebar -->
-  <nav class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden md:block">
-    <div class="p-4">
-      <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">🏫 TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG 🎈</h2>
-      <!-- Dark Mode Toggle -->
-      <button id="darkModeToggle" class="mb-4 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-        <i class="fas fa-moon dark:hidden"></i>
-        <i class="fas fa-sun hidden dark:inline"></i>
-        <span class="ml-2 dark:hidden">Dark Mode</span>
-        <span class="ml-2 hidden dark:inline">Light Mode</span>
-      </button>
-    </div>
-    <div class="px-2">
-      <ul class="space-y-1">
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/employees" href="#">
-            <i class="fas fa-users w-5"></i>
-            <span>Trang Chính</span>
-          </a>
-        </li>
-        {% if session['role'] == 'user' or session['role'] == 'supervisor' %}
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/user-epa-score" href="#">
-            <i class="fas fa-chart-line w-5"></i>
-            <span>Đánh Giá EPA</span>
-          </a>
-        </li>
-        {% endif %}
-        {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/users" href="#">
-            <i class="fas fa-user-shield w-5"></i>
-            <span>Quản Lý Tài Khoản</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/classes" href="#">
-            <i class="fas fa-school w-5"></i>
-            <span>Danh Sách Lớp</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/assign-classes" href="#">
-            <i class="fas fa-user-plus w-5"></i>
-            <span>Phân Lớp Học Sinh</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/assign-teachers" href="#">
-            <i class="fas fa-chalkboard-teacher w-5"></i>
-            <span>Phân Công Giáo Viên</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/data_epa" href="#">
-            <i class="fas fa-chart-line w-5"></i>
-            <span>Đánh Giá Giáo Viên</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/epa_summary" href="#">
-            <i class="fas fa-chart-line w-5"></i>
-            <span>Xếp Hạng Đánh Giá</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/thoigianmoepa" href="#">
-            <i class="fas fa-scroll w-5"></i>
-            <span>Đặt Thời Gian Đánh Giá</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/admin/questions" href="#">
-            <i class="fas fa-scroll w-5"></i>
-            <span>Câu Hỏi Đánh Giá</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/logs" href="#">
-            <i class="fas fa-scroll w-5"></i>
-            <span>Nhật Ký Thay Đổi</span>
-          </a>
-        </li>
-        <li>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-page="/stats" href="#">
-            <i class="fas fa-chart-bar w-5"></i>
-            <span>Thông Tin Thống Kê</span>
-          </a>
-        </li>
-        {% endif %}
 
-        <li class="mt-8">
-          <a class="flex items-center gap-3 px-3 py-2 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" href="/logout">
-            <i class="fas fa-sign-out-alt w-5"></i>
-            <span>Đăng Xuất</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <!-- Main Content -->
-  <main class="flex-1 flex flex-col">
-    <!-- Top Bar -->
-    <div class="h-14 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 flex items-center justify-between">
-      <h5 class="text-lg font-semibold text-gray-800 dark:text-white">- TRƯỜNG MẦM NON HOA HƯỚNG DƯƠNG -</h5>
-      <div class="flex items-center gap-3">
-        <a class="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" href="/dashboard">
-          🏠 Trang Chủ
-        </a>
-        <button class="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onclick="openChangePassModal()">
-          🔐 Đổi Mật Khẩu
-        </button>
-        <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
-          👤 <span id="currentUser">{{ user }} ({{ role }})</span>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">🌻</div>
+        <h2 class="sidebar-title">TRƯỜNG MẦM NON<br>HOA HƯỚNG DƯƠNG</h2>
+        <p class="sidebar-subtitle">HỆ THỐNG QUẢN LÝ NHÂN SỰ</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <!-- Main Section -->
+        <div class="nav-section">
+          <div class="nav-section-title">Chính</div>
+          <div class="nav-item">
+            <a class="nav-link active" data-page="/employees" href="#">
+              <i class="fas fa-home"></i>
+              <span>Trang Chủ</span>
+            </a>
+          </div>
         </div>
+        
+        <!-- EPA Section -->
+        {% if session['role'] == 'user' or session['role'] == 'supervisor' %}
+        <div class="nav-section">
+          <div class="nav-section-title">Đánh Giá EPA</div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/user-epa-score" href="#">
+              <i class="fas fa-star"></i>
+              <span>Đánh Giá Cá Nhân</span>
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        
+        <!-- Admin Section -->
+        {% if session['role'] == 'admin' or session['user'] == 'kimnhung' %}
+        <div class="nav-section">
+          <div class="nav-section-title">Quản Lý</div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/users" href="#">
+              <i class="fas fa-users-cog"></i>
+              <span>Tài Khoản</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/classes" href="#">
+              <i class="fas fa-school"></i>
+              <span>Danh Sách Lớp</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/assign-classes" href="#">
+              <i class="fas fa-user-plus"></i>
+              <span>Phân Lớp</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/assign-teachers" href="#">
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Phân Công GV</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Đánh Giá & Báo Cáo</div>
+          <div class="nav-item">
+            {% if session['role'] == 'supervisor' %}
+            <a class="nav-link" data-page="/sup-epa-score" href="#">
+              <i class="fas fa-users-cog"></i>
+              <span>Chấm Điểm Tổ Viên</span>
+            </a>
+            {% else %}
+            <a class="nav-link" data-page="/data_epa" href="#">
+              <i class="fas fa-chart-line"></i>
+              <span>Đánh Giá GV</span>
+            </a>
+            {% endif %}
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/epa_summary" href="#">
+              <i class="fas fa-trophy"></i>
+              <span>Xếp Hạng</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/admin/questions" href="#">
+              <i class="fas fa-question-circle"></i>
+              <span>Câu Hỏi EPA</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/thoigianmoepa" href="#">
+              <i class="fas fa-clock"></i>
+              <span>Thời Gian EPA</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Hệ Thống</div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/logs" href="#">
+              <i class="fas fa-history"></i>
+              <span>Nhật Ký</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-page="/stats" href="#">
+              <i class="fas fa-chart-bar"></i>
+              <span>Thống Kê</span>
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        
+        <!-- Logout -->
+        <div class="nav-section">
+          <div class="nav-item">
+            <a class="nav-link text-danger" href="/logout">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Đăng Xuất</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="topbar-title">Dashboard</h1>
+        </div>
+        
+        <div class="topbar-actions">
+          <a class="btn-topbar" href="/dashboard">
+            <i class="fas fa-home"></i>
+            <span>Trang Chủ</span>
+          </a>
+          <button class="btn-topbar" onclick="openChangePassModal()">
+            <i class="fas fa-key"></i>
+            <span>Đổi MK</span>
+          </button>
+          <div class="user-info">
+            <div class="user-avatar">
+              {{ user[0].upper() if user else 'U' }}
+            </div>
+            <div class="user-details">
+              <span class="user-name">{{ user or 'Unknown' }}</span>
+              <span class="user-role">{{ role or 'user' }}</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content-area">
+        <iframe 
+          id="mainFrame" 
+          class="content-frame" 
+          src="/employees"
+          title="Main Content"
+        ></iframe>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  
+  <!-- Change Password Modal -->
+  <div class="modal" id="changePassModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Đổi Mật Khẩu</h3>
+        <button class="modal-close" onclick="closeChangePassModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="changePassForm">
+          <div class="form-group">
+            <label class="form-label">Mật khẩu hiện tại</label>
+            <input class="form-control" id="oldPassword" type="password" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu mới</label>
+            <input class="form-control" id="newPassword" type="password" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Xác nhận mật khẩu mới</label>
+            <input class="form-control" id="confirmNewPassword" type="password" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeChangePassModal()">Hủy</button>
+        <button class="btn btn-primary" onclick="submitChangePassword()">Đổi Mật Khẩu</button>
       </div>
     </div>
-    <!-- Content Frame -->
-    <iframe id="mainFrame" src="/employees" class="flex-1 w-full border-0"></iframe>
-  </main>
-</div>
-</div>
-<!-- Modal đổi mật khẩu -->
-<div id="changePassModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
-    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-      <h5 class="text-lg font-semibold text-gray-900 dark:text-white">Đổi Mật Khẩu</h5>
-      <button onclick="closeChangePassModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="p-4">
-      <form id="changePassForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu hiện tại</label>
-          <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="oldPassword" required type="password"/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu mới</label>
-          <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="newPassword" required type="password"/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Xác nhận mật khẩu mới</label>
-          <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" id="confirmNewPassword" required type="password"/>
-        </div>
-      </form>
-    </div>
-    <div class="flex gap-3 p-4 border-t border-gray-200 dark:border-gray-700">
-      <button onclick="closeChangePassModal()" class="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Hủy</button>
-      <button onclick="submitChangePassword()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Đổi Mật Khẩu</button>
-    </div>
   </div>
-</div>
-<script>
-    // ✅ Lấy URL parameter để xác định trang hiện tại
+
+  <script>
+    // Navigation Management
     function getPageFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get('page') || '/employees'; // Mặc định là employees
+      const params = new URLSearchParams(window.location.search);
+      return params.get('page') || '/employees';
     }
 
-    // ✅ Cập nhật URL khi chuyển trang
     function updateURL(page) {
-        const newURL = `/dashboard?page=${encodeURIComponent(page)}`;
-        window.history.pushState({page: page}, '', newURL);
+      const newURL = `/dashboard?page=${encodeURIComponent(page)}`;
+      window.history.pushState({page: page}, '', newURL);
     }
 
-    // ✅ Tạo URL an toàn cho iframe - sử dụng relative URL để tránh mixed content
     function createSafeURL(page) {
-        // Remove trailing slash nếu có
-        const cleanPage = page.endsWith('/') ? page.slice(0, -1) : page;
-        
-        // Sử dụng relative URL thay vì absolute URL để tránh mixed content issues
-        console.log('🔗 Creating relative URL:', cleanPage); // Debug log
-        return cleanPage;
+      const cleanPage = page.endsWith('/') ? page.slice(0, -1) : page;
+      return cleanPage;
     }
 
-    // ✅ Load trang và cập nhật active state  
     function loadPage(page) {
-        const safeURL = createSafeURL(page);
-        
-        // Cập nhật iframe
-        document.getElementById('mainFrame').src = safeURL;
-        
-        // Cập nhật active state cho sidebar
-        document.querySelectorAll('.nav-link').forEach(l => {
-            l.classList.remove('bg-blue-600', 'text-white', 'dark:bg-blue-700');
-            l.classList.add('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
-        });
-        const activeLink = document.querySelector(`[data-page="${page}"]`);
-        if (activeLink) {
-            activeLink.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
-            activeLink.classList.add('bg-blue-600', 'text-white', 'dark:bg-blue-700');
-        }
-        
-        // Cập nhật URL
-        updateURL(page);
+      const iframe = document.getElementById('mainFrame');
+      const safeURL = createSafeURL(page);
+      
+      // Add loading state
+      iframe.classList.add('loading');
+      
+      // Update iframe
+      iframe.src = safeURL;
+      
+      // Update active state
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      const activeLink = document.querySelector(`[data-page="${page}"]`);
+      if (activeLink) activeLink.classList.add('active');
+      
+      // Update URL
+      updateURL(page);
+      
+      // Remove loading state when loaded
+      iframe.onload = function() {
+        iframe.classList.remove('loading');
+      };
     }
 
-    // ✅ Xử lý click navigation
-    document.querySelectorAll('.nav-link[data-page]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            console.log('🖱️ Navigation click:', page); // Debug log
-            loadPage(page);
-        });
-    });
-
-    // ✅ Xử lý browser back/forward
-    window.addEventListener('popstate', function(e) {
-        const page = e.state?.page || getPageFromURL();
-        console.log('⬅️ Browser back/forward:', page); // Debug log
-        
-        const safeURL = createSafeURL(page);
-        document.getElementById('mainFrame').src = safeURL;
-        
-        // Cập nhật active state
-        document.querySelectorAll('.nav-link').forEach(l => {
-            l.classList.remove('bg-blue-600', 'text-white', 'dark:bg-blue-700');
-            l.classList.add('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
-        });
-        const activeLink = document.querySelector(`[data-page="${page}"]`);
-        if (activeLink) {
-            activeLink.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
-            activeLink.classList.add('bg-blue-600', 'text-white', 'dark:bg-blue-700');
-        }
-    });
-
-    // ✅ Khởi tạo khi trang load
-    document.addEventListener('DOMContentLoaded', function() {
-        initDarkMode();
-        
-        const currentPage = getPageFromURL();
-        console.log('🚀 Initial page load:', currentPage); // Debug log
-        
-        // Set iframe src với URL an toàn
-        const safeURL = createSafeURL(currentPage);
-        document.getElementById('mainFrame').src = safeURL;
-        
-        // Set active state
-        const activeLink = document.querySelector(`[data-page="${currentPage}"]`);
-        if (activeLink) {
-            activeLink.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-blue-50', 'dark:hover:bg-gray-700', 'hover:text-blue-600', 'dark:hover:text-blue-400');
-            activeLink.classList.add('bg-blue-600', 'text-white', 'dark:bg-blue-700');
-        }
-        
-        // Ensure URL is correct
-        if (!window.location.search) {
-            updateURL(currentPage);
-        }
-    });
-
-    // ✅ Handle iframe load errors
-    document.getElementById('mainFrame').addEventListener('error', function(e) {
-        console.error('❌ Iframe load error:', e);
-        // Fallback to employees page
-        if (this.src !== '/employees') {
-            console.log('🔄 Fallback to employees page');
-            this.src = '/employees';
-        }
-    });
-
-    // Dark mode functionality
-    function initDarkMode() {
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark');
-        }
-        
-        darkModeToggle.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('darkMode', isDark);
-            
-            // Send message to iframe to sync dark mode
-            const iframe = document.getElementById('mainFrame');
-            if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ type: 'darkModeToggle', isDark }, '*');
-            }
-        });
+    // Mobile Menu Management
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('mobileOverlay');
+      
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('show');
     }
-    
+
+    function closeMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('mobileOverlay');
+      
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('show');
+    }
+
+    // Modal Management
     function openChangePassModal() {
-        document.getElementById('changePassForm').reset();
-        document.getElementById('changePassModal').classList.remove('hidden');
+      document.getElementById('changePassForm').reset();
+      document.getElementById('changePassModal').classList.add('show');
     }
-    
+
     function closeChangePassModal() {
-        document.getElementById('changePassModal').classList.add('hidden');
+      document.getElementById('changePassModal').classList.remove('show');
     }
 
     async function submitChangePassword() {
-        const oldPass = document.getElementById('oldPassword').value.trim();
-        const newPass = document.getElementById('newPassword').value.trim();
-        const confirmPass = document.getElementById('confirmNewPassword').value.trim();
+      const oldPass = document.getElementById('oldPassword').value.trim();
+      const newPass = document.getElementById('newPassword').value.trim();
+      const confirmPass = document.getElementById('confirmNewPassword').value.trim();
 
-        if (!oldPass || !newPass || !confirmPass) {
-            alert("Vui lòng nhập đầy đủ thông tin!");
-            return;
+      if (!oldPass || !newPass || !confirmPass) {
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        alert("Mật khẩu mới không trùng khớp!");
+        return;
+      }
+
+      const payload = { old_password: oldPass, new_password: newPass };
+
+      try {
+        const res = await fetch('/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        
+        if (result.status === 'success') {
+          alert("✅ Đổi mật khẩu thành công!");
+          closeChangePassModal();
+        } else {
+          alert("❌ Đổi mật khẩu thất bại: " + (result.message || "Không rõ lỗi"));
         }
-
-        if (newPass !== confirmPass) {
-            alert("Mật khẩu mới không trùng khớp!");
-            return;
-        }
-
-        const payload = { old_password: oldPass, new_password: newPass };
-
-        try {
-            const res = await fetch('/change-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await res.json();
-            if (result.status === 'success') {
-                alert("✅ Đổi mật khẩu thành công!");
-                bootstrap.Modal.getInstance(document.getElementById('changePassModal')).hide();
-            } else {
-                alert("❌ Đổi mật khẩu thất bại: " + (result.message || "Không rõ lỗi"));
-            }
-        } catch (err) {
-            console.error(err);
-            alert("❌ Lỗi kết nối server!");
-        }
+      } catch (err) {
+        console.error(err);
+        alert("❌ Lỗi kết nối server!");
+      }
     }
-</script>
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navigation
+      document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const page = this.getAttribute('data-page');
+          loadPage(page);
+          closeMobileMenu();
+        });
+      });
+
+      // Mobile menu
+      document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+      document.getElementById('mobileOverlay').addEventListener('click', closeMobileMenu);
+
+      // Modal close on background click
+      document.getElementById('changePassModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeChangePassModal();
+        }
+      });
+
+      // Browser back/forward
+      window.addEventListener('popstate', function(e) {
+        const page = e.state?.page || getPageFromURL();
+        const safeURL = createSafeURL(page);
+        document.getElementById('mainFrame').src = safeURL;
+        
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        const activeLink = document.querySelector(`[data-page="${page}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      });
+
+      // Initialize
+      const currentPage = getPageFromURL();
+      const safeURL = createSafeURL(currentPage);
+      document.getElementById('mainFrame').src = safeURL;
+      
+      const activeLink = document.querySelector(`[data-page="${currentPage}"]`);
+      if (activeLink) activeLink.classList.add('active');
+      
+      if (!window.location.search) {
+        updateURL(currentPage);
+      }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+        closeChangePassModal();
+      }
+    });
+  </script>
 </body>
 </html>

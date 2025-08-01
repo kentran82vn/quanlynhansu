@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from utils.db import get_conn
 from datetime import datetime
-from calendar import monthrange
 
 # ✅ Blueprint với tên rõ ràng
 thoigianmoepa_bp = Blueprint('thoigianmoepa', __name__)
@@ -46,17 +45,7 @@ def index():
     finally:
         conn.close()
     
-    # Lấy thông tin tháng hiện tại để truyền vào template
-    current_year = datetime.now().year
-    current_month = datetime.now().month
-    days_in_current_month = monthrange(current_year, current_month)[1]
-    
-    return render_template('thoigianmoepa.html', 
-                          tk_list=tk_list, 
-                          records=records,
-                          current_month=current_month,
-                          current_year=current_year,
-                          days_in_current_month=days_in_current_month)
+    return render_template('thoigianmoepa.html', tk_list=tk_list, records=records)
 
 # ✅ Route sync_records 
 @thoigianmoepa_bp.route('/sync_records', methods=['POST'])
@@ -145,21 +134,14 @@ def save_record():
     phase3_start = request.form.get('phase3_start', type=int)
     phase3_end = request.form.get('phase3_end', type=int)
     
-    # Get current month's days for validation
-    current_year = datetime.now().year
-    current_month = datetime.now().month
-    days_in_current_month = monthrange(current_year, current_month)[1]
-    
     # Backward compatibility: nếu không có dữ liệu 3 giai đoạn, dùng start_day/close_day cũ
     if not phase1_start and request.form.get('start_day'):
         start_day = request.form.get('start_day', type=int)
         close_day = request.form.get('close_day', type=int)
-        # Convert sang 3 giai đoạn mặc định với điều chỉnh theo tháng
+        # Convert sang 3 giai đoạn mặc định
         phase1_start, phase1_end = 20, 25
         phase2_start, phase2_end = 26, 27
-        # Điều chỉnh giai đoạn 3 theo số ngày trong tháng
-        phase3_start = 28
-        phase3_end = min(30, days_in_current_month)  # Không vượt quá số ngày trong tháng
+        phase3_start, phase3_end = 28, 30
     
     # Validation
     if not ten_tk:
@@ -182,8 +164,8 @@ def save_record():
             flash(f"❌ {phase_name}: Ngày bắt đầu phải nhỏ hơn ngày kết thúc", "danger")
             return redirect(url_for('thoigianmoepa.index'))
         
-        if not (1 <= start <= days_in_current_month) or not (1 <= end <= days_in_current_month):
-            flash(f"❌ {phase_name}: Ngày phải trong khoảng 1-{days_in_current_month} (tháng {current_month} có {days_in_current_month} ngày)", "danger")
+        if not (1 <= start <= 31) or not (1 <= end <= 31):
+            flash(f"❌ {phase_name}: Ngày phải trong khoảng 1-31", "danger")
             return redirect(url_for('thoigianmoepa.index'))
     
     # Validate sequential order
@@ -282,17 +264,11 @@ def get_assessment_period():
             
             record = cursor.fetchone()
             
-            # Get current month's days for smart defaults
-            current_year = datetime.now().year
-            current_month = datetime.now().month
-            days_in_current_month = monthrange(current_year, current_month)[1]
-            
             if not record:
-                # Nếu không có cài đặt, dùng mặc định 3 giai đoạn với điều chỉnh theo tháng
+                # Nếu không có cài đặt, dùng mặc định 3 giai đoạn
                 phase1_start, phase1_end = 20, 25
                 phase2_start, phase2_end = 26, 27
-                phase3_start = 28
-                phase3_end = min(30, days_in_current_month)  # Tự động điều chỉnh theo tháng
+                phase3_start, phase3_end = 28, 30
                 make_epa_gv = "yes"
                 make_epa_tgv = "no"
                 make_epa_all = "no"
@@ -302,9 +278,7 @@ def get_assessment_period():
                 phase2_start = record['phase2_start'] or 26
                 phase2_end = record['phase2_end'] or 27
                 phase3_start = record['phase3_start'] or 28
-                # Điều chỉnh phase3_end nếu vượt quá số ngày trong tháng
-                default_phase3_end = record['phase3_end'] or 30
-                phase3_end = min(default_phase3_end, days_in_current_month)
+                phase3_end = record['phase3_end'] or 30
                 make_epa_gv = record['make_epa_gv']
                 make_epa_tgv = record['make_epa_tgv']
                 make_epa_all = record['make_epa_all']

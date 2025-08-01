@@ -23,10 +23,6 @@ def check_epa_period_for_user(ten_tk):
     day = now.day
     year = now.year
     month = now.month
-    
-    # Get days in current month for validation
-    days_in_current_month = monthrange(year, month)[1]
-    
     conn = get_conn()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
@@ -54,19 +50,11 @@ def check_epa_period_for_user(ten_tk):
         # Determine user type and appropriate phase
         is_tgv = record.get('make_epa_tgv') == 'yes'
         
-        # Adjust phase end dates if they exceed days in current month
-        phase1_start = record['phase1_start'] or 20
-        phase1_end = min(record['phase1_end'] or 25, days_in_current_month)
-        phase2_start = record['phase2_start'] or 26  
-        phase2_end = min(record['phase2_end'] or 27, days_in_current_month)
-        phase3_start = record['phase3_start'] or 28
-        phase3_end = min(record['phase3_end'] or 30, days_in_current_month)
-        
         # For teachers (GV): only Phase 1 matters
         # For supervisors (TGV): Phase 1 (self) + Phase 2 (supervise others) 
-        phase1_open = phase1_start <= day <= phase1_end
-        phase2_open = phase2_start <= day <= phase2_end if phase2_start and phase2_end else False
-        phase3_open = phase3_start <= day <= phase3_end if phase3_start and phase3_end else False
+        phase1_open = record['phase1_start'] <= day <= record['phase1_end']
+        phase2_open = record['phase2_start'] <= day <= record['phase2_end'] if record['phase2_start'] and record['phase2_end'] else False
+        phase3_open = record['phase3_start'] <= day <= record['phase3_end'] if record['phase3_start'] and record['phase3_end'] else False
         
         # Determine if user can assess themselves
         if is_tgv:
@@ -74,16 +62,16 @@ def check_epa_period_for_user(ten_tk):
             is_open = phase1_open or phase2_open
             if phase1_open:
                 current_phase = 'Phase 1 (Tu danh gia)'
-                start_day = phase1_start
-                close_day = phase1_end
+                start_day = record['phase1_start']
+                close_day = record['phase1_end']
             elif phase2_open:
                 current_phase = 'Phase 2 (Tu danh gia TGV)'
-                start_day = phase2_start
-                close_day = phase2_end
+                start_day = record['phase2_start'] 
+                close_day = record['phase2_end']
             else:
                 current_phase = 'Phase 3 (Chi HT/PHT danh gia)'
-                start_day = phase3_start
-                close_day = phase3_end
+                start_day = record['phase3_start'] or 0
+                close_day = record['phase3_end'] or 0
         else:
             # Regular teachers: only Phase 1
             is_open = phase1_open
@@ -96,8 +84,8 @@ def check_epa_period_for_user(ten_tk):
             else:
                 current_phase = 'Ngoai thoi gian danh gia'
             
-            start_day = phase1_start
-            close_day = phase1_end
+            start_day = record['phase1_start'] or 0
+            close_day = record['phase1_end'] or 0
         
         return {
             'is_open': is_open,

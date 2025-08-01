@@ -3,7 +3,8 @@ USE quanlytruonghoc_app;
 CREATE TABLE cauhoi_epa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     question TEXT NOT NULL,
-    translate TEXT
+    translate TEXT,
+    score INT DEFAULT 20
 );
 SET SQL_SAFE_UPDATES = 0;
 DELETE FROM cauhoi_epa;

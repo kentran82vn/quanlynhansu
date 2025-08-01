@@ -272,11 +272,11 @@ def import_students_hs():
         # Version indicator - will appear in logs when new code is loaded
         print("INFO: Using FIXED import code v2.0")
 
-        # Đổi tên cột cho khớp SQL - FIXED: mapping sau khi strip()
+        # Đổi tên cột cho khớp SQL (dấu cách đã được strip ở trên)
         df.rename(columns={
             "MÃ HS": "ma_hs",
             "HỌ VÀ TÊN": "ho_va_ten",
-            "NGÀY SINH": "ngay_sinh",      # FIXED: sau strip() không còn space
+            "NGÀY SINH": "ngay_sinh",  
             "GIỚI TÍNH": "gioi_tinh",
             "DT": "dan_toc",
             "MÃ ĐỊNH DANH": "ma_dinh_danh",
@@ -285,7 +285,7 @@ def import_students_hs():
             "HỌ VÀ TÊN MẸ": "ho_ten_me",
             "NGHỀ NGHIỆP MẸ": "nghe_nghiep_me",
             "HỘ KHẨU": "ho_khau",
-            "SỐ CCCD CỦA BỐ/MẸ": "cccd_bo_me",  # FIXED: sau strip() không còn space ở đầu
+            "SỐ CCCD CỦA BỐ/MẸ": "cccd_bo_me",  
             "ĐT": "sdt"
         }, inplace=True)
 
