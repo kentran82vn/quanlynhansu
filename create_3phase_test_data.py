@@ -26,8 +26,8 @@ def create_3phase_test_data():
                 cursor.execute("""
                     INSERT INTO thoigianmoepa (ten_tk, phase1_start, phase1_end, phase2_start, phase2_end, 
                                              phase3_start, phase3_end, start_day, close_day, 
-                                             make_epa_gv, make_epa_tgv, make_epa_all, remark)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                             make_epa_gv, make_epa_tgv, make_epa_all, remark, month, year)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, MONTH(CURDATE()), YEAR(CURDATE()))
                     ON DUPLICATE KEY UPDATE
                         phase1_start = VALUES(phase1_start),
                         phase1_end = VALUES(phase1_end),
@@ -107,8 +107,8 @@ def create_3phase_test_data():
                 cursor.execute("""
                     INSERT INTO thoigianmoepa (ten_tk, phase1_start, phase1_end, phase2_start, phase2_end, 
                                              phase3_start, phase3_end, start_day, close_day, 
-                                             make_epa_gv, make_epa_tgv, make_epa_all, remark)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                             make_epa_gv, make_epa_tgv, make_epa_all, remark, month, year)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, MONTH(CURDATE()), YEAR(CURDATE()))
                     ON DUPLICATE KEY UPDATE
                         phase1_start = VALUES(phase1_start),
                         phase1_end = VALUES(phase1_end),
