@@ -91,8 +91,8 @@ def sync_records():
                     make_epa_all = 'yes' if nhom == 'admin' else 'no'
                     
                     cursor.execute("""
-                        INSERT INTO thoigianmoepa (ten_tk, start_day, close_day, remark, make_epa_gv, make_epa_tgv, make_epa_all)
-                        VALUES (%s, 20, 25, '', %s, %s, %s)
+                        INSERT INTO thoigianmoepa (ten_tk, start_day, close_day, month, year, remark, make_epa_gv, make_epa_tgv, make_epa_all)
+                        VALUES (%s, 20, 25, MONTH(CURDATE()), YEAR(CURDATE()), '', %s, %s, %s)
                     """, (ten_tk, make_epa_gv, make_epa_tgv, make_epa_all))
                     count += 1
                     
